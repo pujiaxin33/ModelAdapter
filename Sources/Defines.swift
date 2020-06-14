@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-@propertyWrapper public class Entity<Value> {
+@propertyWrapper public class Field<Value> {
     public var wrappedValue: Value
     public let key: String?
     public let codingKey: String?
@@ -58,7 +58,7 @@ import ObjectMapper
     }
 }
 
-public extension Entity where Value: ExpressibleByNilLiteral {
+public extension Field where Value: ExpressibleByNilLiteral {
     convenience init(key: String? = nil, codingKey: String? = nil, storageKey: String? = nil) {
         self.init(wrappedValue: nil, key: key, codingKey: codingKey, storageKey: storageKey)
     }
@@ -76,7 +76,7 @@ public extension Entity where Value: ExpressibleByNilLiteral {
     }
 }
 
-extension Entity: EntityWrappedAny {}
+extension Field: EntityWrappedAny {}
 
 
 

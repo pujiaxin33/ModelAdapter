@@ -10,34 +10,40 @@ import Foundation
 import ModelAdaptor
 import ObjectMapper
 
+enum DQGender: String {
+    case unknow = "UnKnown"
+    case female = "Female"
+    case male = "Male"
+}
+
 class CustomModel: ModelAdaptorObjectMappable {
-    @Entity(key: "accountId")
+    @Field(key: "accountId")
     var accountID: Int?         //用户ID
-    @Entity
+    @Field
     var userName: String?       //账号
-    @Entity
+    @Field
     var nickName: String?       //昵称
-    @Entity
+    @Field
     var amount: Double = 0            // 账户余额
-    @Entity
+    @Field
     var phone: String?          //手机号
-//    @Entity
-//    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
-    @Entity
+    @Field
+    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
+    @Field
     var avatar: String?         //头像
 //    @EntityConvertor(wrappedValue: Date(), convertor: DQDateTransform())
-    @Entity(convertor: DQDateTransform())
+    @Field(convertor: DQDateTransform())
     var birthday: Date?         //生日，没有就是nil
-    @Entity(key: "level")
+    @Field(key: "level")
     var vipLevel: Int = 1       //会员等级， 1~5
-    @Entity
+    @Field
     var levelPoints: Int = 0   //当前等级值
-    @Entity
+    @Field
     var downPoints: Int = 0
 //    @EntityConvertor(wrappedValue: Date(), key: "123", convertor: DQDateTransform())
-    @Entity(convertor: DQDateTransform())
+    @Field(convertor: DQDateTransform())
     var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
-    @Entity(wrappedValue: false,key: "hasFundsPassword")
+    @Field(wrappedValue: false,key: "hasFundsPassword")
     var isExchangePasswordValid: Bool    //是否设置了兑换密码
 
     required init?(map: Map) {
