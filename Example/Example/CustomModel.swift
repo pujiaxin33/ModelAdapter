@@ -32,7 +32,7 @@ class CustomModel: ModelAdaptorObjectMappable {
     @Field
     var avatar: String?         //头像
 //    @EntityConvertor(wrappedValue: Date(), convertor: DQDateTransform())
-    @Field(convertor: DQDateTransform())
+    @Field(key: "123", codingKey: "13", convertor: DQDateTransform())
     var birthday: Date?         //生日，没有就是nil
     @Field(key: "level")
     var vipLevel: Int = 1       //会员等级， 1~5

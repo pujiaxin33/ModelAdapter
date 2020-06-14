@@ -44,7 +44,7 @@ import ObjectMapper
         self.init(wrappedValue: wrappedValue, key: nil, codingKey: codingKey, storageKey: storageKey)
     }
 
-    convenience public init<Convertor: TransformType>(wrappedValue: Value, convertor: Convertor?) where Convertor.Object == Value {
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingKey: String?, storageKey: String?, convertor: Convertor?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingKey: nil, storageKey: nil)
 
         self.convertorClosure = {[weak self] (key, map) in
@@ -56,14 +56,35 @@ import ObjectMapper
             }
         }
     }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingKey: nil, storageKey: nil)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: key, codingKey: nil, storageKey: nil)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingKey: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingKey: codingKey, storageKey: nil)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, storageKey: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingKey: nil, storageKey: storageKey)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingKey: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: key, codingKey: codingKey, storageKey: nil)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, storageKey: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: key, codingKey: nil, storageKey: storageKey)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingKey: String?, storageKey: String?, convertor: Convertor?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingKey: codingKey, storageKey: storageKey)
+    }
 }
 
 public extension Field where Value: ExpressibleByNilLiteral {
     convenience init(key: String? = nil, codingKey: String? = nil, storageKey: String? = nil) {
         self.init(wrappedValue: nil, key: key, codingKey: codingKey, storageKey: storageKey)
     }
-    convenience init<Convertor: TransformType>(convertor: Convertor?) where Convertor.Object? == Value {
-        self.init(wrappedValue: nil, key: nil, codingKey: nil, storageKey: nil)
+    convenience init<Convertor: TransformType>(key: String? = nil, codingKey: String? = nil, storageKey: String? = nil, convertor: Convertor?) where Convertor.Object? == Value {
+        self.init(wrappedValue: nil, key: key, codingKey: codingKey, storageKey: storageKey)
 
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }
