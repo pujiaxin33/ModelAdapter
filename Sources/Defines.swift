@@ -15,6 +15,7 @@ import ObjectMapper
     public let codingKey: String?
     public let storageKey: String?
     var convertorClosure: ((String,Map) -> ())?
+    var immutableConvertorClosure: ((String, Map) -> ())?
 
     public init(wrappedValue: Value, key: String?, codingKey: String?, storageKey: String?) {
         self.wrappedValue = wrappedValue
@@ -53,6 +54,14 @@ import ObjectMapper
                 self.wrappedValue <- (map[key], convertor)
             }else {
                 self.wrappedValue <- map[key]
+            }
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            if let convertor = convertor {
+                self.wrappedValue >>> (map[key], convertor)
+            }else {
+                self.wrappedValue >>> map[key]
             }
         }
     }
@@ -94,10 +103,18 @@ public extension Field where Value: ExpressibleByNilLiteral {
                 self.wrappedValue <- map[key]
             }
         }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            if let convertor = convertor {
+                self.wrappedValue >>> (map[key], convertor)
+            }else {
+                self.wrappedValue >>> map[key]
+            }
+        }
     }
 }
 
-extension Field: EntityWrappedAny {}
+extension Field: EntityWrappedAny { }
 
 
 
