@@ -54,31 +54,29 @@ import ObjectMapper
             }else {
                 self.wrappedValue <- map[key]
             }
-
         }
     }
-
 }
 
 public extension Entity where Value: ExpressibleByNilLiteral {
     convenience init(key: String? = nil, codingKey: String? = nil, storageKey: String? = nil) {
         self.init(wrappedValue: nil, key: key, codingKey: codingKey, storageKey: storageKey)
     }
-    convenience init<Convertor: TransformType>(convertor: Convertor?) where Convertor.Object == Value {
-        self.init(wrappedValue: nil, convertor: convertor)
+    convenience init<Convertor: TransformType>(convertor: Convertor?) where Convertor.Object? == Value {
+        self.init(wrappedValue: nil, key: nil, codingKey: nil, storageKey: nil)
+
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            if let convertor = convertor {
+                self.wrappedValue <- (map[key], convertor)
+            }else {
+                self.wrappedValue <- map[key]
+            }
+        }
     }
 }
 
-extension Entity: EntityWrappedAny {
-    var wrappedValueAny: Any {
-        get {
-            return wrappedValue
-        }
-        set {
-            wrappedValue = newValue as! Value
-        }
-    }
-}
+extension Entity: EntityWrappedAny {}
 
 
 

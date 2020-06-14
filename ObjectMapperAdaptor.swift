@@ -42,7 +42,6 @@ public extension ModelAdaptorObjectMappable {
 }
 
 protocol EntityWrappedAny {
-    var wrappedValueAny: Any { get set }
     var key: String? { get }
     var codingKey: String? { get }
     var storageKey: String? { get }

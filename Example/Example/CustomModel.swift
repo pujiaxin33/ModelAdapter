@@ -26,7 +26,7 @@ class CustomModel: ModelAdaptorObjectMappable {
     @Entity
     var avatar: String?         //头像
 //    @EntityConvertor(wrappedValue: Date(), convertor: DQDateTransform())
-//    @Entity(wrappedValue: nil, convertor: DQDateTransform())
+    @Entity(convertor: DQDateTransform())
     var birthday: Date?         //生日，没有就是nil
     @Entity(key: "level")
     var vipLevel: Int = 1       //会员等级， 1~5
