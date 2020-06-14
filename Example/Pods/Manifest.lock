@@ -1,0 +1,23 @@
+PODS:
+  - ModelAdaptor (0.0.1):
+    - ObjectMapper
+  - ObjectMapper (4.2.0)
+
+DEPENDENCIES:
+  - ModelAdaptor (from `../../ModelAdaptor`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - ObjectMapper
+
+EXTERNAL SOURCES:
+  ModelAdaptor:
+    :path: "../../ModelAdaptor"
+
+SPEC CHECKSUMS:
+  ModelAdaptor: dba2aa5c82ba627b5b8f23d056b62e4598d9b2d4
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
+
+PODFILE CHECKSUM: 0d1f7fb2381a4ea2d91417c8e41db730d2b4d88a
+
+COCOAPODS: 1.7.5

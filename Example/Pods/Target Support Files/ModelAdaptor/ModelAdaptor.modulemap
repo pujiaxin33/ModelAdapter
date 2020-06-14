@@ -1,0 +1,6 @@
+framework module ModelAdaptor {
+  umbrella header "ModelAdaptor-umbrella.h"
+
+  export *
+  module * { export * }
+}
