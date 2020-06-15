@@ -24,7 +24,7 @@ public extension ModelAdaptorMappable {
         }
     }
 
-    func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
+    private func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
         if codingKey?.isEmpty == false {
             return codingKey!
         }else if key?.isEmpty == false {
@@ -54,7 +54,7 @@ public extension ModelAdaptorImmutableMappable {
         }
     }
 
-    func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
+    private func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
         if codingKey?.isEmpty == false {
             return codingKey!
         }else if key?.isEmpty == false {
@@ -77,3 +77,15 @@ protocol FieldWrappedProtocol {
 }
 
 extension Field: FieldWrappedProtocol { }
+
+public class NilTransform<NilValue>: TransformType {
+    public typealias Object = NilValue
+    public typealias JSON = Int
+    public func transformFromJSON(_ value: Any?) -> Object? {
+        return nil
+    }
+    public func transformToJSON(_ value: Object?) -> JSON? {
+        return nil
+    }
+    public init() { }
+}
