@@ -24,6 +24,9 @@
   "dependencies": {
     "ObjectMapper": [
 
+    ],
+    "SQLite.swift": [
+
     ]
   },
   "swift_version": "5.0"
