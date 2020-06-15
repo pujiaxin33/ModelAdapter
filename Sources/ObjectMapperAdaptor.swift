@@ -7,6 +7,7 @@
 
 import Foundation
 import ObjectMapper
+import SQLite
 
 public protocol ModelAdaptorMappable: Mappable { }
 
@@ -68,15 +69,7 @@ public extension ModelAdaptorImmutableMappable {
     }
 }
 
-protocol FieldWrappedProtocol {
-    var key: String? { get }
-    var codingKey: String? { get }
-    var storageKey: String? { get }
-    var convertorClosure: ((String, Map)->())? { get }
-    var immutableConvertorClosure: ((String, Map)->())? { get }
-}
 
-extension Field: FieldWrappedProtocol { }
 
 public class NilTransform<NilValue>: TransformType {
     public typealias Object = NilValue

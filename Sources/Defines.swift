@@ -8,6 +8,7 @@
 
 import Foundation
 import ObjectMapper
+import SQLite
 
 open class CodingParams<Convertor: TransformType>{
     public let key: String?
@@ -15,6 +16,7 @@ open class CodingParams<Convertor: TransformType>{
     public let nested: Bool?
     public let delimiter: String
     public let ignoreNil: Bool
+
     public init(key: String? = nil, convertor: Convertor? = nil, nested: Bool? = nil, delimiter: String = ".", ignoreNil: Bool = false) {
         self.key = key
         self.convertor = convertor
@@ -36,6 +38,7 @@ open class StorageParams {
     public let key: String?
     public var codingKey: String?
     public var storageKey: String?
+    public var projectedValue: Field<Value> { self }
     var convertorClosure: ((String,Map) -> ())?
     var immutableConvertorClosure: ((String, Map) -> ())?
 
@@ -45,22 +48,7 @@ open class StorageParams {
         self.codingKey = codingParams?.key
         self.storageKey = storageParams?.key
 
-        self.convertorClosure = {[weak self] (key, map) in
-            guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
-                self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
-            }else {
-                self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
-            }
-        }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
-            guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
-                self.wrappedValue >>> (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
-            }else {
-                self.wrappedValue >>> map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
-            }
-        }
+        configMapperClosure(codingParams: codingParams)
     }
     convenience public init(wrappedValue: Value) {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: nil)
@@ -90,22 +78,7 @@ public extension Field where Value: ExpressibleByNilLiteral {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
         self.codingKey = codingParams?.key
 
-        self.convertorClosure = {[weak self] (key, map) in
-            guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
-                self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
-            }else {
-                self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
-            }
-        }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
-            guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
-                self.wrappedValue >>> (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
-            }else {
-                self.wrappedValue >>> map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
-            }
-        }
+        configMapperOptionalClosure(codingParams: codingParams)
     }
 
     convenience init(key: String? = nil) {

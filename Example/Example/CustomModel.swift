@@ -16,7 +16,7 @@ enum DQGender: String {
     case male = "Male"
 }
 
-class CustomModel: ModelAdaptorMappable {
+class CustomModel: ModelAdaptorMappable, NormalInitialize {
     @Field(key: "123", storageParams: nil)
     var accountID: Int?         //用户ID
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
@@ -44,5 +44,8 @@ class CustomModel: ModelAdaptorMappable {
     @Field(wrappedValue: false,key: "hasFundsPassword")
     var isExchangePasswordValid: Bool    //是否设置了兑换密码
 
+    required init() {
+    }
+    
     required init?(map: Map) { }
 }

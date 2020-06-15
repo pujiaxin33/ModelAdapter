@@ -12,7 +12,12 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        let dao = CustomDAO()
+        let model = CustomModel()
+        try? dao.insert(entity: model)
+//        try? dao.update(entity: model, model.&accountID.expression == 123)
+//        try? dao.delete(model.$amount.expression == Double(123))
     }
 
 
