@@ -16,7 +16,7 @@ enum DQGender: String {
     case male = "Male"
 }
 
-class CustomModel: ModelAdaptorObjectMappable {
+class CustomModel: ModelAdaptorMappable {
     @Field(key: "accountId")
     var accountID: Int?         //用户ID
     @Field

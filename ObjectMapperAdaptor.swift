@@ -8,9 +8,9 @@
 import Foundation
 import ObjectMapper
 
-public protocol ModelAdaptorObjectMappable: Mappable { }
+public protocol ModelAdaptorMappable: Mappable { }
 
-public extension ModelAdaptorObjectMappable {
+public extension ModelAdaptorMappable {
     mutating func mapping(map: Map) {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
@@ -38,9 +38,9 @@ public extension ModelAdaptorObjectMappable {
     }
 }
 
-public protocol ModelAdaptorObjectImmutableMappable: ImmutableMappable { }
+public protocol ModelAdaptorImmutableMappable: ImmutableMappable { }
 
-public extension ModelAdaptorObjectImmutableMappable {
+public extension ModelAdaptorImmutableMappable {
     mutating func mapping(map: Map) {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
