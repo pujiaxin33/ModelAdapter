@@ -38,7 +38,7 @@ open class StorageParams {
     public let key: String?
     public var codingKey: String?
     public var storageKey: String?
-    public var projectedValue: Field<Value> { self }
+    public var projectedValue: Field { self }
     var convertorClosure: ((String,Map) -> ())?
     var immutableConvertorClosure: ((String, Map) -> ())?
 
@@ -73,7 +73,17 @@ open class StorageParams {
     }
 }
 
+public struct FieldWrapper<Base> {
+    public let base: Base
+    init(_ base: Base) {
+        self.base = base
+    }
+}
+
 public extension Field where Value: ExpressibleByNilLiteral {
+//    var projectedValue: FieldWrapper<Field> { FieldWrapper(self) }
+    var projectedValue: Field { self }
+
     convenience init<Convertor: TransformType>(key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object? == Value {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
         self.codingKey = codingParams?.key

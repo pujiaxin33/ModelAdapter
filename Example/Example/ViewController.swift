@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import SQLite
+import ModelAdaptor
 
 class ViewController: UIViewController {
 
@@ -16,8 +18,10 @@ class ViewController: UIViewController {
         let dao = CustomDAO()
         let model = CustomModel()
         try? dao.insert(entity: model)
+//        let entity: Field<Bool> = model.&isExchangePasswordValid
 //        try? dao.update(entity: model, model.&accountID.expression == 123)
-//        try? dao.delete(model.$amount.expression == Double(123))
+        try? dao.delete(model.$vipLevel.expression == 123)
+        
     }
 
 

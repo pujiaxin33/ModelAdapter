@@ -23,9 +23,9 @@ public protocol ModelAdaptorDAO {
     func insert(entity: Entity) throws
     func inset(entities: [Entity]) throws
     func deleteAll() throws
-    func delete(_ predicate: SQLite.Expression<Bool?>) throws
-    func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws
-    func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity?
+    func delete(_ predicate: SQLite.Expression<Bool>) throws
+    func update(entity: Entity, _ predicate: SQLite.Expression<Bool>) throws
+    func query(_ predicate: SQLite.Expression<Bool>) throws -> Entity?
     func queryAll() throws -> [Entity]?
 }
 
@@ -71,11 +71,11 @@ public extension ModelAdaptorDAO {
         try connection.run(table.delete())
     }
 
-    func delete(_ predicate: SQLite.Expression<Bool?>) throws {
+    func delete(_ predicate: SQLite.Expression<Bool>) throws {
         try connection.run(table.filter(predicate).delete())
     }
 
-    func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws {
+    func update(entity: Entity, _ predicate: SQLite.Expression<Bool>) throws {
         let alice = table.filter(predicate)
         let mirror = Mirror(reflecting: self)
         var setters = [Setter]()
@@ -94,7 +94,7 @@ public extension ModelAdaptorDAO {
         try connection.run(alice.update(setters))
     }
 
-    func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity? {
+    func query(_ predicate: SQLite.Expression<Bool>) throws -> Entity? {
         let alice = table.filter(predicate)
         guard let rows = try? connection.prepare(alice), let row = rows.first(where: { (_) -> Bool in
             return true

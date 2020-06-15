@@ -9,6 +9,7 @@
 import Foundation
 import ModelAdaptor
 import ObjectMapper
+import SQLite
 
 enum DQGender: String {
     case unknow = "UnKnown"
@@ -20,10 +21,10 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
     @Field(key: "123", storageParams: nil)
     var accountID: Int?         //用户ID
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
-    var userName: String?       //账号
+    var userName: String = "123"       //账号
     @Field
     var nickName: String?       //昵称
-    @Field
+    @Field(key: "123")
     var amount: Double = 0            // 账户余额
     @Field
     var phone: String?          //手机号
@@ -38,14 +39,21 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
     @Field
     var levelPoints: Int = 0   //当前等级值
     @Field
-    var downPoints: Int = 0
+    var downPoints: Int?
     @Field(codingParams: .init(convertor: DQDateTransform()))
     var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
     @Field(wrappedValue: false,key: "hasFundsPassword")
     var isExchangePasswordValid: Bool    //是否设置了兑换密码
 
     required init() {
+        
     }
     
     required init?(map: Map) { }
+
+    func deleteExpression() -> Expression<Bool> {
+//        return _l
+//        let some = _downPoints.expression
+        return _levelPoints.expression >= 12
+    }
 }
