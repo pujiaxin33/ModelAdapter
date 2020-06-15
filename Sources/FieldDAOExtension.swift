@@ -35,21 +35,8 @@ public extension Field where Value: SQLite.Value {
     }
 }
 
-//extension Optional: Expressible where Wrapped: Expressible {
-//    public var expression: Expression<Void> {
-//        <#code#>
-//    }
-//
-//    <#witnesses#>
-//}
 
-//extension Optional: SQLite.Value where Wrapped: SQLite.Value {
-//    public typealias Datatype = Wrapped
-//
-//
-//}
-
-//public extension Field where Value: SQLite.Value  {
+public extension Field where Value == SQLite.Value.ValueType?  {
 //    var expression: Expression<Value> {
 //        set {
 //            objc_setAssociatedObject(self, &AssociatedKeys.expression, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -70,4 +57,4 @@ public extension Field where Value: SQLite.Value {
 //    func update(row: Row) {
 //        self.wrappedValue = row[expression]
 //    }
-//}
+}
