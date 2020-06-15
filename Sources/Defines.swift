@@ -114,8 +114,6 @@ public extension Field where Value: ExpressibleByNilLiteral {
     }
 }
 
-extension Field: EntityWrappedAny { }
-
 
 
 

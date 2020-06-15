@@ -17,7 +17,7 @@ public extension ModelAdaptorObjectMappable {
             guard let propertyName = child.label else {
                 continue
             }
-            guard let value = child.value as? EntityWrappedAny else {
+            guard let value = child.value as? FieldWrappedProtocol else {
                 continue
             }
             value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
@@ -47,7 +47,7 @@ public extension ModelAdaptorObjectImmutableMappable {
             guard let propertyName = child.label else {
                 continue
             }
-            guard let value = child.value as? EntityWrappedAny else {
+            guard let value = child.value as? FieldWrappedProtocol else {
                 continue
             }
             value.immutableConvertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
@@ -68,10 +68,12 @@ public extension ModelAdaptorObjectImmutableMappable {
     }
 }
 
-protocol EntityWrappedAny {
+protocol FieldWrappedProtocol {
     var key: String? { get }
     var codingKey: String? { get }
     var storageKey: String? { get }
     var convertorClosure: ((String, Map)->())? { get }
     var immutableConvertorClosure: ((String, Map)->())? { get }
 }
+
+extension Field: FieldWrappedProtocol { }
