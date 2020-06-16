@@ -42,8 +42,8 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
     var downPoints: Int?
     @Field(codingParams: .init(convertor: DQDateTransform()))
     var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
-    @Field(wrappedValue: false,key: "hasFundsPassword")
-    var isExchangePasswordValid: Bool    //是否设置了兑换密码
+    @Field(wrappedValue: false, key: "hasFundsPassword")
+    var isExchangePasswordValid: Bool   //是否设置了兑换密码
 
     required init() {
         
@@ -56,4 +56,8 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
 //        let some = _downPoints.expression
         return _levelPoints.expression >= 12
     }
+}
+
+extension CustomModel: SQLiteValueProvider {
+    typealias SQLiteValue = String
 }

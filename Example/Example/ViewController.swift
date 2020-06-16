@@ -20,8 +20,11 @@ class ViewController: UIViewController {
         try? dao.insert(entity: model)
 //        let entity: Field<Bool> = model.&isExchangePasswordValid
 //        try? dao.update(entity: model, model.&accountID.expression == 123)
+        let some = model.$accountID
+        let name = model.$nickName
         try? dao.delete(model.$vipLevel.expression == 123)
-        
+//        try? dao.update(entity: model, model.$accountID.expression == 123)
+        let ex = Expression<String?>("123")
     }
 
 

@@ -73,17 +73,7 @@ open class StorageParams {
     }
 }
 
-public struct FieldWrapper<Base> {
-    public let base: Base
-    init(_ base: Base) {
-        self.base = base
-    }
-}
-
 public extension Field where Value: ExpressibleByNilLiteral {
-//    var projectedValue: FieldWrapper<Field> { FieldWrapper(self) }
-    var projectedValue: Field { self }
-
     convenience init<Convertor: TransformType>(key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object? == Value {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
         self.codingKey = codingParams?.key

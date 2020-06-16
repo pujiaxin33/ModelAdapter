@@ -24,8 +24,11 @@ public protocol ModelAdaptorDAO {
     func inset(entities: [Entity]) throws
     func deleteAll() throws
     func delete(_ predicate: SQLite.Expression<Bool>) throws
+    func delete(_ predicate: SQLite.Expression<Bool?>) throws
     func update(entity: Entity, _ predicate: SQLite.Expression<Bool>) throws
+    func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws
     func query(_ predicate: SQLite.Expression<Bool>) throws -> Entity?
+    func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity?
     func queryAll() throws -> [Entity]?
 }
 
@@ -75,6 +78,10 @@ public extension ModelAdaptorDAO {
         try connection.run(table.filter(predicate).delete())
     }
 
+    func delete(_ predicate: SQLite.Expression<Bool?>) throws {
+        try connection.run(table.filter(predicate).delete())
+    }
+
     func update(entity: Entity, _ predicate: SQLite.Expression<Bool>) throws {
         let alice = table.filter(predicate)
         let mirror = Mirror(reflecting: self)
@@ -94,7 +101,49 @@ public extension ModelAdaptorDAO {
         try connection.run(alice.update(setters))
     }
 
+    func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws {
+        //todo:
+        let alice = table.filter(predicate)
+        let mirror = Mirror(reflecting: self)
+        var setters = [Setter]()
+        for child in mirror.children {
+            guard let _ = child.label else {
+                continue
+            }
+            guard let value = child.value as? FieldWrappedProtocol else {
+                continue
+            }
+            guard let setter = value.setter() else {
+                continue
+            }
+            setters.append(setter)
+        }
+        try connection.run(alice.update(setters))
+    }
+
     func query(_ predicate: SQLite.Expression<Bool>) throws -> Entity? {
+        let alice = table.filter(predicate)
+        guard let rows = try? connection.prepare(alice), let row = rows.first(where: { (_) -> Bool in
+            return true
+        }) else {
+            return nil
+        }
+        let entity = Entity()
+        let mirror = Mirror(reflecting: entity)
+        for child in mirror.children {
+            guard let _ = child.label else {
+                continue
+            }
+            guard let value = child.value as? FieldWrappedProtocol else {
+                continue
+            }
+            value.update(row: row)
+        }
+        return entity
+    }
+
+    func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity? {
+        //todo:
         let alice = table.filter(predicate)
         guard let rows = try? connection.prepare(alice), let row = rows.first(where: { (_) -> Bool in
             return true
