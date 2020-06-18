@@ -28,8 +28,15 @@ extension Field: FieldWrappedProtocol {
     func setter() -> Setter? {
         return nil
     }
-    func initExpresionIfNeeded(key: String) {}
+    func initExpresionIfNeeded(key: String) {
+        //todo:没有走extension里面的方法
+        print("123")
+    }
     func update(row: Row) {}
-    func createColumn(tableBuilder: TableBuilder) {}
-    func addColumn(table: Table) {}
+    func createColumn(tableBuilder: TableBuilder) {
+        print("create")
+    }
+    func addColumn(table: Table) {
+        print("add")
+    }
 }

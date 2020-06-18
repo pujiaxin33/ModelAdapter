@@ -43,6 +43,11 @@ public extension ModelAdaptorDAO {
             guard let value = child.value as? FieldWrappedProtocol else {
                 continue
             }
+            
+            if let ex = child.value as? DAOExtension {
+                ex.test()
+            }
+
             value.initExpresionIfNeeded(key: codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
         }
         _ = try? connection.run(table.create(ifNotExists: true) { t in

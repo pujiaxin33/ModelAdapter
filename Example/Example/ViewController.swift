@@ -29,6 +29,8 @@ class ViewController: UIViewController {
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
         let queryAll = try? dao.queryAll()
 
+        let test = Expression<NestModel>("123")
+
     }
 
     func createModel() -> CustomModel {

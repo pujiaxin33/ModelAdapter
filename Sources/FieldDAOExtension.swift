@@ -106,7 +106,11 @@ public extension Field where Value: SQLiteValueProvider {
     }
 }
 
-public extension Field where Value: SQLiteValueProvider, Value: ExpressibleByNilLiteral {
+public protocol DAOExtension {
+    func test()
+}
+
+extension Field: DAOExtension where Value: SQLiteValueProvider, Value: ExpressibleByNilLiteral {
     var expressionOptional: Expression<Value.SQLiteValue?> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expressionOptional, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -116,14 +120,19 @@ public extension Field where Value: SQLiteValueProvider, Value: ExpressibleByNil
         }
     }
 
-    func setter() -> Setter? {
-        if let value = self.wrappedValue.value() {
-            return self.expressionOptional <- value
-        }
-        return nil
+    public func test() {
+        initExpresionIfNeeded1(key: "123")
     }
 
-    func initExpresionIfNeeded(key: String) {
+    func setter() -> Setter? {
+//        if let value = self.wrappedValue.value() {
+//            return self.expressionOptional <- value
+//        }
+//        return nil
+        return self.expressionOptional <- self.wrappedValue.value()
+    }
+
+    func initExpresionIfNeeded1(key: String) {
         self.expressionOptional = Expression<Value.SQLiteValue?>(key)
     }
 
