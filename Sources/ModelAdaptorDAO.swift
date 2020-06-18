@@ -8,7 +8,7 @@
 import Foundation
 import SQLite
 
-public protocol NormalInitialize: class {
+public protocol NormalInitialize {
     init()
 }
 
@@ -19,9 +19,9 @@ public protocol ModelAdaptorDAO {
 
     init()
 
-    func initExpressions()
+    func createTable(ifNotExists: Bool)
     func insert(entity: Entity) throws
-    func inset(entities: [Entity]) throws
+    func insert(entities: [Entity]) throws
     func deleteAll() throws
     func delete(_ predicate: SQLite.Expression<Bool>) throws
     func delete(_ predicate: SQLite.Expression<Bool?>) throws
@@ -33,9 +33,9 @@ public protocol ModelAdaptorDAO {
 }
 
 public extension ModelAdaptorDAO {
-    func initExpressions() {
-        let mirror = Mirror(reflecting: self)
-
+    func createTable(ifNotExists: Bool = true) {
+        let object = Entity()
+        let mirror = Mirror(reflecting: object)
         for child in mirror.children {
             guard let propertyName = child.label else {
                 continue
@@ -45,7 +45,26 @@ public extension ModelAdaptorDAO {
             }
             value.initExpresionIfNeeded(key: codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
         }
+        _ = try? connection.run(table.create(ifNotExists: true) { t in
+            for child in mirror.children {
+                guard let value = child.value as? FieldWrappedProtocol else {
+                    continue
+                }
+                if value.storageVersion ?? 1 == 1 {
+                    value.createColumn(tableBuilder: t)
+                }
+            }
+        })
+        for child in mirror.children {
+            guard let value = child.value as? FieldWrappedProtocol else {
+                continue
+            }
+            if value.storageVersion ?? 1 > 1 {
+                value.addColumn(table: table)
+            }
+        }
     }
+
     func insert(entity: Entity) throws {
         let mirror = Mirror(reflecting: self)
         var setters = [Setter]()
@@ -64,7 +83,7 @@ public extension ModelAdaptorDAO {
         try connection.run(table.insert(setters))
     }
 
-    func inset(entities: [Entity]) throws {
+    func insert(entities: [Entity]) throws {
         for entity in entities {
             try insert(entity: entity)
         }

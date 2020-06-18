@@ -16,7 +16,6 @@ class CustomDAO: ModelAdaptorDAO {
     var table: Table = Table("user")
 
     required init() {
-        initExpressions()
     }
 
 

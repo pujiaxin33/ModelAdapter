@@ -27,9 +27,11 @@ open class CodingParams<Convertor: TransformType>{
 }
 
 open class StorageParams {
-    public var key: String?
-    public init(key: String?) {
+    public let key: String?
+    public let version: Int
+    public init(key: String?, version: Int = 1) {
         self.key = key
+        self.version = version
     }
 }
 
@@ -38,8 +40,9 @@ open class StorageParams {
     public let key: String?
     public var codingKey: String?
     public var storageKey: String?
+    public var storageVersion: Int?
     public var projectedValue: Field { self }
-    var convertorClosure: ((String,Map) -> ())?
+    var convertorClosure: ((String, Map) -> ())?
     var immutableConvertorClosure: ((String, Map) -> ())?
 
     public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
@@ -47,6 +50,7 @@ open class StorageParams {
         self.key = key
         self.codingKey = codingParams?.key
         self.storageKey = storageParams?.key
+        self.storageVersion = storageParams?.version
 
         configMapperClosure(codingParams: codingParams)
     }
