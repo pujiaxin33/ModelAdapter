@@ -70,15 +70,17 @@ public extension ModelAdaptorImmutableMappable {
 }
 
 
+public struct NilJSON {
+}
 
 public class NilTransform<NilValue>: TransformType {
     public typealias Object = NilValue
-    public typealias JSON = Int
+    public typealias JSON = NilJSON
     public func transformFromJSON(_ value: Any?) -> Object? {
         return nil
     }
-    public func transformToJSON(_ value: Object?) -> JSON? {
-        return nil
+    public func transformToJSON(_ value: Object?) -> NilJSON? {
+        return NilJSON()
     }
     public init() { }
 }

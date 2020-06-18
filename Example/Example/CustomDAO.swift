@@ -12,7 +12,7 @@ import SQLite
 
 class CustomDAO: ModelAdaptorDAO {
     typealias Entity = CustomModel
-    var connection: Connection = try! Connection("123")
+    var connection: Connection = try! Connection("\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/db.sqlite3")
     var table: Table = Table("user")
 
     required init() {

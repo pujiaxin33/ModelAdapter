@@ -18,14 +18,14 @@ enum DQGender: String {
 }
 
 class CustomModel: ModelAdaptorMappable, NormalInitialize {
-    @Field(key: "accountID", storageParams: nil)
+    @Field(key: "accountID_key", storageParams: nil)
     var accountID: Int?         //用户ID
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
     var userName: String = "名字"       //账号
     @Field(key: "nick_name")
     var nickName: String?       //昵称
     @Field(key: "amount")
-    var amount: Double = 0            // 账户余额
+    var amount: Double = 6            // 账户余额
     @Field
     var phone: String?          //手机号
     @Field
