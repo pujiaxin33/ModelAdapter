@@ -45,32 +45,37 @@ open class StorageParams {
     var convertorClosure: ((String, Map) -> ())?
     var immutableConvertorClosure: ((String, Map) -> ())?
 
-    public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
+    public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
         self.key = key
         self.codingKey = codingParams?.key
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-        configMapperClosure(codingParams: codingParams)
+        configMapperConvertorClosure(codingParams: codingParams)
     }
     convenience public init(wrappedValue: Value) {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: nil)
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
     }
     convenience public init(wrappedValue: Value, key: String?) {
-        self.init(wrappedValue: wrappedValue, key: key, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: nil)
+        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
     }
     convenience public init(wrappedValue: Value, storageParams: StorageParams?) {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: storageParams)
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
     }
-    convenience public init(wrappedValue: Value, key: String?, storageParams: StorageParams?) {
-        self.init(wrappedValue: wrappedValue, key: key, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: storageParams)
+    public init(wrappedValue: Value, key: String?, storageParams: StorageParams?) {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.storageKey = storageParams?.key
+        self.storageVersion = storageParams?.version
+
+        configMapperClosure()
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
@@ -82,26 +87,28 @@ public extension Field where Value: ExpressibleByNilLiteral {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
         self.codingKey = codingParams?.key
 
-        configMapperOptionalClosure(codingParams: codingParams)
+        configMapperOptionalConvertorClosure(codingParams: codingParams)
     }
 
-    convenience init(key: String? = nil) {
-        self.init(wrappedValue: nil, key: nil)
+    convenience init(key: String?) {
+        self.init(key: key, storageParams: nil)
     }
     convenience init<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
         self.init(key: nil, codingParams: codingParams, storageParams: nil)
     }
+
     convenience init(key: String?, storageParams: StorageParams?) {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
+
+        configMapperOptionalClosure()
     }
+
     convenience init<Convertor: TransformType>(key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
         self.init(key: key, codingParams: codingParams, storageParams: nil)
     }
-    convenience init(wrappedValue: Value, key: String?, storageParams: StorageParams?) {
-        self.init(wrappedValue: wrappedValue, key: key, codingParams: CodingParams(key: nil, convertor: NilTransform<Value>()), storageParams: storageParams)
-    }
-    convenience init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
+
+    convenience init<Convertor: TransformType>(codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object? == Value {
+        self.init(key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }
 

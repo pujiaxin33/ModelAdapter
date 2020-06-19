@@ -9,13 +9,21 @@ import Foundation
 import ObjectMapper
 
 extension Field {
-    func configMapperClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
+    func configMapperClosure() {
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+             self.wrappedValue >>> map[key]
+        }
+    }
+
+    func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
-                if key == "birthday_coding" {
-                    print("213")
-                }
                 self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
             }else {
                 self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
@@ -31,15 +39,23 @@ extension Field {
         }
     }
 
-    func configMapperOptionalClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
+    func configMapperOptionalClosure() {
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+             self.wrappedValue >>> map[key]
+        }
+    }
+
+    func configMapperOptionalConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor.transformToJSON(nil) is NilJSON) {
                 self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
             }else {
-                if key == "birthday_coding" {
-                    print("213")
-                }
                 self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
             }
         }

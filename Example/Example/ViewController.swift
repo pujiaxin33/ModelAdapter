@@ -15,10 +15,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let dao = CustomDAO()
-        dao.createTable()
+//        let dao = CustomDAO()
+//        dao.createTable()
         let model = createModel()
-        try? dao.insert(entity: model)
+        print(model)
+//        try? dao.insert(entity: model)
 //        try? dao.insert(entities: [model])
 //        try? dao.delete(model.$vipLevel.expression == 123)
 //        try? dao.delete(model.$accountID.expressionOptional > 100)
@@ -27,28 +28,32 @@ class ViewController: UIViewController {
 //        try? dao.update(entity: model, model.$amount.expression == 333)
 //        let queryOne = try? dao.query(model.$birthday.expressionOptional == Date())
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
-        let queryAll = try? dao.queryAll()
+//        let queryAll = try? dao.queryAll()
 
-        let test = Expression<NestModel>("123")
+//        let test = Expression<NestModel>("123")
 
     }
 
     func createModel() -> CustomModel {
-        let nestModel = NestModel(JSON: ["nest_name" : "嵌套名字", "age" : 123])
-        let jsonDict = ["accountID_key" : 123,
+        //todo:嵌套
+//        let nestModel = NestModel(JSON: ["nest_name" : "嵌套名字", "age" : 123])
+        let jsonDict = [
+                        "accountID_key" : 123,
                         "userName" : "用户名",
                         "nick_name" : "昵称",
-                        "amount" : 100,
+                        "amount" : Double(100),
                         "phone" : "123123123",
                         "gender" : DQGender.male,
                         "avatar_key" : "avatar",
-                        "birthday_coding" : Double(123123),
+                        "birthday_coding" : "2020-08-08 06:06:06",
                         "level" : 10,
                         "levelPoints" : 99,
                         "downPoints" : 88,
-                        "registerDate" : Double(333221),
+                        "registerDate" : "2020-08-08 06:06:06",
                         "hasFundsPassword" : true,
-                        "nest" : nestModel! ] as [String : Any]
+//                        "nest" : ["nest_name" : "嵌套名字", "age" : 123]
+            ] as [String : Any]
+//
         let model = CustomModel(JSON: jsonDict)
         return model!
     }
