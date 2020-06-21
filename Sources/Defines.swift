@@ -52,7 +52,12 @@ open class StorageParams {
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-        configMapperConvertorClosure(codingParams: codingParams)
+
+        if let aClass = self as? BaseMappableWrappedProtocol {
+            aClass.configBase()
+        }else {
+            configMapperConvertorClosure(codingParams: codingParams)
+        }
     }
     convenience public init(wrappedValue: Value) {
         self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
@@ -75,7 +80,11 @@ open class StorageParams {
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-        configMapperClosure()
+        if let aClass = self as? BaseMappableWrappedProtocol {
+            aClass.configBase()
+        }else {
+            configMapperClosure()
+        }
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
@@ -87,7 +96,15 @@ public extension Field where Value: ExpressibleByNilLiteral {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
         self.codingKey = codingParams?.key
 
-        configMapperOptionalConvertorClosure(codingParams: codingParams)
+        if let aClass = self as? BaseMappableWrappedOptionalProtocol {
+            aClass.configBaseOptional()
+        }else {
+            configMapperOptionalConvertorClosure(codingParams: codingParams)
+        }
+    }
+
+    convenience init(wrappedValue: Value) {
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
     }
 
     convenience init(key: String?) {
@@ -100,7 +117,12 @@ public extension Field where Value: ExpressibleByNilLiteral {
     convenience init(key: String?, storageParams: StorageParams?) {
         self.init(wrappedValue: nil, key: key, storageParams: storageParams)
 
-        configMapperOptionalClosure()
+        if let aClass = self as? BaseMappableWrappedOptionalProtocol {
+            aClass.configBaseOptional()
+        }else {
+            //todo:
+            configMapperOptionalClosure()
+        }
     }
 
     convenience init<Convertor: TransformType>(key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
@@ -111,7 +133,6 @@ public extension Field where Value: ExpressibleByNilLiteral {
         self.init(key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }
-
 
 
 

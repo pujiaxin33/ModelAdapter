@@ -40,19 +40,14 @@ public extension ModelAdaptorDAO {
             guard let propertyName = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
-            
-            if let ex = child.value as? DAOExtension {
-                ex.test()
-            }
-
             value.initExpresionIfNeeded(key: codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
         }
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
-                guard let value = child.value as? FieldWrappedProtocol else {
+                guard let value = child.value as? FieldStorgeWrappedProtocol else {
                     continue
                 }
                 if value.storageVersion ?? 1 == 1 {
@@ -61,7 +56,7 @@ public extension ModelAdaptorDAO {
             }
         })
         for child in mirror.children {
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             if value.storageVersion ?? 1 > 1 {
@@ -77,7 +72,7 @@ public extension ModelAdaptorDAO {
             guard let _ = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             guard let setter = value.setter() else {
@@ -114,7 +109,7 @@ public extension ModelAdaptorDAO {
             guard let _ = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             guard let setter = value.setter() else {
@@ -126,7 +121,6 @@ public extension ModelAdaptorDAO {
     }
 
     func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws {
-        //todo:
         let alice = table.filter(predicate)
         let mirror = Mirror(reflecting: self)
         var setters = [Setter]()
@@ -134,7 +128,7 @@ public extension ModelAdaptorDAO {
             guard let _ = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             guard let setter = value.setter() else {
@@ -158,7 +152,7 @@ public extension ModelAdaptorDAO {
             guard let _ = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             value.update(row: row)
@@ -167,7 +161,6 @@ public extension ModelAdaptorDAO {
     }
 
     func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity? {
-        //todo:
         let alice = table.filter(predicate)
         guard let rows = try? connection.prepare(alice), let row = rows.first(where: { (_) -> Bool in
             return true
@@ -180,7 +173,7 @@ public extension ModelAdaptorDAO {
             guard let _ = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldWrappedProtocol else {
+            guard let value = child.value as? FieldStorgeWrappedProtocol else {
                 continue
             }
             value.update(row: row)
@@ -200,7 +193,7 @@ public extension ModelAdaptorDAO {
                 guard let _ = child.label else {
                     continue
                 }
-                guard let value = child.value as? FieldWrappedProtocol else {
+                guard let value = child.value as? FieldStorgeWrappedProtocol else {
                     continue
                 }
                 value.update(row: row)

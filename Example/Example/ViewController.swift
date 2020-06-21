@@ -51,7 +51,7 @@ class ViewController: UIViewController {
                         "downPoints" : 88,
                         "registerDate" : "2020-08-08 06:06:06",
                         "hasFundsPassword" : true,
-//                        "nest" : ["nest_name" : "嵌套名字", "age" : 123]
+                        "nest" :  ["nest_name" : "嵌套名字", "age" : 123]
             ] as [String : Any]
 //
         let model = CustomModel(JSON: jsonDict)

@@ -8,6 +8,37 @@
 import Foundation
 import ObjectMapper
 
+extension Field : FieldMappableWrappedProtocol {
+    
+}
+
+extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
+   
+    func configBase() {
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+             self.wrappedValue >>> map[key]
+        }
+    }
+}
+
+extension Field: BaseMappableWrappedOptionalProtocol where Value == Optional<BaseMappable> {
+    func configBaseOptional() {
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+             self.wrappedValue >>> map[key]
+        }
+    }
+}
+
 extension Field {
     func configMapperClosure() {
         self.convertorClosure = {[weak self] (key, map) in
@@ -39,6 +70,7 @@ extension Field {
         }
     }
 
+    //todo:确保wrappedValue是optional
     func configMapperOptionalClosure() {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }

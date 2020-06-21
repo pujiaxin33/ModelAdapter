@@ -11,11 +11,19 @@ import SQLite
 
 protocol FieldWrappedProtocol {
     var key: String? { get }
+}
+
+extension Field: FieldWrappedProtocol { }
+
+protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
     var codingKey: String? { get }
-    var storageKey: String? { get }
-    var storageVersion: Int? { get }
     var convertorClosure: ((String, Map)->())? { get }
     var immutableConvertorClosure: ((String, Map)->())? { get }
+}
+
+protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
+    var storageKey: String? { get }
+    var storageVersion: Int? { get }
 
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table)
@@ -24,19 +32,10 @@ protocol FieldWrappedProtocol {
     func update(row: Row)
 }
 
-extension Field: FieldWrappedProtocol {
-    func setter() -> Setter? {
-        return nil
-    }
-    func initExpresionIfNeeded(key: String) {
-        //todo:没有走extension里面的方法
-        print("123")
-    }
-    func update(row: Row) {}
-    func createColumn(tableBuilder: TableBuilder) {
-        print("create")
-    }
-    func addColumn(table: Table) {
-        print("add")
-    }
+protocol BaseMappableWrappedProtocol {
+    func configBase()
 }
+protocol BaseMappableWrappedOptionalProtocol {
+    func configBaseOptional()
+}
+

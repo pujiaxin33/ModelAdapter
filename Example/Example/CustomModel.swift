@@ -45,7 +45,7 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
     @Field(wrappedValue: false, key: "hasFundsPassword")
     var isExchangePasswordValid: Bool   //是否设置了兑换密码
     @Field
-    var nest: NestModel?
+    var nest: NestModel = NestModel(JSON: [String : Any]())!
 
     required init() {}
 

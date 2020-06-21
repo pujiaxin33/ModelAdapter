@@ -72,7 +72,7 @@ extension Date: SQLiteValueProvider {
     }
 }
 
-public extension Field where Value: SQLiteValueProvider {
+extension Field: FieldStorgeWrappedProtocol where Value: SQLiteValueProvider {
     var expression: Expression<Value.SQLiteValue> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expression, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -105,12 +105,8 @@ public extension Field where Value: SQLiteValueProvider {
         _ = table.addColumn(expression, defaultValue: self.wrappedValue.value()!)
     }
 }
-
-public protocol DAOExtension {
-    func test()
-}
-
-extension Field: DAOExtension where Value: SQLiteValueProvider, Value: ExpressibleByNilLiteral {
+//todo:FieldStorgeWrappedProtocol  确定是否会调用这里的扩展方法
+extension Field where Value: SQLiteValueProvider, Value: ExpressibleByNilLiteral {
     var expressionOptional: Expression<Value.SQLiteValue?> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expressionOptional, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -118,10 +114,6 @@ extension Field: DAOExtension where Value: SQLiteValueProvider, Value: Expressib
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as! Expression<Value.SQLiteValue?>
         }
-    }
-
-    public func test() {
-        initExpresionIfNeeded1(key: "123")
     }
 
     func setter() -> Setter? {
