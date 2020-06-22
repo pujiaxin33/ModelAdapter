@@ -42,8 +42,8 @@ open class StorageParams {
     public var storageKey: String?
     public var storageVersion: Int?
     public var projectedValue: Field { self }
-    var convertorClosure: ((String, Map) -> ())?
-    var immutableConvertorClosure: ((String, Map) -> ())?
+    public var convertorClosure: ((String, Map) -> ())?
+    public var immutableConvertorClosure: ((String, Map) -> ())?
 
     public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue

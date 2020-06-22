@@ -9,12 +9,12 @@ import Foundation
 import ObjectMapper
 
 extension Field : FieldMappableWrappedProtocol {
-    
+
 }
 
 extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
    
-    func configBase() {
+    public func configBase() {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
@@ -27,7 +27,7 @@ extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
 }
 
 extension Field: BaseMappableWrappedOptionalProtocol where Value == Optional<BaseMappable> {
-    func configBaseOptional() {
+    public func configBaseOptional() {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]

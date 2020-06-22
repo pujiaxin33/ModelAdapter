@@ -15,14 +15,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        let dao = CustomDAO()
-//        dao.createTable()
+        let dao = CustomDAO()
+        dao.createTable()
         let model = createModel()
         print(model)
-//        try? dao.insert(entity: model)
+        try? dao.insert(entity: model)
 //        try? dao.insert(entities: [model])
 //        try? dao.delete(model.$vipLevel.expression == 123)
-//        try? dao.delete(model.$accountID.expressionOptional > 100)
+        try? dao.delete(model.$accountID.expressionOptional > 100)
 //        try? dao.deleteAll()
 //        try? dao.update(entity: model, model.$nickName.expressionOptional == "xinxin")
 //        try? dao.update(entity: model, model.$amount.expression == 333)
