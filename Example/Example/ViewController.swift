@@ -19,10 +19,10 @@ class ViewController: UIViewController {
         dao.createTable()
         let model = createModel()
         print(model)
-        try? dao.insert(entity: model)
+//        try? dao.insert(entity: model)
 //        try? dao.insert(entities: [model])
 //        try? dao.delete(model.$vipLevel.expression == 123)
-        try? dao.delete(model.$accountID.expressionOptional > 100)
+//        try? dao.delete(model.$accountID.expressionOptional > 100)
 //        try? dao.deleteAll()
 //        try? dao.update(entity: model, model.$nickName.expressionOptional == "xinxin")
 //        try? dao.update(entity: model, model.$amount.expression == 333)
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
                         "userName" : "用户名",
                         "nick_name" : "昵称",
                         "amount" : Double(100),
-                        "phone" : "123123123",
+//                        "phone" : "123123123",
                         "gender" : DQGender.male,
                         "avatar_key" : "avatar",
                         "birthday_coding" : "2020-08-08 06:06:06",

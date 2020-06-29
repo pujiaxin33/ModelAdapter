@@ -44,7 +44,7 @@
 		6B146890C0EC6E4921839BA9354720BC /* EnumTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2E6FA97C449868876A3092ACAA4182C /* EnumTransform.swift */; };
 		6C13B0CEE460466B848D25600C5EB8E0 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15FA0E0A3967CF87905A93AA313A606 /* Query.swift */; };
 		6D84E163EFBFFF85BCCC37C833611932 /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4690B721A1359128CE6D217237E63D /* Foundation.swift */; };
-		70701C08AA2A96A07DDD04819F5705B6 /* FieldObjectMapperExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494068F6C47195B30D25AB2541EF009 /* FieldObjectMapperExtension.swift */; };
+		70701C08AA2A96A07DDD04819F5705B6 /* BaseMappableWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5494068F6C47195B30D25AB2541EF009 /* BaseMappableWrappedProtocol.swift */; };
 		749D5EE4A2E7F43C8AD32D8D9580E93E /* TransformOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7A300E458FA3F45A79304551DA886C /* TransformOf.swift */; };
 		74BDCD589BECD40033A0D6379BAB9C58 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86554739DF0790CCE7EE449CB14B801 /* Operators.swift */; };
 		78760A879311A773FAA29D28405C8BF1 /* MapError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FB61C62C33F2C16484DDFFDCE94DB4 /* MapError.swift */; };
@@ -145,7 +145,7 @@
 		49B46DBA673CAFD3DE86AA01F1A32EB7 /* Blob.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Blob.swift; path = Sources/SQLite/Core/Blob.swift; sourceTree = "<group>"; };
 		4DC6F2B563BEC2107715B7E352EF1009 /* SQLite.swift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SQLite.swift-Info.plist"; sourceTree = "<group>"; };
 		4E736AEA0CCB7CE74ADA303BD9C03016 /* CustomFunctions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CustomFunctions.swift; path = Sources/SQLite/Typed/CustomFunctions.swift; sourceTree = "<group>"; };
-		5494068F6C47195B30D25AB2541EF009 /* FieldObjectMapperExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FieldObjectMapperExtension.swift; path = Sources/FieldObjectMapperExtension.swift; sourceTree = "<group>"; };
+		5494068F6C47195B30D25AB2541EF009 /* BaseMappableWrappedProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseMappableWrappedProtocol.swift; path = Sources/BaseMappableWrappedProtocol.swift; sourceTree = "<group>"; };
 		55C0B97FD62DB5CF0231E882066AAD48 /* ModelAdaptor-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ModelAdaptor-Info.plist"; sourceTree = "<group>"; };
 		56C1CB4764260D89F7CA5D715D410330 /* HexColorTransform.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HexColorTransform.swift; path = Sources/HexColorTransform.swift; sourceTree = "<group>"; };
 		5750EC27E5B43AC4DAFFE8DFF289C1B5 /* Value.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Value.swift; path = Sources/SQLite/Core/Value.swift; sourceTree = "<group>"; };
@@ -449,7 +449,7 @@
 				C90F7BF8BDCDE5D1607904BD8E56BAB2 /* Defines.swift */,
 				7321D76A6F2190A2C062F559ECED0766 /* FieldWrappedProtocol.swift */,
 				298D39A7E7C0D542041F8949BBA5FA6C /* ObjectMapperAdaptor.swift */,
-				5494068F6C47195B30D25AB2541EF009 /* FieldObjectMapperExtension.swift */,
+				5494068F6C47195B30D25AB2541EF009 /* BaseMappableWrappedProtocol.swift */,
 				6D1C7820E73D3E7E667DCB448EF12C1D /* ModelAdaptorDAO.swift */,
 				78E7511A6A0B753978A4FFFF2BE6250D /* FieldDAOExtension.swift */,
 				289ACB29266C8B358F7A8800CE334897 /* Pod */,
@@ -672,7 +672,7 @@
 			files = (
 				E6803910F3B567854916BBF05E9BC6C9 /* Defines.swift in Sources */,
 				E1F1517543332D5376036933BE75DE1E /* FieldDAOExtension.swift in Sources */,
-				70701C08AA2A96A07DDD04819F5705B6 /* FieldObjectMapperExtension.swift in Sources */,
+				70701C08AA2A96A07DDD04819F5705B6 /* BaseMappableWrappedProtocol.swift in Sources */,
 				4F95A46F50C67B59CC7CFD6D09FADE53 /* FieldWrappedProtocol.swift in Sources */,
 				59A3BAE636016198D6D9CAB5F86FA1B4 /* ModelAdaptor-dummy.m in Sources */,
 				42331A89D9CBC5FD02F0D8937A9F6E21 /* ModelAdaptorDAO.swift in Sources */,

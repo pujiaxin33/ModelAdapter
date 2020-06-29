@@ -35,6 +35,9 @@ open class StorageParams {
     }
 }
 
+protocol OptionalType {}
+extension Optional: OptionalType {}
+
 @propertyWrapper public class Field<Value> {
     public var wrappedValue: Value
     public let key: String?
@@ -52,7 +55,9 @@ open class StorageParams {
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-
+//        if wrappedValue is ExpressibleByNilLiteral {
+//            assertionFailure("Use FieldOptional when value is optional")
+//        }
         if let aClass = self as? BaseMappableWrappedProtocol {
             aClass.configBase()
         }else {
@@ -80,6 +85,9 @@ open class StorageParams {
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
+//        if wrappedValue is ExpressibleByNilLiteral {
+//            assertionFailure("Use FieldOptional when value is optional")
+//        }
         if let aClass = self as? BaseMappableWrappedProtocol {
             aClass.configBase()
         }else {
@@ -91,46 +99,59 @@ open class StorageParams {
     }
 }
 
-public extension Field where Value: ExpressibleByNilLiteral {
-    convenience init<Convertor: TransformType>(key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object? == Value {
-        self.init(wrappedValue: nil, key: key, storageParams: storageParams)
-        self.codingKey = codingParams?.key
+@propertyWrapper public class FieldOptional<Value> {
+    public var wrappedValue: Value?
+    public let key: String?
+    public var codingKey: String?
+    public var storageKey: String?
+    public var storageVersion: Int?
+    public var projectedValue: FieldOptional { self }
+    public var convertorClosure: ((String, Map) -> ())?
+    public var immutableConvertorClosure: ((String, Map) -> ())?
 
-        if let aClass = self as? BaseMappableWrappedOptionalProtocol {
-            aClass.configBaseOptional()
+    public init<Convertor: TransformType>(wrappedValue: Value?, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object == Value {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.codingKey = codingParams?.key
+        self.storageKey = storageParams?.key
+        self.storageVersion = storageParams?.version
+
+
+        if let aClass = self as? BaseMappableWrappedProtocol {
+            aClass.configBase()
         }else {
-            configMapperOptionalConvertorClosure(codingParams: codingParams)
+            configMapperConvertorClosure(codingParams: codingParams)
         }
     }
-
-    convenience init(wrappedValue: Value) {
+    convenience public init(wrappedValue: Value?) {
         self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
     }
-
-    convenience init(key: String?) {
-        self.init(key: key, storageParams: nil)
+    convenience public init(wrappedValue: Value? = nil, key: String?) {
+        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
     }
-    convenience init<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
-        self.init(key: nil, codingParams: codingParams, storageParams: nil)
+    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
     }
+    convenience public init(wrappedValue: Value? = nil, storageParams: StorageParams?) {
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
+    }
+    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
+    }
+    public init(wrappedValue: Value? = nil, key: String?, storageParams: StorageParams?) {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.storageKey = storageParams?.key
+        self.storageVersion = storageParams?.version
 
-    convenience init(key: String?, storageParams: StorageParams?) {
-        self.init(wrappedValue: nil, key: key, storageParams: storageParams)
-
-        if let aClass = self as? BaseMappableWrappedOptionalProtocol {
-            aClass.configBaseOptional()
+        if let aClass = self as? BaseMappableWrappedProtocol {
+            aClass.configBase()
         }else {
-            //todo:
-            configMapperOptionalClosure()
+            configMapperClosure()
         }
     }
-
-    convenience init<Convertor: TransformType>(key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
-        self.init(key: key, codingParams: codingParams, storageParams: nil)
-    }
-
-    convenience init<Convertor: TransformType>(codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object? == Value {
-        self.init(key: nil, codingParams: codingParams, storageParams: storageParams)
+    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
+        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }
 

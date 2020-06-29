@@ -8,26 +8,10 @@
 import Foundation
 import ObjectMapper
 
-extension Field : FieldMappableWrappedProtocol {
-
-}
+extension Field: FieldMappableWrappedProtocol { }
 
 extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
-   
     public func configBase() {
-        self.convertorClosure = {[weak self] (key, map) in
-            guard let self = self else { return }
-            self.wrappedValue <- map[key]
-        }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
-            guard let self = self else { return }
-             self.wrappedValue >>> map[key]
-        }
-    }
-}
-
-extension Field: BaseMappableWrappedOptionalProtocol where Value == Optional<BaseMappable> {
-    public func configBaseOptional() {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
@@ -69,9 +53,25 @@ extension Field {
             }
         }
     }
+}
 
-    //todo:确保wrappedValue是optional
-    func configMapperOptionalClosure() {
+extension FieldOptional: FieldOptionalMappableWrappedProtocol {}
+
+extension FieldOptional: BaseMappableWrappedProtocol where Value: BaseMappable {
+    public func configBase() {
+        self.convertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+        self.immutableConvertorClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+             self.wrappedValue >>> map[key]
+        }
+    }
+}
+
+extension FieldOptional {
+    func configMapperClosure() {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
@@ -82,10 +82,10 @@ extension Field {
         }
     }
 
-    func configMapperOptionalConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object? == Value {
+    func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.convertorClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor.transformToJSON(nil) is NilJSON) {
+            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
             }else {
                 self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
@@ -93,7 +93,7 @@ extension Field {
         }
         self.immutableConvertorClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
-            if let convertor = codingParams.convertor, !(convertor.transformToJSON(nil) is NilJSON) {
+            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue >>> (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
             }else {
                 self.wrappedValue >>> map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]

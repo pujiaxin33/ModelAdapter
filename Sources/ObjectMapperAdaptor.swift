@@ -18,10 +18,11 @@ public extension ModelAdaptorMappable {
             guard let propertyName = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldMappableWrappedProtocol else {
-                continue
+            if let value = child.value as? FieldMappableWrappedProtocol {
+                value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
+            }else if let value =  child.value as? FieldOptionalMappableWrappedProtocol {
+                value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }
-            value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
         }
     }
 

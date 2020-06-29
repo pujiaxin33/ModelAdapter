@@ -21,6 +21,8 @@ public protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
     var immutableConvertorClosure: ((String, Map)->())? { get }
 }
 
+public protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedProtocol {}
+
 public protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
     var storageKey: String? { get }
     var storageVersion: Int? { get }
@@ -45,8 +47,5 @@ public protocol FieldStorgeOptionalWrappedProtocol: FieldWrappedProtocol {
 
 public protocol BaseMappableWrappedProtocol {
     func configBase()
-}
-public protocol BaseMappableWrappedOptionalProtocol {
-    func configBaseOptional()
 }
 
