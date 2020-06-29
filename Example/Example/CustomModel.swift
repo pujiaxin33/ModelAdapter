@@ -18,17 +18,17 @@ enum DQGender: String {
 }
 
 class CustomModel: ModelAdaptorMappable, NormalInitialize {
-//    @FieldOptional(key: "accountID_key", storageParams: nil)
-//    var accountID: Int?         //用户ID
+    @FieldOptional(key: "accountID_key", storageParams: nil)
+    var accountID: Int?         //用户ID
 //    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
 //    var userName: String = "名字"       //账号
 //    @FieldOptional(key: "nick_name")
 //    var nickName: String?       //昵称
 //    @Field(key: "amount")
 //    var amount: Double = 6            // 账户余额
-    @Field
-    var phone: String?          //手机号
-//    @Field
+//    @FieldOptional
+//    var phone: String?          //手机号
+//    @FieldOptional
 //    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
 //    @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
 //    var avatar: String?         //头像
@@ -38,7 +38,7 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
 //    var vipLevel: Int = 1       //会员等级， 1~5
 //    @Field
 //    var levelPoints: Int = 0   //当前等级值
-//    @Field
+//    @FieldOptional
 //    var downPoints: Int?
 //    @Field(codingParams: .init(convertor: DQDateTransform()))
 //    var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
@@ -46,7 +46,6 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
 //    var isExchangePasswordValid: Bool   //是否设置了兑换密码
 //    @Field
 //    var nest: NestModel = NestModel(JSON: [String : Any]())!
-
 
     required init() {
 
@@ -56,17 +55,12 @@ class CustomModel: ModelAdaptorMappable, NormalInitialize {
 }
 
 
-struct NestModel: SQLiteValueProvider, ModelAdaptorMappable {
-    typealias SQLiteValue = String
+struct NestModel: ModelAdaptorMappable {
 
     @FieldOptional(key: "nest_name")
     var nestName: String?
     @Field(key: "age")
     var nestAge: Int = 0
-
-    func value() -> String? {
-        return toJSONString()
-    }
 
     init?(map: Map) {
 

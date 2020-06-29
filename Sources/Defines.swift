@@ -55,9 +55,9 @@ extension Optional: OptionalType {}
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-//        if wrappedValue is ExpressibleByNilLiteral {
-//            assertionFailure("Use FieldOptional when value is optional")
-//        }
+        if wrappedValue is ExpressibleByNilLiteral {
+            assertionFailure("Use FieldOptional when value is optional")
+        }
         if let aClass = self as? BaseMappableWrappedProtocol {
             aClass.configBase()
         }else {
@@ -85,9 +85,9 @@ extension Optional: OptionalType {}
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
-//        if wrappedValue is ExpressibleByNilLiteral {
-//            assertionFailure("Use FieldOptional when value is optional")
-//        }
+        if wrappedValue is ExpressibleByNilLiteral {
+            assertionFailure("Use FieldOptional when value is optional")
+        }
         if let aClass = self as? BaseMappableWrappedProtocol {
             aClass.configBase()
         }else {

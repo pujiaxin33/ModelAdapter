@@ -24,7 +24,7 @@ public protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
 public protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedProtocol {}
 
 public protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get }
+    var storageKey: String? { get set }
     var storageVersion: Int? { get }
 
     func createColumn(tableBuilder: TableBuilder)
@@ -34,8 +34,8 @@ public protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
     func update(row: Row)
 }
 
-public protocol FieldStorgeOptionalWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get }
+public protocol FieldOptionalStorgeWrappedProtocol: FieldWrappedProtocol {
+    var storageKey: String? { get set }
     var storageVersion: Int? { get }
 
     func createColumn(tableBuilder: TableBuilder)

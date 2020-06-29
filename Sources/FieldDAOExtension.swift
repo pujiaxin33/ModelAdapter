@@ -13,106 +13,30 @@ struct AssociatedKeys {
     static var expressionOptional: UInt8 = 0
 }
 
-public protocol SQLiteValueProvider {
-    associatedtype SQLiteValue: SQLite.Value
-    func value() -> SQLiteValue?
-}
-
-extension Optional: SQLiteValueProvider where Wrapped: SQLiteValueProvider {
-    public typealias SQLiteValue = Wrapped.SQLiteValue
-    public func value() -> Wrapped.SQLiteValue? {
-        switch self {
-        case .none:
-            return nil
-        case .some(let data):
-            return data as? Wrapped.SQLiteValue
-        }
-    }
-}
-//extension Optional: Expressible where Wrapped: Expressible {
-//    public var expression: Expression<Void> {
-//        return Expression<Void>("123")
-//    }
-//}
-//
-//extension Optional: SQLite.Value where Wrapped: SQLite.Value {
-//    public typealias Datatype = Wrapped
-//    public static let declaredDatatype = "REAL"
-//
-//    public static func fromDatatypeValue(_ datatypeValue: Wrapped) -> Wrapped {
-//        return datatypeValue
-//    }
-//    public var datatypeValue: Wrapped {
-//        return self
-//    }
-//}
-
-extension String: SQLiteValueProvider {
-    public typealias SQLiteValue = String
-    public func value() -> String? {
-        return self
-    }
-}
-extension Double: SQLiteValueProvider {
-    public typealias SQLiteValue = Double
-    public func value() -> Double? {
-        return self
-    }
-}
-extension Int64: SQLiteValueProvider {
-    public typealias SQLiteValue = Int64
-    public func value() -> Int64? {
-        return self
-    }
-}
-extension Blob: SQLiteValueProvider {
-    public typealias SQLiteValue = Blob
-    public func value() -> Blob? {
-        return self
-    }
-}
-extension Bool: SQLiteValueProvider {
-    public typealias SQLiteValue = Bool
-    public func value() -> Bool? {
-        return self
-    }
-}
-extension Int: SQLiteValueProvider {
-    public typealias SQLiteValue = Int
-    public func value() -> Int? {
-        return self
-    }
-}
-extension Date: SQLiteValueProvider {
-    public typealias SQLiteValue = Date
-    public func value() -> Date? {
-        return self
-    }
-}
-
-extension Field: FieldStorgeWrappedProtocol where Value: SQLiteValueProvider {
-    public var expression: Expression<Value.SQLiteValue> {
+extension Field: FieldStorgeWrappedProtocol where Value: SQLite.Value {
+    public var expression: Expression<Value> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expression, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.expression) as! Expression<Value.SQLiteValue>
+            if let result = objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as? Expression<Value> {
+                return result
+            }
+            initExpresionIfNeeded(key: storageKey!)
+            return objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as! Expression<Value>
         }
     }
 
     public func setter() -> Setter? {
-        if let value = self.wrappedValue.value() {
-            return self.expression <- value
-        }
-        return nil
+        return self.expression <- self.wrappedValue
     }
 
     public func initExpresionIfNeeded(key: String) {
-        self.expression = Expression<Value.SQLiteValue>(key)
+        self.expression = Expression<Value>(key)
     }
 
     public func update(row: Row) {
-        self.wrappedValue = row[expression] as! Value
+        self.wrappedValue = row[expression]
     }
 
     public func createColumn(tableBuilder: TableBuilder) {
@@ -120,51 +44,41 @@ extension Field: FieldStorgeWrappedProtocol where Value: SQLiteValueProvider {
     }
 
     public func addColumn(table: Table) {
-        _ = table.addColumn(expression, defaultValue: self.wrappedValue.value()!)
+        _ = table.addColumn(expression, defaultValue: self.wrappedValue)
     }
 }
-//todo:FieldStorgeWrappedProtocol  确定是否会调用这里的扩展方法
-extension Field: FieldStorgeOptionalWrappedProtocol where Value: SQLiteValueProvider, Value: ExpressibleByNilLiteral {
-    public var expressionOptional: Expression<Value.SQLiteValue?> {
+
+extension FieldOptional: FieldOptionalStorgeWrappedProtocol where Value: SQLite.Value {
+    public var expression: Expression<Value?> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expressionOptional, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as! Expression<Value.SQLiteValue?>
+            if let result = objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as? Expression<Value?> {
+                return result
+            }
+            initExpresionIfNeeded(key: storageKey!)
+            return objc_getAssociatedObject(self, &AssociatedKeys.expressionOptional) as! Expression<Value?>
         }
     }
 
     public func setter() -> Setter? {
-//        if let value = self.wrappedValue.value() {
-//            return self.expressionOptional <- value
-//        }
-//        return nil
-        return self.expressionOptional <- self.wrappedValue.value()
+        return self.expression <- self.wrappedValue
     }
 
     public func initExpresionIfNeeded(key: String) {
-        self.expressionOptional = Expression<Value.SQLiteValue?>(key)
+        self.expression = Expression<Value?>(key)
     }
 
     public func update(row: Row) {
-        if let value = row[expressionOptional] as? Value {
-            self.wrappedValue = value
-        }
+        self.wrappedValue = row[expression]
     }
 
     public func createColumn(tableBuilder: TableBuilder) {
-        tableBuilder.column(expressionOptional)
+        tableBuilder.column(expression)
     }
 
     public func addColumn(table: Table) {
-        _ = table.addColumn(expressionOptional)
+        _ = table.addColumn(expression, defaultValue: self.wrappedValue)
     }
 }
-
-extension Field where Value: SQLite.Value {
-
-}
-
-//extension Field where Value == Optional<SQLite.Value> {
-//
-//}

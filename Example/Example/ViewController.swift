@@ -19,7 +19,7 @@ class ViewController: UIViewController {
         dao.createTable()
         let model = createModel()
         print(model)
-//        try? dao.insert(entity: model)
+        try? dao.insert(entity: model)
 //        try? dao.insert(entities: [model])
 //        try? dao.delete(model.$vipLevel.expression == 123)
 //        try? dao.delete(model.$accountID.expressionOptional > 100)
@@ -28,10 +28,17 @@ class ViewController: UIViewController {
 //        try? dao.update(entity: model, model.$amount.expression == 333)
 //        let queryOne = try? dao.query(model.$birthday.expressionOptional == Date())
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
-//        let queryAll = try? dao.queryAll()
+        let queryAll = try? dao.queryAll()
 
 //        let test = Expression<NestModel>("123")
+        Captain.default.prepare()
 
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let vc = JXFileBrowserController(path: NSHomeDirectory())
+        navigationController?.pushViewController(vc, animated: true)
+//        Captain.default.show()
     }
 
     func createModel() -> CustomModel {
@@ -42,7 +49,7 @@ class ViewController: UIViewController {
                         "userName" : "用户名",
                         "nick_name" : "昵称",
                         "amount" : Double(100),
-//                        "phone" : "123123123",
+                        "phone" : "123123123",
                         "gender" : DQGender.male,
                         "avatar_key" : "avatar",
                         "birthday_coding" : "2020-08-08 06:06:06",
