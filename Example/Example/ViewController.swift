@@ -30,16 +30,6 @@ class ViewController: UIViewController {
 //        let queryOne = try? dao.query(model.$birthday.expressionOptional == Date())
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
         let queryAll = try? dao.queryAll()
-
-//        let test = Expression<NestModel>("123")
-//        Captain.default.prepare()
-
-    }
-
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let vc = JXFileBrowserController(path: NSHomeDirectory())
-        navigationController?.pushViewController(vc, animated: true)
-//        Captain.default.show()
     }
 
     func createModel() -> CustomModel {

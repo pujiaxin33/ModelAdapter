@@ -8,12 +8,12 @@
 import Foundation
 import SQLite
 
-public protocol NormalInitialize {
+public protocol ModelAdaptorStorable {
     init()
     func initExpressionsIfNeeded()
 }
 
-public extension NormalInitialize {
+public extension ModelAdaptorStorable {
     func initExpressionsIfNeeded() {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
@@ -30,7 +30,7 @@ public extension NormalInitialize {
 }
 
 public protocol ModelAdaptorDAO {
-    associatedtype Entity: NormalInitialize
+    associatedtype Entity: ModelAdaptorStorable
     var connection: Connection { get }
     var table: Table { get }
 

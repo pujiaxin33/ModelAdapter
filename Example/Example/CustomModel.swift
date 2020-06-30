@@ -29,7 +29,7 @@ enum DQGender: String, SQLiteValueProvider {
     }
 }
 
-class CustomModel: ModelAdaptorMappable, NormalInitialize {
+class CustomModel: ModelAdaptorModel {
     @FieldOptional(key: "accountID_key", storageParams: nil)
     var accountID: Int?         //用户ID
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))

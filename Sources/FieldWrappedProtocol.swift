@@ -9,6 +9,8 @@ import Foundation
 import ObjectMapper
 import SQLite
 
+public protocol ModelAdaptorModel: ModelAdaptorMappable, ModelAdaptorStorable {}
+
 public protocol FieldWrappedProtocol {
     var key: String? { get }
 }
