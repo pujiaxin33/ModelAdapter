@@ -40,7 +40,7 @@ class ViewController: UIViewController {
                         "nick_name" : "昵称",
                         "amount" : Double(100),
                         "phone" : "123123123",
-                        "gender" : DQGender.male,
+                        "gender" : Gender.male,
                         "avatar_key" : "avatar",
                         "birthday_coding" : "2020-08-08 06:06:06",
                         "level" : 10,

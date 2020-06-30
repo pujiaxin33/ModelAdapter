@@ -11,12 +11,12 @@ import ObjectMapper
 extension Field: FieldMappableWrappedProtocol { }
 
 extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
-    public func configBase() {
-        self.convertorClosure = {[weak self] (key, map) in
+    public func configBaseMappableMapperClosure() {
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
              self.wrappedValue >>> map[key]
         }
@@ -25,18 +25,18 @@ extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
 
 extension Field {
     func configMapperClosure() {
-        self.convertorClosure = {[weak self] (key, map) in
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
              self.wrappedValue >>> map[key]
         }
     }
 
     func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.convertorClosure = {[weak self] (key, map) in
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
@@ -44,7 +44,7 @@ extension Field {
                 self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
             }
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue >>> (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
@@ -58,12 +58,12 @@ extension Field {
 extension FieldOptional: FieldOptionalMappableWrappedProtocol {}
 
 extension FieldOptional: BaseMappableWrappedProtocol where Value: BaseMappable {
-    public func configBase() {
-        self.convertorClosure = {[weak self] (key, map) in
+    public func configBaseMappableMapperClosure() {
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
              self.wrappedValue >>> map[key]
         }
@@ -72,18 +72,18 @@ extension FieldOptional: BaseMappableWrappedProtocol where Value: BaseMappable {
 
 extension FieldOptional {
     func configMapperClosure() {
-        self.convertorClosure = {[weak self] (key, map) in
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
              self.wrappedValue >>> map[key]
         }
     }
 
     func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.convertorClosure = {[weak self] (key, map) in
+        self.mapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
@@ -91,7 +91,7 @@ extension FieldOptional {
                 self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
             }
         }
-        self.immutableConvertorClosure = {[weak self] (key, map) in
+        self.immutableMapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
                 self.wrappedValue >>> (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)

@@ -11,13 +11,12 @@ import ModelAdaptor
 import ObjectMapper
 import SQLite
 
-enum DQGender: String, SQLiteValueProvider {
-    typealias SQLiteValue = String
-
+enum Gender: String, SQLiteValueProvider {
     case unknow = "UnKnown"
     case female = "Female"
     case male = "Male"
 
+    typealias SQLiteValue = String
     init?(value: String) {
         self.init(rawValue: value)
     }
@@ -28,55 +27,51 @@ enum DQGender: String, SQLiteValueProvider {
 
 class CustomModel: ModelAdaptorModel {
     @FieldOptional(key: "accountID_key", storageParams: nil)
-    var accountID: Int?         //用户ID
+    var accountID: Int?
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
-    var userName: String = "名字"       //账号
+    var userName: String = "名字"
     @FieldOptional(key: "nick_name")
-    var nickName: String?       //昵称
-    @Field(key: "amount")
-    var amount: Double = 6            // 账户余额
+    var nickName: String?
+    @Field(key: "amount", storageParams: .init(defaultValue: 100))
+    var amount: Double = 6
     @FieldOptional
-    var phone: String?          //手机号
+    var phone: String?
     @FieldOptional
-    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
+    var gender: Gender?
     @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
-    var avatar: String?         //头像
+    var avatar: String?
     @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DQDateTransform()))
-    var birthday: Date?         //生日，没有就是nil
+    var birthday: Date?
     @Field(key: "level")
-    var vipLevel: Int = 1       //会员等级， 1~5
+    var vipLevel: Int = 1
     @Field
-    var levelPoints: Int = 0   //当前等级值
+    var levelPoints: Int = 0
     @FieldOptional
     var downPoints: Int?
     @Field(codingParams: .init(convertor: DQDateTransform()))
     var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
     @Field(wrappedValue: false, key: "hasFundsPassword")
-    var isExchangePasswordValid: Bool   //是否设置了兑换密码
+    var isExchangePasswordValid: Bool
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
 
-    required init() {
-
-    }
-
+    required init() {}
     required init?(map: Map) { }
-
-
 }
 
 
-struct NestModel: ModelAdaptorMappable, SQLiteValueProvider {
-    typealias SQLiteValue = String
-
+struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     @FieldOptional(key: "nest_name")
     var nestName: String?
     @Field(key: "age")
     var nestAge: Int = 0
 
     init?(map: Map) {
-
     }
+
+    init() {}
+
+    typealias SQLiteValue = String
     init?(value: String) {
         self.init(JSONString: value)
     }
