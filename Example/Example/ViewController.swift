@@ -30,6 +30,7 @@ class ViewController: UIViewController {
 //        let queryOne = try? dao.query(model.$birthday.expressionOptional == Date())
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
         let queryAll = try? dao.queryAll()
+        print(queryAll)
     }
 
     func createModel() -> CustomModel {

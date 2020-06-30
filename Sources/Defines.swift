@@ -26,12 +26,14 @@ open class CodingParams<Convertor: TransformType>{
     }
 }
 
-open class StorageParams {
+open class StorageParams<Value> {
     public let key: String?
     public let version: Int
-    public init(key: String?, version: Int = 1) {
+    public let defaultValue: Value?
+    public init(key: String?, version: Int = 1, defaultValue: Value? = nil) {
         self.key = key
         self.version = version
+        self.defaultValue = defaultValue
     }
 }
 
@@ -44,14 +46,16 @@ extension Optional: OptionalType {}
     public var codingKey: String?
     public var storageKey: String?
     public var storageVersion: Int?
+    var storageParams: StorageParams<Value>?
     public var projectedValue: Field { self }
     public var convertorClosure: ((String, Map) -> ())?
     public var immutableConvertorClosure: ((String, Map) -> ())?
 
-    public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object == Value {
+    public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
         self.key = key
         self.codingKey = codingParams?.key
+        self.storageParams = storageParams
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
@@ -73,15 +77,16 @@ extension Optional: OptionalType {}
     convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
     }
-    convenience public init(wrappedValue: Value, storageParams: StorageParams?) {
+    convenience public init(wrappedValue: Value, storageParams: StorageParams<Value>?) {
         self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
     }
-    public init(wrappedValue: Value, key: String?, storageParams: StorageParams?) {
+    public init(wrappedValue: Value, key: String?, storageParams: StorageParams<Value>?) {
         self.wrappedValue = wrappedValue
         self.key = key
+        self.storageParams = storageParams
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
@@ -94,7 +99,7 @@ extension Optional: OptionalType {}
             configMapperClosure()
         }
     }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
+    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams<Value>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }
@@ -103,16 +108,18 @@ extension Optional: OptionalType {}
     public var wrappedValue: Value?
     public let key: String?
     public var codingKey: String?
+    var storageParams: StorageParams<Value>?
     public var storageKey: String?
     public var storageVersion: Int?
     public var projectedValue: FieldOptional { self }
     public var convertorClosure: ((String, Map) -> ())?
     public var immutableConvertorClosure: ((String, Map) -> ())?
 
-    public init<Convertor: TransformType>(wrappedValue: Value?, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams? = nil) where Convertor.Object == Value {
+    public init<Convertor: TransformType>(wrappedValue: Value?, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
         self.key = key
         self.codingKey = codingParams?.key
+        self.storageParams = storageParams
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
@@ -132,15 +139,16 @@ extension Optional: OptionalType {}
     convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
     }
-    convenience public init(wrappedValue: Value? = nil, storageParams: StorageParams?) {
+    convenience public init(wrappedValue: Value? = nil, storageParams: StorageParams<Value>?) {
         self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
     }
     convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
     }
-    public init(wrappedValue: Value? = nil, key: String?, storageParams: StorageParams?) {
+    public init(wrappedValue: Value? = nil, key: String?, storageParams: StorageParams<Value>?) {
         self.wrappedValue = wrappedValue
         self.key = key
+        self.storageParams = storageParams
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
 
@@ -150,7 +158,7 @@ extension Optional: OptionalType {}
             configMapperClosure()
         }
     }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?, storageParams: StorageParams?) where Convertor.Object == Value {
+    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?, storageParams: StorageParams<Value>?) where Convertor.Object == Value {
         self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }

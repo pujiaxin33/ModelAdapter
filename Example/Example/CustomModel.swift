@@ -24,9 +24,6 @@ enum DQGender: String, SQLiteValueProvider {
     func value() -> String? {
         return self.rawValue
     }
-    func defaultValue() -> String? {
-        return DQGender.female.rawValue
-    }
 }
 
 class CustomModel: ModelAdaptorModel {
@@ -86,9 +83,6 @@ struct NestModel: ModelAdaptorMappable, SQLiteValueProvider {
 
     func value() -> String? {
         return self.toJSONString()
-    }
-    func defaultValue() -> String? {
-        return ""
     }
 }
 
