@@ -11,51 +11,66 @@ import ModelAdaptor
 import ObjectMapper
 import SQLite
 
-enum DQGender: String {
+enum DQGender: String, SQLiteValueProvider {
+    typealias SQLiteValue = String
+
     case unknow = "UnKnown"
     case female = "Female"
     case male = "Male"
+
+    init?(value: String) {
+        self.init(rawValue: value)
+    }
+    func value() -> String? {
+        return self.rawValue
+    }
+    func defaultValue() -> String? {
+        return DQGender.female.rawValue
+    }
 }
 
 class CustomModel: ModelAdaptorMappable, NormalInitialize {
     @FieldOptional(key: "accountID_key", storageParams: nil)
     var accountID: Int?         //用户ID
-//    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
-//    var userName: String = "名字"       //账号
-//    @FieldOptional(key: "nick_name")
-//    var nickName: String?       //昵称
-//    @Field(key: "amount")
-//    var amount: Double = 6            // 账户余额
-//    @FieldOptional
-//    var phone: String?          //手机号
-//    @FieldOptional
-//    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
-//    @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
-//    var avatar: String?         //头像
-//    @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DQDateTransform()))
-//    var birthday: Date?         //生日，没有就是nil
-//    @Field(key: "level")
-//    var vipLevel: Int = 1       //会员等级， 1~5
-//    @Field
-//    var levelPoints: Int = 0   //当前等级值
-//    @FieldOptional
-//    var downPoints: Int?
-//    @Field(codingParams: .init(convertor: DQDateTransform()))
-//    var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
-//    @Field(wrappedValue: false, key: "hasFundsPassword")
-//    var isExchangePasswordValid: Bool   //是否设置了兑换密码
-//    @Field
-//    var nest: NestModel = NestModel(JSON: [String : Any]())!
+    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
+    var userName: String = "名字"       //账号
+    @FieldOptional(key: "nick_name")
+    var nickName: String?       //昵称
+    @Field(key: "amount")
+    var amount: Double = 6            // 账户余额
+    @FieldOptional
+    var phone: String?          //手机号
+    @FieldOptional
+    var gender: DQGender?       //性别 = ['UnKnow', 'Male', 'Female'],
+    @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
+    var avatar: String?         //头像
+    @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DQDateTransform()))
+    var birthday: Date?         //生日，没有就是nil
+    @Field(key: "level")
+    var vipLevel: Int = 1       //会员等级， 1~5
+    @Field
+    var levelPoints: Int = 0   //当前等级值
+    @FieldOptional
+    var downPoints: Int?
+    @Field(codingParams: .init(convertor: DQDateTransform()))
+    var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
+    @Field(wrappedValue: false, key: "hasFundsPassword")
+    var isExchangePasswordValid: Bool   //是否设置了兑换密码
+    @Field
+    var nest: NestModel = NestModel(JSON: [String : Any]())!
 
     required init() {
 
     }
 
     required init?(map: Map) { }
+
+
 }
 
 
-struct NestModel: ModelAdaptorMappable {
+struct NestModel: ModelAdaptorMappable, SQLiteValueProvider {
+    typealias SQLiteValue = String
 
     @FieldOptional(key: "nest_name")
     var nestName: String?
@@ -64,6 +79,16 @@ struct NestModel: ModelAdaptorMappable {
 
     init?(map: Map) {
 
+    }
+    init?(value: String) {
+        self.init(JSONString: value)
+    }
+
+    func value() -> String? {
+        return self.toJSONString()
+    }
+    func defaultValue() -> String? {
+        return ""
     }
 }
 

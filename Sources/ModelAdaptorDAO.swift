@@ -10,6 +10,23 @@ import SQLite
 
 public protocol NormalInitialize {
     init()
+    func initExpressionsIfNeeded()
+}
+
+public extension NormalInitialize {
+    func initExpressionsIfNeeded() {
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            guard let propertyName = child.label else {
+                continue
+            }
+            if let value = child.value as? FieldStorgeWrappedProtocol {
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+            }
+        }
+    }
 }
 
 public protocol ModelAdaptorDAO {
@@ -34,18 +51,9 @@ public protocol ModelAdaptorDAO {
 
 public extension ModelAdaptorDAO {
     func createTable(ifNotExists: Bool = true) {
-        let object = Entity()
-        let mirror = Mirror(reflecting: object)
-        for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
-            }
-        }
+        let entity = Entity()
+        entity.initExpressionsIfNeeded()
+        let mirror = Mirror(reflecting: entity)
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
                 if let value = child.value as? FieldStorgeWrappedProtocol {
@@ -76,16 +84,11 @@ public extension ModelAdaptorDAO {
         let mirror = Mirror(reflecting: entity)
         var setters = [Setter]()
         for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            if let value = child.value as? FieldStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
@@ -117,16 +120,11 @@ public extension ModelAdaptorDAO {
         let mirror = Mirror(reflecting: entity)
         var setters = [Setter]()
         for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            if let value = child.value as? FieldStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
@@ -140,16 +138,11 @@ public extension ModelAdaptorDAO {
         let mirror = Mirror(reflecting: entity)
         var setters = [Setter]()
         for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            if let value = child.value as? FieldStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
@@ -166,16 +159,12 @@ public extension ModelAdaptorDAO {
             return nil
         }
         let entity = Entity()
+        entity.initExpressionsIfNeeded()
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            if let value = child.value as? FieldStorgeWrappedProtocol {
                 value.update(row: row)
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                 value.update(row: row)
             }
         }
@@ -190,16 +179,12 @@ public extension ModelAdaptorDAO {
             return nil
         }
         let entity = Entity()
+        entity.initExpressionsIfNeeded()
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if var value = child.value as? FieldStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            if let value = child.value as? FieldStorgeWrappedProtocol {
                 value.update(row: row)
-            }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+            }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                 value.update(row: row)
             }
         }
@@ -213,34 +198,17 @@ public extension ModelAdaptorDAO {
         var entities = [Entity]()
         for row in rows {
             let entity = Entity()
+            entity.initExpressionsIfNeeded()
             let mirror = Mirror(reflecting: entity)
             for child in mirror.children {
-                guard let propertyName = child.label else {
-                    continue
-                }
-                if var value = child.value as? FieldStorgeWrappedProtocol {
-                    value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+                if let value = child.value as? FieldStorgeWrappedProtocol {
                     value.update(row: row)
-                }else if var value = child.value as? FieldOptionalStorgeWrappedProtocol {
-                    value.storageKey = codingKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey)
+                }else if let value = child.value as? FieldOptionalStorgeWrappedProtocol {
                     value.update(row: row)
                 }
             }
             entities.append(entity)
         }
         return entities
-    }
-
-    private func codingKey(propertyName: String, key: String?, storageKey: String?) -> String {
-        if storageKey?.isEmpty == false {
-            return storageKey!
-        }else if key?.isEmpty == false {
-            return key!
-        }else if propertyName.hasPrefix("_") {
-            let from = propertyName.index(after: propertyName.startIndex)
-            return String(propertyName[from...])
-        }else {
-            return propertyName
-        }
     }
 }

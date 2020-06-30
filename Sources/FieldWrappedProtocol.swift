@@ -45,6 +45,28 @@ public protocol FieldOptionalStorgeWrappedProtocol: FieldWrappedProtocol {
     func update(row: Row)
 }
 
+public protocol FieldSQLiteValueProviderWrappedProtocol: FieldWrappedProtocol {
+    var storageKey: String? { get set }
+    var storageVersion: Int? { get }
+
+    func createColumn(tableBuilder: TableBuilder)
+    func addColumn(table: Table)
+    func setter() -> Setter?
+    func initExpresionIfNeeded(key: String)
+    func update(row: Row)
+}
+
+public protocol FieldOptionalSQLiteValueProviderWrappedProtocol: FieldWrappedProtocol {
+    var storageKey: String? { get set }
+    var storageVersion: Int? { get }
+
+    func createColumn(tableBuilder: TableBuilder)
+    func addColumn(table: Table)
+    func setter() -> Setter?
+    func initExpresionIfNeeded(key: String)
+    func update(row: Row)
+}
+
 public protocol BaseMappableWrappedProtocol {
     func configBase()
 }

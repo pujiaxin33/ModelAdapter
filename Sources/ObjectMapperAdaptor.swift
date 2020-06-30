@@ -19,23 +19,14 @@ public extension ModelAdaptorMappable {
                 continue
             }
             if let value = child.value as? FieldMappableWrappedProtocol {
-                value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
+                value.convertorClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }else if let value =  child.value as? FieldOptionalMappableWrappedProtocol {
-                value.convertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
+                value.convertorClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }
         }
-    }
-
-    private func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
-        if codingKey?.isEmpty == false {
-            return codingKey!
-        }else if key?.isEmpty == false {
-            return key!
-        }else if propertyName.hasPrefix("_") {
-            let from = propertyName.index(after: propertyName.startIndex)
-            return String(propertyName[from...])
-        }else {
-            return propertyName
+        if let aClass = self as? NormalInitialize {
+            //fixme:找一个更好的地方进行数据库expresstion属性初始化
+            aClass.initExpressionsIfNeeded()
         }
     }
 }
@@ -52,20 +43,11 @@ public extension ModelAdaptorImmutableMappable {
             guard let value = child.value as? FieldMappableWrappedProtocol else {
                 continue
             }
-            value.immutableConvertorClosure?(codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
+            value.immutableConvertorClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
         }
-    }
-
-    private func codingKey(propertyName: String, key: String?, codingKey: String?) -> String {
-        if codingKey?.isEmpty == false {
-            return codingKey!
-        }else if key?.isEmpty == false {
-            return key!
-        }else if propertyName.hasPrefix("_") {
-            let from = propertyName.index(after: propertyName.startIndex)
-            return String(propertyName[from...])
-        }else {
-            return propertyName
+        if let aClass = self as? NormalInitialize {
+            //fixme:找一个更好的地方进行数据库expresstion属性初始化
+            aClass.initExpressionsIfNeeded()
         }
     }
 }
