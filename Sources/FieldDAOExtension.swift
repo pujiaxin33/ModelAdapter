@@ -83,7 +83,7 @@ extension Date: SQLiteValueProvider {
     }
 }
 
-extension Field: FieldStorgeWrappedProtocol where Value: SQLiteValueProvider {
+extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expression, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -125,7 +125,7 @@ extension Field: FieldStorgeWrappedProtocol where Value: SQLiteValueProvider {
     }
 }
 
-extension FieldOptional: FieldOptionalStorgeWrappedProtocol where Value: SQLiteValueProvider {
+extension FieldOptional: FieldOptionalStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue?> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expressionOptional, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)

@@ -17,10 +17,10 @@ enum Gender: String, SQLiteValueProvider {
     case male = "Male"
 
     typealias SQLiteValue = String
-    init?(value: String) {
+    init?(value: SQLiteValue) {
         self.init(rawValue: value)
     }
-    func value() -> String? {
+    func value() -> SQLiteValue? {
         return self.rawValue
     }
 }
@@ -55,8 +55,14 @@ class CustomModel: ModelAdaptorModel {
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
 
-    required init() {}
-    required init?(map: Map) { }
+    required init() {
+        //必须在required的初始化器调用initExpressionsIfNeeded方法
+        initExpressionsIfNeeded()
+    }
+    required init?(map: Map) {
+        //必须在required的初始化器调用initExpressionsIfNeeded方法
+        initExpressionsIfNeeded()
+    }
 }
 
 
@@ -72,11 +78,10 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     init() {}
 
     typealias SQLiteValue = String
-    init?(value: String) {
+    init?(value: SQLiteValue) {
         self.init(JSONString: value)
     }
-
-    func value() -> String? {
+    func value() -> SQLiteValue? {
         return self.toJSONString()
     }
 }

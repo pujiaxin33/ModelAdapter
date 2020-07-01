@@ -24,10 +24,6 @@ public extension ModelAdaptorMappable {
                 value.mapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }
         }
-        if let aClass = self as? ModelAdaptorStorable {
-            //fixme:找一个更好的地方进行数据库expresstion属性初始化
-            aClass.initExpressionsIfNeeded()
-        }
     }
 }
 
@@ -44,10 +40,6 @@ public extension ModelAdaptorImmutableMappable {
                 continue
             }
             value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
-        }
-        if let aClass = self as? ModelAdaptorStorable {
-            //fixme:找一个更好的地方进行数据库expresstion属性初始化
-            aClass.initExpressionsIfNeeded()
         }
     }
 }

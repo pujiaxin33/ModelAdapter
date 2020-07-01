@@ -22,9 +22,9 @@ protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
     var immutableMapperClosure: ((String, Map)->())? { get }
 }
 
- protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedProtocol {}
+protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedProtocol {}
 
-protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
+protocol FieldStorageWrappedProtocol: FieldWrappedProtocol {
     var storageKey: String? { get set }
     var storageVersion: Int? { get }
 
@@ -35,7 +35,7 @@ protocol FieldStorgeWrappedProtocol: FieldWrappedProtocol {
     func update(row: Row)
 }
 
-protocol FieldOptionalStorgeWrappedProtocol: FieldWrappedProtocol {
+protocol FieldOptionalStorageWrappedProtocol: FieldWrappedProtocol {
     var storageKey: String? { get set }
     var storageVersion: Int? { get }
 
