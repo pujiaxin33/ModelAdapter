@@ -15,17 +15,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let bolb = Blob(bytes: [7, 32, 9])
-        let string = bolb.toHex()
-
-//        let stringValue = "07091F"
-//        for start in stride(from: 0, to: stringValue.count, by: 2) {
-//            let startIndex = stringValue.index(stringValue.startIndex, offsetBy: start)
-//            let endIndex = stringValue.index(startIndex, offsetBy: 2)
-//            let byteString = stringValue[startIndex..<endIndex]
-//            print(byteString)
-//        }
-
         let model = createModel()
         print(model)
         let dao = CustomDAO()
@@ -40,8 +29,9 @@ class ViewController: UIViewController {
 //        try? dao.update(entity: model, model.$amount.expression == 333)
 //        let queryOne = try? dao.query(model.$birthday.expressionOptional == Date())
 //        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
-        let queryAll = try? dao.queryAll()
-        print(queryAll)
+        if let queryAll = try? dao.queryAll() {
+            print(queryAll)
+        }
     }
 
     func createModel() -> CustomModel {

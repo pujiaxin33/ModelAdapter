@@ -32,7 +32,6 @@ public extension ModelAdaptorMappable {
 }
 
 public protocol ModelAdaptorImmutableMappable: ImmutableMappable { }
-
 public extension ModelAdaptorImmutableMappable {
     mutating func mapping(map: Map) {
         let mirror = Mirror(reflecting: self)
@@ -40,18 +39,17 @@ public extension ModelAdaptorImmutableMappable {
             guard let propertyName = child.label else {
                 continue
             }
-            guard let value = child.value as? FieldMappableWrappedProtocol else {
-                continue
+            if let value = child.value as? FieldMappableWrappedProtocol {
+                value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
+            }else if let value =  child.value as? FieldOptionalMappableWrappedProtocol {
+                value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }
-            value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
         }
     }
 }
 
 
-public struct NilJSON {
-}
-
+public struct NilJSON {}
 public class NilTransform<NilValue>: TransformType {
     public typealias Object = NilValue
     public typealias JSON = NilJSON

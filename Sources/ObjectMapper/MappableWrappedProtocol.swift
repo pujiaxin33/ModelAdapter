@@ -55,7 +55,6 @@ extension Field {
 }
 
 extension FieldOptional: FieldOptionalMappableWrappedProtocol {}
-
 extension FieldOptional: BaseMappableWrappedProtocol where Value: BaseMappable {
     public func configBaseMappableMapperClosure() {
         self.mapperClosure = {[weak self] (key, map) in

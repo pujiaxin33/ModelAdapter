@@ -100,25 +100,7 @@ public extension ModelAdaptorDAO {
     }
 
     func insert(entity: Entity) throws {
-        let mirror = Mirror(reflecting: entity)
-        var setters = [Setter]()
-        for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }
-        }
-        setters.append(contentsOf: entity.setters())
-        try connection.run(table.insert(setters))
+        try connection.run(table.insert(setters(with: entity)))
     }
 
     func insert(entities: [Entity]) throws {
@@ -141,48 +123,12 @@ public extension ModelAdaptorDAO {
 
     func update(entity: Entity, _ predicate: SQLite.Expression<Bool>) throws {
         let alice = table.filter(predicate)
-        let mirror = Mirror(reflecting: entity)
-        var setters = [Setter]()
-        for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }
-        }
-        setters.append(contentsOf: entity.setters())
-        try connection.run(alice.update(setters))
+        try connection.run(alice.update(setters(with: entity)))
     }
 
     func update(entity: Entity, _ predicate: SQLite.Expression<Bool?>) throws {
         let alice = table.filter(predicate)
-        let mirror = Mirror(reflecting: entity)
-        var setters = [Setter]()
-        for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }
-        }
-        setters.append(contentsOf: entity.setters())
-        try connection.run(alice.update(setters))
+        try connection.run(alice.update(setters(with: entity)))
     }
 
     func query(_ predicate: SQLite.Expression<Bool>) throws -> Entity? {
@@ -193,16 +139,7 @@ public extension ModelAdaptorDAO {
             return nil
         }
         let entity = Entity()
-        let mirror = Mirror(reflecting: entity)
-        for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                value.update(row: row)
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                value.update(row: row)
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                value.update(row: row)
-            }
-        }
+        update(entity: entity, with: row)
         entity.update(with: row)
         return entity
     }
@@ -215,6 +152,46 @@ public extension ModelAdaptorDAO {
             return nil
         }
         let entity = Entity()
+        update(entity: entity, with: row)
+        return entity
+    }
+
+    func queryAll() throws -> [Entity]? {
+        guard let rows = try? connection.prepare(table) else {
+            return nil
+        }
+        var entities = [Entity]()
+        for row in rows {
+            let entity = Entity()
+            update(entity: entity, with: row)
+            entities.append(entity)
+        }
+        return entities
+    }
+
+    private func setters(with entity: Entity) -> [Setter] {
+        var setters = [Setter]()
+        let mirror = Mirror(reflecting: entity)
+        for child in mirror.children {
+            if let value = child.value as? FieldStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
+            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
+            }
+        }
+        setters.append(contentsOf: entity.setters())
+        return setters
+    }
+
+    private func update(entity: Entity, with row: Row) {
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
             if let value = child.value as? FieldStorageWrappedProtocol {
@@ -226,29 +203,5 @@ public extension ModelAdaptorDAO {
             }
         }
         entity.update(with: row)
-        return entity
-    }
-
-    func queryAll() throws -> [Entity]? {
-        guard let rows = try? connection.prepare(table) else {
-            return nil
-        }
-        var entities = [Entity]()
-        for row in rows {
-            let entity = Entity()
-            let mirror = Mirror(reflecting: entity)
-            for child in mirror.children {
-                if let value = child.value as? FieldStorageWrappedProtocol {
-                    value.update(row: row)
-                }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                    value.update(row: row)
-                }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                    value.update(row: row)
-                }
-            }
-            entity.update(with: row)
-            entities.append(entity)
-        }
-        return entities
     }
 }

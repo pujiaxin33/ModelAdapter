@@ -11,7 +11,6 @@ import SQLite
 struct AssociatedKeys {
     static var expression: UInt8 = 0
     static var expressionOptional: UInt8 = 0
-    static var expressionArray: UInt8 = 0
     static var expressionCustom: UInt8 = 0
 }
 

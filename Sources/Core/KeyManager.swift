@@ -33,13 +33,4 @@ class KeyManager {
             return propertyName
         }
     }
-
-    static func perttyPropertyName(_ propertyName: String) -> String {
-        if propertyName.hasPrefix("_") {
-            let from = propertyName.index(after: propertyName.startIndex)
-            return String(propertyName[from...])
-        }else {
-            return propertyName
-        }
-    }
 }
