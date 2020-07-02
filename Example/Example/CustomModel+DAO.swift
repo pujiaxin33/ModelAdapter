@@ -10,16 +10,16 @@ import Foundation
 import SQLite
 
 extension CustomModel {
-    static let customDictExpression = Expression<String?>("custom_dict")
+    static let customDictIntExpression = Expression<String?>("custom_dict_int")
 
     func createColumn(tableBuilder: TableBuilder) {
-        tableBuilder.column(CustomModel.customDictExpression)
+        tableBuilder.column(CustomModel.customDictIntExpression)
     }
     func addColumn(table: Table) {
 
     }
     func setters() -> [Setter] {
-        guard let dict = customDict else {
+        guard let dict = customDictInt else {
             return []
         }
         var result = [String : String]()
@@ -27,15 +27,15 @@ extension CustomModel {
             guard let stringValue = value.toJSONString() else {
                 continue
             }
-            result[key] = stringValue
+            result["\(key)"] = stringValue
         }
         guard let data = try? JSONSerialization.data(withJSONObject: result, options: []) else {
             return []
         }
-        return [CustomModel.customDictExpression <- String(data: data, encoding: .utf8)]
+        return [CustomModel.customDictIntExpression <- String(data: data, encoding: .utf8)]
     }
     func update(with row: Row) {
-        guard let string = row[CustomModel.customDictExpression] else {
+        guard let string = row[CustomModel.customDictIntExpression] else {
             return
         }
 
@@ -43,13 +43,13 @@ extension CustomModel {
         guard let stringDict = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : String] else {
             return
         }
-        var result = [String : NestModel]()
+        var result = [Int : NestModel]()
         for (key, value) in stringDict {
             guard let model = NestModel(JSONString: value) else {
                 continue
             }
-            result[key] = model
+            result[Int(key) ?? 0] = model
         }
-        self.customDict = result
+        self.customDictInt = result
     }
 }

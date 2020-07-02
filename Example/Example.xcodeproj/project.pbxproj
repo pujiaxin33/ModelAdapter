@@ -14,7 +14,7 @@
 		19886C292496475D00A8D28D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19886C282496475D00A8D28D /* Assets.xcassets */; };
 		19886C2C2496475D00A8D28D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19886C2A2496475D00A8D28D /* LaunchScreen.storyboard */; };
 		19886CAD24964A3900A8D28D /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886CAC24964A3900A8D28D /* CustomModel.swift */; };
-		19886CAF24964B2E00A8D28D /* DQDateTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886CAE24964B2E00A8D28D /* DQDateTransform.swift */; };
+		19886CAF24964B2E00A8D28D /* DateTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886CAE24964B2E00A8D28D /* DateTransform.swift */; };
 		19EF104424AD8CDE0090A58D /* CustomModel+DAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */; };
 		19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F8007B2497570F00A98C1F /* CustomDAO.swift */; };
 		9EC6ECF047FB2B9A07E5588D /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD68C87A731E9037712163 /* Pods_Example.framework */; };
@@ -30,7 +30,7 @@
 		19886C2B2496475D00A8D28D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		19886C2D2496475D00A8D28D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19886CAC24964A3900A8D28D /* CustomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModel.swift; sourceTree = "<group>"; };
-		19886CAE24964B2E00A8D28D /* DQDateTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DQDateTransform.swift; sourceTree = "<group>"; };
+		19886CAE24964B2E00A8D28D /* DateTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTransform.swift; sourceTree = "<group>"; };
 		19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomModel+DAO.swift"; sourceTree = "<group>"; };
 		19F8007B2497570F00A98C1F /* CustomDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDAO.swift; sourceTree = "<group>"; };
 		38FD68C87A731E9037712163 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,7 +77,7 @@
 				19886CAC24964A3900A8D28D /* CustomModel.swift */,
 				19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */,
 				19F8007B2497570F00A98C1F /* CustomDAO.swift */,
-				19886CAE24964B2E00A8D28D /* DQDateTransform.swift */,
+				19886CAE24964B2E00A8D28D /* DateTransform.swift */,
 				19886C252496475B00A8D28D /* Main.storyboard */,
 				19886C282496475D00A8D28D /* Assets.xcassets */,
 				19886C2A2496475D00A8D28D /* LaunchScreen.storyboard */,
@@ -218,7 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19886CAF24964B2E00A8D28D /* DQDateTransform.swift in Sources */,
+				19886CAF24964B2E00A8D28D /* DateTransform.swift in Sources */,
 				19886CAD24964A3900A8D28D /* CustomModel.swift in Sources */,
 				19886C242496475B00A8D28D /* ViewController.swift in Sources */,
 				19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */,

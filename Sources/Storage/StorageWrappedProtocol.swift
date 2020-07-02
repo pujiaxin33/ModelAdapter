@@ -144,8 +144,9 @@ extension Optional: SQLiteValueProvider where Wrapped: SQLiteValueProvider {
     public init?(value: SQLiteValue) {
         if let initValue = Wrapped.init(value: value) {
             self = .some(initValue)
+        }else {
+            return nil
         }
-        return nil
     }
     public func value() -> SQLiteValue? {
         switch self {
@@ -195,29 +196,50 @@ extension Array: SQLiteValueProvider where Element: SQLiteValueProvider {
     public func stringValue() -> String? { return value() }
 }
 
-//extension Dictionary: SQLiteValueProvider where Key == String, Value: SQLiteValueProvider {
-//    public typealias SQLiteValue = String
-//    static var separator: String { "|sss|" }
-//    public init?(value: SQLiteValue) {
-//        let components = value.components(separatedBy: Dictionary.separator)
-//        self = components.compactMap { Element.init(stringValue: $0) }
-//    }
-//    public func value() -> SQLiteValue? {
-//
-//        var result = ""
-//        for elment in self {
-//            guard let value = elment.stringValue() else {
-//                continue
-//            }
-//            result.append(Dictionary.separator + value)
-//        }
-//        return result
-//    }
-//    public init?(stringValue: String) {
-//        self = [Element]()
-//    }
-//    public func stringValue() -> String? { return nil }
-//}
+extension Dictionary: SQLiteValueProvider where Key == String, Value: SQLiteValueProvider {
+    public typealias SQLiteValue = String
+    public init?(value: SQLiteValue) {
+        if let dictValue = Dictionary.fromString(value: value) {
+            self = dictValue
+        }else {
+            return nil
+        }
+    }
+    public func value() -> SQLiteValue? { return stringValue() }
+    public init?(stringValue: String) {
+        if let dictValue = Dictionary.fromString(value: stringValue) {
+            self = dictValue
+        }
+        return nil
+    }
+    public func stringValue() -> String? {
+        var result = [String : String]()
+        for (key, value) in self {
+            guard let stringValue = value.stringValue() else {
+                continue
+            }
+            result[key] = stringValue
+        }
+        guard let data = try? JSONSerialization.data(withJSONObject: result, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+
+    private static func fromString(value: String) -> Self? {
+        guard let dict = try? JSONSerialization.jsonObject(with: Data(value.utf8), options: []) as? [String : String] else {
+            return nil
+        }
+        var result = [String: Value]()
+        for (key, item) in dict {
+            guard let dictVaule = Value.init(stringValue: item)  else {
+                continue
+            }
+            result[key] = dictVaule
+        }
+        return result
+    }
+}
 
 extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue> {

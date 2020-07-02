@@ -31,7 +31,7 @@ enum Gender: String, SQLiteValueProvider {
 }
 
 class CustomModel: ModelAdaptorModel {
-    @FieldOptional(key: "accountID_key", storageParams: nil)
+    @FieldOptional(key: "accountID_key")
     var accountID: Int?
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
     var userName: String = "名字"
@@ -61,7 +61,12 @@ class CustomModel: ModelAdaptorModel {
     var nest: NestModel = NestModel(JSON: [String : Any]())!
     @FieldCustom
     var nests: [NestModel] = [NestModel]()
+    @FieldCustom
     var customDict: [String: NestModel]?
+    @FieldCustom
+    var customDictAarray: [String: [NestModel]]?
+    var customDictInt: [Int : NestModel]?//完全需要自己去处理map和storage
+
 
     required init() {
         //必须在required的初始化器调用initExpressionsIfNeeded方法
@@ -73,8 +78,10 @@ class CustomModel: ModelAdaptorModel {
     }
 
     func customMap(map: Map) {
-        self.nests <- map["nests"]
+//        self.nests <- map["nests"]
         self.customDict <- map["custom_dict"]
+        self.customDictAarray <- map["custom_dict_array"]
+        self.customDictInt <- (map["custom_dict_int"], IntDictTransform())
     }
 }
 
@@ -107,3 +114,38 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     }
 }
 
+struct IntDictTransform: TransformType {
+    typealias Object = [Int : NestModel]
+    typealias JSON = String
+
+    func transformFromJSON(_ value: Any?) -> [Int : NestModel]? {
+        guard let dict = value as? [Int : [String: Any]] else {
+            return nil
+        }
+        var result = [Int : NestModel]()
+        for (key, dictValue) in dict {
+            guard let model = NestModel(JSON: dictValue) else {
+                continue
+            }
+            result[key] = model
+        }
+        return result
+    }
+
+    func transformToJSON(_ value: [Int : NestModel]?) -> String? {
+        guard let dict = value else {
+            return nil
+        }
+        var result = [Int: String]()
+        for (key, value) in dict {
+            guard let string = value.stringValue() else {
+                continue
+            }
+            result[key] = string
+        }
+        guard let data = try? JSONSerialization.data(withJSONObject: result, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: .utf8)
+    }
+}

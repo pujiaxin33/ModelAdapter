@@ -1,5 +1,5 @@
 //
-//  DQDateTransform.swift
+//  DateTransform.swift
 //  Example
 //
 //  Created by jiaxin on 2020/6/14.
@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class DQDateTransform: TransformType {
+class DateTransform: TransformType {
     public typealias Object = Date
     public typealias JSON = String
 
