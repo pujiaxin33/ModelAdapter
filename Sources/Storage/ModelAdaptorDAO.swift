@@ -11,6 +11,10 @@ import SQLite
 public protocol ModelAdaptorStorable {
     init()
     func initExpressionsIfNeeded()
+    func createColumn(tableBuilder: TableBuilder)
+    func addColumn(table: Table)
+    func setters() -> [Setter]
+    func update(with row: Row)
 }
 
 public extension ModelAdaptorStorable {
@@ -24,9 +28,15 @@ public extension ModelAdaptorStorable {
                 value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
                 value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
             }
         }
     }
+    func createColumn(tableBuilder: TableBuilder) {}
+    func addColumn(table: Table) {}
+    func setters() -> [Setter] { return [] }
+    func update(with row: Row) {}
 }
 
 public protocol ModelAdaptorDAO {
@@ -63,8 +73,13 @@ public extension ModelAdaptorDAO {
                     if value.storageVersion ?? 1 == 1 {
                         value.createColumn(tableBuilder: t)
                     }
+                }else if let value = child.value as? FieldCustomStorageWrappedProtocol{
+                    if value.storageVersion ?? 1 == 1 {
+                        value.createColumn(tableBuilder: t)
+                    }
                 }
             }
+            entity.createColumn(tableBuilder: t)
         })
         for child in mirror.children {
             if let value = child.value as? FieldStorageWrappedProtocol {
@@ -75,8 +90,13 @@ public extension ModelAdaptorDAO {
                 if value.storageVersion ?? 1 > 1 {
                     value.addColumn(table: table)
                 }
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                if value.storageVersion ?? 1 > 1 {
+                    value.addColumn(table: table)
+                }
             }
         }
+        entity.addColumn(table: table)
     }
 
     func insert(entity: Entity) throws {
@@ -91,8 +111,13 @@ public extension ModelAdaptorDAO {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
             }
         }
+        setters.append(contentsOf: entity.setters())
         try connection.run(table.insert(setters))
     }
 
@@ -127,8 +152,13 @@ public extension ModelAdaptorDAO {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
             }
         }
+        setters.append(contentsOf: entity.setters())
         try connection.run(alice.update(setters))
     }
 
@@ -145,8 +175,13 @@ public extension ModelAdaptorDAO {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                if let setter = value.setter() {
+                    setters.append(setter)
+                }
             }
         }
+        setters.append(contentsOf: entity.setters())
         try connection.run(alice.update(setters))
     }
 
@@ -164,8 +199,11 @@ public extension ModelAdaptorDAO {
                 value.update(row: row)
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
                 value.update(row: row)
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                value.update(row: row)
             }
         }
+        entity.update(with: row)
         return entity
     }
 
@@ -183,8 +221,11 @@ public extension ModelAdaptorDAO {
                 value.update(row: row)
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
                 value.update(row: row)
+            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                value.update(row: row)
             }
         }
+        entity.update(with: row)
         return entity
     }
 
@@ -201,8 +242,11 @@ public extension ModelAdaptorDAO {
                     value.update(row: row)
                 }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
                     value.update(row: row)
+                }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+                    value.update(row: row)
                 }
             }
+            entity.update(with: row)
             entities.append(entity)
         }
         return entities

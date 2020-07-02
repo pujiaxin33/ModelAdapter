@@ -15,12 +15,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let dao = CustomDAO()
-        dao.createTable()
+        let bolb = Blob(bytes: [7, 32, 9])
+        let string = bolb.toHex()
+
+//        let stringValue = "07091F"
+//        for start in stride(from: 0, to: stringValue.count, by: 2) {
+//            let startIndex = stringValue.index(stringValue.startIndex, offsetBy: start)
+//            let endIndex = stringValue.index(startIndex, offsetBy: 2)
+//            let byteString = stringValue[startIndex..<endIndex]
+//            print(byteString)
+//        }
+
         let model = createModel()
         print(model)
-//        try? dao.insert(entity: model)
-        try? dao.insert(entities: [model])
+        let dao = CustomDAO()
+        dao.createTable()
+        try? dao.insert(entity: model)
+//        try? dao.insert(entities: [model])
 //        try? dao.delete(model.$nickName.expression == "更新后")
 //        try? dao.delete(model.$accountID.expressionOptional > 100)
 //        try? dao.deleteAll()
@@ -48,7 +59,9 @@ class ViewController: UIViewController {
                         "downPoints" : 88,
                         "registerDate" : "2020-08-08 06:06:06",
                         "hasFundsPassword" : true,
-                        "nest" :  ["nest_name" : "嵌套名字", "age" : 123]
+                        "nest" :  ["nest_name" : "嵌套名字", "age" : 123],
+                        "nests" : [["nest_name" : "嵌套名字", "age" : 123]],
+                        "custom_dict" : ["custom1" : ["nest_name" : "嵌套名字", "age" : 123]]
             ] as [String : Any]
         return CustomModel(JSON: jsonDict)!
     }

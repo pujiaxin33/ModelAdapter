@@ -37,6 +37,8 @@ open class StorageParams<Value> {
     }
 }
 
+extension Field: FieldWrappedProtocol { }
+
 @propertyWrapper public class Field<Value> {
     public var wrappedValue: Value
     public var projectedValue: Field { self }
@@ -159,5 +161,29 @@ open class StorageParams<Value> {
     }
 }
 
+extension FieldCustom: FieldWrappedProtocol { }
+@propertyWrapper public class FieldCustom<Value> {
+    public var wrappedValue: Value
+    public var projectedValue: FieldCustom { self }
+    let key: String?
+    var storageKey: String?
+    var storageVersion: Int?
+    var storageParams: StorageParams<Value>?
 
-
+    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.storageParams = storageParams
+        self.storageKey = storageParams?.key
+        self.storageVersion = storageParams?.version
+    }
+    convenience public init(wrappedValue: Value) {
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
+    }
+    convenience public init(wrappedValue: Value, key: String?) {
+        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
+    }
+    convenience public init(wrappedValue: Value, storageParams: StorageParams<Value>?) {
+        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
+    }
+}

@@ -15,6 +15,7 @@
 		19886C2C2496475D00A8D28D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19886C2A2496475D00A8D28D /* LaunchScreen.storyboard */; };
 		19886CAD24964A3900A8D28D /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886CAC24964A3900A8D28D /* CustomModel.swift */; };
 		19886CAF24964B2E00A8D28D /* DQDateTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886CAE24964B2E00A8D28D /* DQDateTransform.swift */; };
+		19EF104424AD8CDE0090A58D /* CustomModel+DAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */; };
 		19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F8007B2497570F00A98C1F /* CustomDAO.swift */; };
 		9EC6ECF047FB2B9A07E5588D /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD68C87A731E9037712163 /* Pods_Example.framework */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		19886C2D2496475D00A8D28D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19886CAC24964A3900A8D28D /* CustomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModel.swift; sourceTree = "<group>"; };
 		19886CAE24964B2E00A8D28D /* DQDateTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DQDateTransform.swift; sourceTree = "<group>"; };
+		19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomModel+DAO.swift"; sourceTree = "<group>"; };
 		19F8007B2497570F00A98C1F /* CustomDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDAO.swift; sourceTree = "<group>"; };
 		38FD68C87A731E9037712163 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4F23314EB699F7E1B04703A /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				19886C212496475B00A8D28D /* SceneDelegate.swift */,
 				19886C232496475B00A8D28D /* ViewController.swift */,
 				19886CAC24964A3900A8D28D /* CustomModel.swift */,
+				19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */,
 				19F8007B2497570F00A98C1F /* CustomDAO.swift */,
 				19886CAE24964B2E00A8D28D /* DQDateTransform.swift */,
 				19886C252496475B00A8D28D /* Main.storyboard */,
@@ -220,6 +223,7 @@
 				19886C242496475B00A8D28D /* ViewController.swift in Sources */,
 				19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */,
 				19886C202496475B00A8D28D /* AppDelegate.swift in Sources */,
+				19EF104424AD8CDE0090A58D /* CustomModel+DAO.swift in Sources */,
 				19886C222496475B00A8D28D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

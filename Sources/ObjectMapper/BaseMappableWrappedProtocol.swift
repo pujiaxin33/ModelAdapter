@@ -9,7 +9,6 @@ import Foundation
 import ObjectMapper
 
 extension Field: FieldMappableWrappedProtocol { }
-
 extension Field: BaseMappableWrappedProtocol where Value: BaseMappable {
     public func configBaseMappableMapperClosure() {
         self.mapperClosure = {[weak self] (key, map) in

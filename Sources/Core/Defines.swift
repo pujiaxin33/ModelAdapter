@@ -14,7 +14,6 @@ public protocol ModelAdaptorModel: ModelAdaptorMappable, ModelAdaptorStorable {}
 protocol FieldWrappedProtocol {
     var key: String? { get }
 }
-extension Field: FieldWrappedProtocol { }
 
 protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
     var codingKey: String? { get }
@@ -46,18 +45,7 @@ protocol FieldOptionalStorageWrappedProtocol: FieldWrappedProtocol {
     func update(row: Row)
 }
 
-protocol FieldSQLiteValueProviderWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get set }
-    var storageVersion: Int? { get }
-
-    func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table)
-    func setter() -> Setter?
-    func initExpresionIfNeeded(key: String)
-    func update(row: Row)
-}
-
-protocol FieldOptionalSQLiteValueProviderWrappedProtocol: FieldWrappedProtocol {
+protocol FieldCustomStorageWrappedProtocol: FieldWrappedProtocol {
     var storageKey: String? { get set }
     var storageVersion: Int? { get }
 

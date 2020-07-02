@@ -18,7 +18,7 @@
   "frameworks": "UIKit",
   "source_files": [
     "Sources",
-    "Sources/*.{swift}"
+    "Sources/**/*.{swift}"
   ],
   "requires_arc": true,
   "dependencies": {
