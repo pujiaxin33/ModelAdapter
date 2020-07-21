@@ -2,7 +2,7 @@
 
 模型适配器：Define once, Use anywhere!
 终极目标是只需要定义一次数据模型，就可以在数据解析、数据库存储等地方使用。
-目前仅支持ObjectMapper数据解析、SQLite.swift数据存储。
+目前仅支持[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)数据解析、[SQLite.swift](https://github.com/stephencelis/SQLite.swift)数据存储。
 
 这个库的灵感来源于`Java`语言的注解特性，感兴趣的可以点击了解[Android Jetpack的Room库的简单使用](https://juejin.im/post/5d4c0088f265da03925a3265)，了解如何使用注解来简化数据库存储。
 
