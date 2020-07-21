@@ -19,6 +19,7 @@ public protocol SQLiteValueProvider {
     init?(value: SQLiteValue)
     func value() -> SQLiteValue?
 
+    //当数据被包裹在数组、字典里面时，就会调用下面两个方法进行转换。
     init?(stringValue: String)
     func stringValue() -> String?
 }
@@ -130,46 +131,28 @@ extension Date: SQLiteValueProvider {
         return self
     }
     public init(stringValue: String) {
-        let interval = TimeInterval(stringValue) ?? 0
-        self = Date(timeIntervalSince1970: interval)
+        self = Date.fromDatatypeValue(stringValue)
     }
     public func stringValue() -> String? {
-        return "\(self.timeIntervalSince1970)"
+        return datatypeValue
     }
 }
-
-extension Optional: SQLiteValueProvider where Wrapped: SQLiteValueProvider {
-    public typealias SQLiteValue = Wrapped.SQLiteValue
-
+extension Data: SQLiteValueProvider {
+    public typealias SQLiteValue = Data
     public init?(value: SQLiteValue) {
-        if let initValue = Wrapped.init(value: value) {
-            self = .some(initValue)
-        }else {
-            return nil
-        }
+        self = value
     }
-    public func value() -> SQLiteValue? {
-        switch self {
-        case .some(let provider):
-            return provider.value()
-        case .none:
-            return nil
-        }
+    public func value() -> Data? {
+        return self
     }
-
-    public init?(stringValue: String) {
-        if let value = Wrapped.init(stringValue: stringValue) {
-            self = .some(value)
+    public init(stringValue: String) {
+        if let blob = Blob(stringValue: stringValue) {
+            self = Data.fromDatatypeValue(blob)
         }
-        return nil
+        self = Data()
     }
     public func stringValue() -> String? {
-        switch self {
-        case .some(let provider):
-            return provider.stringValue()
-        case .none:
-            return nil
-        }
+        return datatypeValue.toHex()
     }
 }
 
@@ -196,7 +179,7 @@ extension Array: SQLiteValueProvider where Element: SQLiteValueProvider {
     public func stringValue() -> String? { return value() }
 }
 
-extension Dictionary: SQLiteValueProvider where Key == String, Value: SQLiteValueProvider {
+extension Dictionary: SQLiteValueProvider where Key: SQLiteValueProvider, Value: SQLiteValueProvider {
     public typealias SQLiteValue = String
     public init?(value: SQLiteValue) {
         if let dictValue = Dictionary.fromString(value: value) {
@@ -215,10 +198,10 @@ extension Dictionary: SQLiteValueProvider where Key == String, Value: SQLiteValu
     public func stringValue() -> String? {
         var result = [String : String]()
         for (key, value) in self {
-            guard let stringValue = value.stringValue() else {
+            guard let keyValue = key.stringValue(), let stringValue = value.stringValue() else {
                 continue
             }
-            result[key] = stringValue
+            result[keyValue] = stringValue
         }
         guard let data = try? JSONSerialization.data(withJSONObject: result, options: []) else {
             return nil
@@ -230,12 +213,12 @@ extension Dictionary: SQLiteValueProvider where Key == String, Value: SQLiteValu
         guard let dict = try? JSONSerialization.jsonObject(with: Data(value.utf8), options: []) as? [String : String] else {
             return nil
         }
-        var result = [String: Value]()
+        var result = [Key: Value]()
         for (key, item) in dict {
-            guard let dictVaule = Value.init(stringValue: item)  else {
+            guard let resultKey = Key.init(stringValue: key), let resultVaule = Value.init(stringValue: item)  else {
                 continue
             }
-            result[key] = dictVaule
+            result[resultKey] = resultVaule
         }
         return result
     }

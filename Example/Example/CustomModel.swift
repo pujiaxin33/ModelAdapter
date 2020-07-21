@@ -15,24 +15,25 @@ enum Gender: String, SQLiteValueProvider {
     case female = "Female"
     case male = "Male"
 
-    typealias SQLiteValue = String
-    init?(value: SQLiteValue) {
+    init?(value: String) {
         self.init(rawValue: value)
     }
-    func value() -> SQLiteValue? {
+    func value() -> String? {
         return self.rawValue
     }
     init?(stringValue: String) {
         self.init(rawValue: stringValue)
     }
     func stringValue() -> String? {
-        return self.rawValue
+        return value()
     }
 }
 
 class CustomModel: ModelAdaptorModel {
     @FieldOptional(key: "accountID_key")
     var accountID: Int?
+
+    //这里的NilTransform<String>仅仅起到一个防止编译器报错，不知道convertor的类型。
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
     var userName: String = "名字"
     @FieldOptional(key: "nick_name")
@@ -45,28 +46,30 @@ class CustomModel: ModelAdaptorModel {
     var gender: Gender?
     @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
     var avatar: String?
-    @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DQDateTransform()))
+    @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DateTransform()))
     var birthday: Date?
     @Field(key: "level")
     var vipLevel: Int = 1
-    @Field
-    var levelPoints: Int = 0
-    @FieldOptional
-    var downPoints: Int?
-    @Field(codingParams: .init(convertor: DQDateTransform()))
-    var registerDate: Date = Date()   //注册时间，格式（2018-04-09 10:12:42 000）
-    @Field(wrappedValue: false, key: "hasFundsPassword")
-    var isExchangePasswordValid: Bool
+    @Field(codingParams: .init(convertor: DateTransform()))
+    var registerDate: Date = Date()
+    @Field(wrappedValue: false, key: "has_money")
+    var isRich: Bool
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
+
+    //ObjectMapper需要自己处理，SQLite.swift不需要自己处理（Array.Elment遵从SQLiteValueProvider就无须自己处理）
     @FieldCustom
     var nests: [NestModel] = [NestModel]()
+    //ObjectMapper需要自己处理，SQLite.swift不需要自己处理（Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider就无须自己处理）
+    //下面示例String、Int、NestModel、[NestModel]都是遵从于SQLiteValueProvider协议的。
     @FieldCustom
     var customDict: [String: NestModel]?
     @FieldCustom
+    var customDictInt: [Int : NestModel]?
+    @FieldCustom
     var customDictAarray: [String: [NestModel]]?
-    var customDictInt: [Int : NestModel]?//完全需要自己去处理map和storage
-
+    //需要自己处理ObjectMapper和QLite.swift逻辑
+    var customSet: Set<String>?
 
     required init() {
         //必须在required的初始化器调用initExpressionsIfNeeded方法
@@ -78,13 +81,13 @@ class CustomModel: ModelAdaptorModel {
     }
 
     func customMap(map: Map) {
-//        self.nests <- map["nests"]
+        self.nests <- map["nests"]
         self.customDict <- map["custom_dict"]
         self.customDictAarray <- map["custom_dict_array"]
         self.customDictInt <- (map["custom_dict_int"], IntDictTransform())
+        self.customSet <- (map["custom_set"], ArraySetTransform())
     }
 }
-
 
 struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     @FieldOptional(key: "nest_name")
@@ -93,24 +96,23 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     var nestAge: Int = 0
 
     init?(map: Map) {
+        initExpressionsIfNeeded()
+    }
+    init() {
+        initExpressionsIfNeeded()
     }
 
-    init() {}
-
-    typealias SQLiteValue = String
-    init?(value: SQLiteValue) {
+    init?(value: String) {
         self.init(JSONString: value)
     }
-    func value() -> SQLiteValue? {
+    func value() -> String? {
         return self.toJSONString()
     }
-
     init?(stringValue: String) {
         self.init(JSONString: stringValue)
     }
-
     func stringValue() -> String? {
-        return self.toJSONString()
+        return value()
     }
 }
 
@@ -147,5 +149,24 @@ struct IntDictTransform: TransformType {
             return nil
         }
         return String(data: data, encoding: .utf8)
+    }
+}
+
+struct ArraySetTransform: TransformType {
+    typealias Object = Set<String>
+    typealias JSON = [String]
+
+    func transformFromJSON(_ value: Any?) -> Object? {
+        guard let array = value as? [String] else {
+            return nil
+        }
+        return Set(array)
+    }
+
+    func transformToJSON(_ value: Object?) -> JSON? {
+        guard let set = value else {
+            return nil
+        }
+        return Array(set)
     }
 }

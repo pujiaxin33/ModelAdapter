@@ -10,6 +10,7 @@ import Foundation
 import ObjectMapper
 import SQLite
 
+/// 因为TransformType协议有关联类型，所以导致CodingParams变成了泛型类型。某些情况不需要配置convertor，只需要配置key、nested、delimiter等参数时，就传递一个NilTransform的实例即可，防止编译器报错。
 open class CodingParams<Convertor: TransformType>{
     public let key: String?
     public let convertor: Convertor?

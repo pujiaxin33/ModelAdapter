@@ -24,11 +24,11 @@ class ViewController: UIViewController {
 //        try? dao.delete(model.$nickName.expression == "更新后")
 //        try? dao.delete(model.$accountID.expression > 100)
 //        try? dao.deleteAll()
-//        model.nickName = "更新后"
-//        try? dao.update(entity: model, model.$nickName.expression == "昵称")
+        model.nickName = "更新后"
+        try? dao.update(entity: model, model.$nickName.expression == "昵称")
 //        try? dao.update(entity: model, model.$amount.expression == 333)
 //        let queryOne = try? dao.query(model.$birthday.expression == Date())
-//        let queryTwo = try? dao.query(model.$vipLevel.expression == 1)
+//        let queryTwo = try? dao.query(model.$vipLevel.expression == 10)
         if let queryAll = try? dao.queryAll() {
             print(queryAll)
         }
@@ -45,15 +45,14 @@ class ViewController: UIViewController {
                         "avatar_key" : "avatar",
                         "birthday_coding" : "2020-08-08 06:06:06",
                         "level" : 10,
-                        "levelPoints" : 99,
-                        "downPoints" : 88,
                         "registerDate" : "2020-08-08 06:06:06",
-                        "hasFundsPassword" : true,
+                        "has_money" : true,
                         "nest" :  ["nest_name" : "嵌套名字", "age" : 123],
                         "nests" : [["nest_name" : "嵌套名字", "age" : 123]],
                         "custom_dict" : ["custom1" : ["nest_name" : "嵌套名字", "age" : 123]],
                         "custom_dict_array" : ["custom1" : [["nest_name" : "嵌套名字", "age" : 123]]],
-                        "custom_dict_int" : [1 : ["nest_name" : "嵌套名字", "age" : 123]]
+                        "custom_dict_int" : [1 : ["nest_name" : "嵌套名字", "age" : 123]],
+                        "custom_set" : ["1", "2", "3"]
             ] as [String : Any]
         return CustomModel(JSON: jsonDict)!
     }
