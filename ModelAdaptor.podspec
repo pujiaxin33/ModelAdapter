@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.author       = { "pujiaxin33" => "317437084@qq.com" }
   s.platform     = :ios, "9.0"
-  s.swift_version = "5.0"
+  s.swift_version = "5.1"
   s.source       = { :git => "https://github.com/pujiaxin33/ModelAdaptor.git", :tag => "#{s.version}" }
   s.framework    = "UIKit"
   s.source_files  = "Sources", "Sources/**/*.{swift}"

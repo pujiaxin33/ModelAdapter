@@ -31,7 +31,7 @@ class CustomModel: ModelAdaptorModel {
 }
 ```
 
-经过这一步`ObjectMapper`层的数据解析已经完成，无需支持自己`func mapping(map: Map) `方法和添加类似`self.vipLevel <- map["level"]`的代码。
+经过这一步`ObjectMapper`层的数据解析已经完成，无需自己实现`func mapping(map: Map) `方法和添加类似`self.vipLevel <- map["level"]`的代码。
 
 ## 数据库DAO定义
 
@@ -97,6 +97,8 @@ let queryOne = try? dao.query(model.$accountID.expression == 123)
 
 ### 自定义codingKey
 
+就是数据解析时定义的key
+
 - 默认使用属性名
 ```Swift
 @FieldOptional
@@ -118,7 +120,7 @@ var nickName: String?
 ```
 这里的codingKey就是`nick_name_custom`。`codingParams.key`优先级高于上面的默认自定义key。
 
-因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor也需要传递一个NilTransform类型实例，防止编译器报错。
+因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor，也需要传递一个NilTransform类型实例，防止编译器报错。
 
 ### 自定义convertor
 
@@ -274,7 +276,7 @@ func queryAll() throws -> [Entity]?
 ```
 
 如果需要实现其他数据库操作，可以参考示例代码：
-```
+```Swift
 //CustomDAO添加的自定义方法
 func customUpdate(entity: Entity) throws {
     let statement = table.update(entity.$vipLevel.expression <- entity.vipLevel)
@@ -282,10 +284,10 @@ func customUpdate(entity: Entity) throws {
 }
 ```
 
-## 不需要存储，只要处理`ObjectMapper`
+## 不需要`SQLite.swift`，只处理`ObjectMapper`
 
 遵从`ModelAdaptorMappable`协议即可。
-```
+```Swift
 struct OnlyMap: ModelAdaptorMappable {
     @FieldOptional(key: "nick_name")
     var nickName: String?
@@ -303,6 +305,13 @@ struct OnlyMap: ModelAdaptorMappable {
 
 目前`ModelAdaptoer`处于实验性阶段，在小项目上进行了实践。感兴趣的朋友，可以一起优化壮大它。虽然目前有一些限制，但是带来的便利也是非常巨大的。期待你的加入，让`ModelAdaptoer`变得更加强大。
 
+# 安装
+
+## Cocoapods
+
+```
+pod 'ModelAdaptor'
+```
 
 
 
