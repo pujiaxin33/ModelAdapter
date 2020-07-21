@@ -116,6 +116,16 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     }
 }
 
+struct OnlyMap: ModelAdaptorMappable {
+    @FieldOptional(key: "nick_name")
+    var nickName: String?
+    @Field
+    var age: Int = 6
+
+    init?(map: Map) {
+    }
+}
+
 struct IntDictTransform: TransformType {
     typealias Object = [Int : NestModel]
     typealias JSON = String

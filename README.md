@@ -14,7 +14,7 @@
 
 ## 定义Model
 
-遵从`ModelAdaptorModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。然后实现协议要求实现的两个初始化方法，并且调用`initExpressions`方法。
+遵从`ModelAdaptorModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。然后实现协议要求实现的两个初始化方法，并且调用`initExpressions`方法，用于创建和属性绑定的`Expression`，用于后续数据库操作。
 ```Swift
 class CustomModel: ModelAdaptorModel {
     @Field(key: "level")
@@ -97,19 +97,28 @@ let queryOne = try? dao.query(model.$accountID.expression == 123)
 
 ### 自定义codingKey
 
-第一种解决方法，通过参数key指定。这里的key是全局的key，如果没有定义codingParams.key或者storageParams.key就会使用全局的key。
+- 默认使用属性名
+```Swift
+@FieldOptional
+var nickName: String?
+```
+这里的codingKey就是`nickName`。
+
+- 默认自定义key
 ```Swift
 @FieldOptional(key: "nick_name")
 var nickName: String?
 ```
+这里的codingKey就是`nick_name`。
 
-第二种解决方法，通过codingParams类型里面的key参数指定。
-因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor也需要传递一个NilTransform类型实例，防止编译器报错。
-只要定义了codingParams.key，即使定义了第一种解决方案里面的全局key，也会使用codingParams.key。
+- 自定义`codingParams.key`
 ```Swift
-@FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
-var avatar: String?
+@FieldOptional(codingParams: .init(key: "nick_name_custom", convertor: NilTransform<String>()))
+var nickName: String?
 ```
+这里的codingKey就是`nick_name_custom`。`codingParams.key`优先级高于上面的默认自定义key。
+
+因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor也需要传递一个NilTransform类型实例，防止编译器报错。
 
 ### 自定义convertor
 
@@ -151,7 +160,7 @@ func customMap(map: Map) {
 
 ### 自定义storageParams.key
 
-同codingKey一样，可以通过全局的key或者storageParams.key完成
+同codingKey一样，可以通过默认属性名、默认自定义key、storageParams.key完成
 
 ```Swift
 @Field(storageParams: .init(key: "user_name"))
@@ -247,7 +256,7 @@ extension CustomModel {
 }
 ```
 
-# DAO层使用
+## DAO层使用
 
 `ModelAdaptorDAO`协议默认实现了常用的增删改查方法：
 ```Swift
@@ -270,6 +279,21 @@ func queryAll() throws -> [Entity]?
 func customUpdate(entity: Entity) throws {
     let statement = table.update(entity.$vipLevel.expression <- entity.vipLevel)
     try connection.run(statement)
+}
+```
+
+## 不需要存储，只要处理`ObjectMapper`
+
+遵从`ModelAdaptorMappable`协议即可。
+```
+struct OnlyMap: ModelAdaptorMappable {
+    @FieldOptional(key: "nick_name")
+    var nickName: String?
+    @Field
+    var age: Int = 6
+
+    init?(map: Map) {
+    }
 }
 ```
 
