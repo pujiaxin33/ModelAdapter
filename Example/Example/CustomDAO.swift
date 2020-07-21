@@ -18,8 +18,8 @@ class CustomDAO: ModelAdaptorDAO {
     required init() {
     }
 
-
-
-
-
+    func customUpdate(entity: Entity) throws {
+        let statement = table.update(entity.$vipLevel.expression <- entity.vipLevel)
+        try connection.run(statement)
+    }
 }

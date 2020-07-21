@@ -13,7 +13,6 @@ import SQLite
 extension CustomModel {
     static let customSetExpression = Expression<String?>("custom_set")
 
-//    Set<String>
     func createColumn(tableBuilder: TableBuilder) {
         tableBuilder.column(CustomModel.customSetExpression)
     }

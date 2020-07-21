@@ -10,7 +10,7 @@ import SQLite
 
 public protocol ModelAdaptorStorable {
     init()
-    func initExpressionsIfNeeded()
+    func initExpressions()
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table)
     func setters() -> [Setter]
@@ -18,7 +18,7 @@ public protocol ModelAdaptorStorable {
 }
 
 public extension ModelAdaptorStorable {
-    func initExpressionsIfNeeded() {
+    func initExpressions() {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             guard let propertyName = child.label else {

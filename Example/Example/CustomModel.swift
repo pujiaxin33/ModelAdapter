@@ -34,11 +34,11 @@ class CustomModel: ModelAdaptorModel {
     var accountID: Int?
 
     //这里的NilTransform<String>仅仅起到一个防止编译器报错，不知道convertor的类型。
-    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: nil))
+    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: "user_name"))
     var userName: String = "名字"
     @FieldOptional(key: "nick_name")
     var nickName: String?
-    @Field(key: "amount", storageParams: .init(defaultValue: 100))
+    @Field(key: "amount", storageParams: .init(version: 2, defaultValue: 100))
     var amount: Double = 6
     @FieldOptional
     var phone: String?
@@ -72,12 +72,12 @@ class CustomModel: ModelAdaptorModel {
     var customSet: Set<String>?
 
     required init() {
-        //必须在required的初始化器调用initExpressionsIfNeeded方法
-        initExpressionsIfNeeded()
+        //必须在required的初始化器调用initExpressions方法
+        initExpressions()
     }
     required init?(map: Map) {
-        //必须在required的初始化器调用initExpressionsIfNeeded方法
-        initExpressionsIfNeeded()
+        //必须在required的初始化器调用initExpressions方法
+        initExpressions()
     }
 
     func customMap(map: Map) {
@@ -96,10 +96,10 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     var nestAge: Int = 0
 
     init?(map: Map) {
-        initExpressionsIfNeeded()
+        initExpressions()
     }
     init() {
-        initExpressionsIfNeeded()
+        initExpressions()
     }
 
     init?(value: String) {
