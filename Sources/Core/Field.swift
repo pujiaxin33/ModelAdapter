@@ -68,22 +68,8 @@ extension Field: FieldWrappedProtocol { }
             configMapperConvertorClosure(codingParams: codingParams)
         }
     }
-    convenience public init(wrappedValue: Value) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value, key: String?) {
-        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
-    }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value, storageParams: StorageParams<Value>?) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
-    }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
-    }
-    public init(wrappedValue: Value, key: String?, storageParams: StorageParams<Value>?) {
+
+    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
@@ -99,9 +85,6 @@ extension Field: FieldWrappedProtocol { }
             configMapperClosure()
         }
     }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value, codingParams: CodingParams<Convertor>?, storageParams: StorageParams<Value>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
-    }
 }
 
 @propertyWrapper public class FieldOptional<Value> {
@@ -115,7 +98,7 @@ extension Field: FieldWrappedProtocol { }
     var mapperClosure: ((String, Map) -> ())?
     var immutableMapperClosure: ((String, Map) -> ())?
 
-    public init<Convertor: TransformType>(wrappedValue: Value?, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
+    public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
         self.key = key
         self.codingKey = codingParams?.key
@@ -129,22 +112,7 @@ extension Field: FieldWrappedProtocol { }
             configMapperConvertorClosure(codingParams: codingParams)
         }
     }
-    convenience public init(wrappedValue: Value?) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value? = nil, key: String?) {
-        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
-    }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value? = nil, storageParams: StorageParams<Value>?) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
-    }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String?, codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: key, codingParams: codingParams, storageParams: nil)
-    }
-    public init(wrappedValue: Value? = nil, key: String?, storageParams: StorageParams<Value>?) {
+    public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
@@ -156,9 +124,6 @@ extension Field: FieldWrappedProtocol { }
         }else {
             configMapperClosure()
         }
-    }
-    convenience public init<Convertor: TransformType>(wrappedValue: Value? = nil, codingParams: CodingParams<Convertor>?, storageParams: StorageParams<Value>?) where Convertor.Object == Value {
-        self.init(wrappedValue: wrappedValue, key: nil, codingParams: codingParams, storageParams: storageParams)
     }
 }
 
@@ -177,14 +142,5 @@ extension FieldCustom: FieldWrappedProtocol { }
         self.storageParams = storageParams
         self.storageKey = storageParams?.key
         self.storageVersion = storageParams?.version
-    }
-    convenience public init(wrappedValue: Value) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value, key: String?) {
-        self.init(wrappedValue: wrappedValue, key: key, storageParams: nil)
-    }
-    convenience public init(wrappedValue: Value, storageParams: StorageParams<Value>?) {
-        self.init(wrappedValue: wrappedValue, key: nil, storageParams: storageParams)
     }
 }

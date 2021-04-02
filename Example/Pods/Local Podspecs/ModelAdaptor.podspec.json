@@ -10,7 +10,7 @@
   "platforms": {
     "ios": "9.0"
   },
-  "swift_versions": "5.0",
+  "swift_versions": "5.1",
   "source": {
     "git": "https://github.com/pujiaxin33/ModelAdaptor.git",
     "tag": "0.0.1"
@@ -29,5 +29,5 @@
 
     ]
   },
-  "swift_version": "5.0"
+  "swift_version": "5.1"
 }

@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
     :path: "../../ModelAdaptor"
 
 SPEC CHECKSUMS:
-  ModelAdaptor: cbe7b7b7727ca48bb957e7073634d719dcb363ad
+  ModelAdaptor: d2b70c1b0cffda201e122019b0c1d9435a80fad6
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
 
