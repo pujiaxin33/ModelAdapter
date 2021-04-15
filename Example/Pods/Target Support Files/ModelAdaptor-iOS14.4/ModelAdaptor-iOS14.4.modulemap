@@ -1,0 +1,6 @@
+framework module ModelAdaptor {
+  umbrella header "ModelAdaptor-iOS14.4-umbrella.h"
+
+  export *
+  module * { export * }
+}

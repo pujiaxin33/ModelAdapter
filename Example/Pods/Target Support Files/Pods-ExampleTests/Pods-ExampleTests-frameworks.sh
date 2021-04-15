@@ -161,14 +161,14 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/ModelAdaptor-iOS9.0/ModelAdaptor.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS9.0/ObjectMapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SQLite.swift-iOS9.0/SQLite.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ModelAdaptor-iOS14.4/ModelAdaptor.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS14.4/ObjectMapper.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SQLite.swift-iOS14.4/SQLite.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/ModelAdaptor-iOS9.0/ModelAdaptor.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS9.0/ObjectMapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SQLite.swift-iOS9.0/SQLite.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ModelAdaptor-iOS14.4/ModelAdaptor.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS14.4/ObjectMapper.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SQLite.swift-iOS14.4/SQLite.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
