@@ -50,8 +50,9 @@ extension Double: SQLiteValueProvider {
     public init?(stringValue: String) {
         if let value = Double(stringValue) {
             self = value
+        }else {
+            return nil
         }
-        return nil
     }
     public func stringValue() -> String? { return String(self) }
 }
@@ -66,8 +67,9 @@ extension Int64: SQLiteValueProvider {
     public init?(stringValue: String) {
         if let value = Int64(stringValue) {
             self = value
+        }else {
+            return nil
         }
-        return nil
     }
     public func stringValue() -> String? { return String(self) }
 }
@@ -119,8 +121,9 @@ extension Int: SQLiteValueProvider {
     public init?(stringValue: String) {
         if let value = Int(stringValue) {
             self = value
+        }else {
+            return nil
         }
-        return nil
     }
     public func stringValue() -> String? { return String(self) }
 }
@@ -194,8 +197,9 @@ extension Dictionary: SQLiteValueProvider where Key: SQLiteValueProvider, Value:
     public init?(stringValue: String) {
         if let dictValue = Dictionary.fromString(value: stringValue) {
             self = dictValue
+        }else {
+            return nil
         }
-        return nil
     }
     public func stringValue() -> String? {
         var result = [String : String]()
@@ -217,7 +221,7 @@ extension Dictionary: SQLiteValueProvider where Key: SQLiteValueProvider, Value:
         }
         var result = [Key: Value]()
         for (key, item) in dict {
-            guard let resultKey = Key.init(stringValue: key), let resultVaule = Value.init(stringValue: item)  else {
+            guard let resultKey = Key.init(stringValue: key), let resultVaule = Value.init(stringValue: item) else {
                 continue
             }
             result[resultKey] = resultVaule
