@@ -12,6 +12,8 @@ struct AssociatedKeys {
     static var expression: UInt8 = 0
     static var expressionOptional: UInt8 = 0
     static var expressionCustom: UInt8 = 0
+    static var expressionOptionalCustom: UInt8 = 0
+    static var expressionsInit: UInt8 = 0
 }
 
 public protocol SQLiteValueProvider {
@@ -158,7 +160,7 @@ extension Data: SQLiteValueProvider {
 
 extension Array: SQLiteValueProvider where Element: SQLiteValueProvider {
     public typealias SQLiteValue = String
-    static var separator: String { "|sss|" }
+    static var separator: String { "|MASep|" }
     public init?(value: SQLiteValue) {
         let components = value.components(separatedBy: Array.separator)
         self = components.compactMap { Element.init(stringValue: $0) }
@@ -224,6 +226,7 @@ extension Dictionary: SQLiteValueProvider where Key: SQLiteValueProvider, Value:
     }
 }
 
+extension Field: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider {}
 extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue> {
         set {
@@ -257,15 +260,17 @@ extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
         tableBuilder.column(expression)
     }
 
-    public func addColumn(table: Table) {
+    public func addColumn(table: Table) -> String? {
         if let value = self.storageParams?.defaultValue?.value() {
-            _ = table.addColumn(expression, defaultValue: value)
+            return table.addColumn(expression, defaultValue: value)
         }else {
             assertionFailure("Must provide defaultValue")
+            return nil
         }
     }
 }
 
+extension FieldOptional: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider { }
 extension FieldOptional: FieldOptionalStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue?> {
         set {
@@ -298,11 +303,12 @@ extension FieldOptional: FieldOptionalStorageWrappedProtocol where Value: SQLite
         tableBuilder.column(expression)
     }
 
-    public func addColumn(table: Table) {
-        _ = table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
+    public func addColumn(table: Table) -> String? {
+        return table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
     }
 }
 
+extension FieldCustom: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider { }
 extension FieldCustom: FieldCustomStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue?> {
         set {
@@ -333,7 +339,45 @@ extension FieldCustom: FieldCustomStorageWrappedProtocol where Value: SQLiteValu
         tableBuilder.column(expression)
     }
 
-    public func addColumn(table: Table) {
-        _ = table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
+    public func addColumn(table: Table) -> String? {
+        return table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
+    }
+}
+
+extension FieldOptionalCustom: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider { }
+extension FieldOptionalCustom: FieldCustomStorageWrappedProtocol where Value: SQLiteValueProvider {
+    public var expression: Expression<Value.SQLiteValue?> {
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.expressionOptionalCustom, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.expressionOptionalCustom) as! Expression<Value.SQLiteValue?>
+        }
+    }
+
+    public func setter() -> Setter? {
+        return self.expression <- self.wrappedValue?.value()
+    }
+
+    public func initExpresionIfNeeded(key: String) {
+        if objc_getAssociatedObject(self, &AssociatedKeys.expressionOptionalCustom) == nil {
+            self.expression = Expression<Value.SQLiteValue?>(key)
+        }
+    }
+
+    public func update(row: Row) {
+        if let value = row[expression] {
+            self.wrappedValue = Value.init(value: value)
+        }else {
+            self.wrappedValue = nil
+        }
+    }
+
+    public func createColumn(tableBuilder: TableBuilder) {
+        tableBuilder.column(expression)
+    }
+
+    public func addColumn(table: Table) -> String? {
+        return table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
     }
 }

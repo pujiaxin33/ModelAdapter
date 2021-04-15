@@ -9,54 +9,44 @@ import Foundation
 import ObjectMapper
 import SQLite
 
-public protocol ModelAdaptorModel: ModelAdaptorMappable, ModelAdaptorStorable {}
+public protocol ModelAdaptorModel: Mappable { }
+public protocol ModelAdaptorCustomMap {
+    func customMap(map: Map)
+}
+public protocol ModelAdaptorCustomStorage {
+    func createColumn(tableBuilder: TableBuilder)
+    func addColumn(table: Table) -> String?
+    func setters() -> [Setter]
+    func update(with row: Row)
+}
 
 protocol FieldWrappedProtocol {
     var key: String? { get }
 }
 
-protocol FieldMappableWrappedProtocol: FieldWrappedProtocol {
+protocol FieldMappableWrappedBaseProtocol: FieldWrappedProtocol {
     var codingKey: String? { get }
     var mapperClosure: ((String, Map)->())? { get }
     var immutableMapperClosure: ((String, Map)->())? { get }
 }
+protocol FieldMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
+protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
 
-protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedProtocol {}
-
-protocol FieldStorageWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get set }
-    var storageVersion: Int? { get }
+protocol FieldStorageWrappedBaseProtocol: FieldWrappedProtocol {
+    var storageKey: String? { get }
+    var storageIsNewField: Bool { get }
 
     func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table)
+    func addColumn(table: Table) -> String?
     func setter() -> Setter?
     func initExpresionIfNeeded(key: String)
     func update(row: Row)
 }
+protocol FieldStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { }
+protocol FieldOptionalStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { }
+protocol FieldCustomStorageWrappedProtocol: FieldStorageWrappedBaseProtocol {}
 
-protocol FieldOptionalStorageWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get set }
-    var storageVersion: Int? { get }
-
-    func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table)
-    func setter() -> Setter?
-    func initExpresionIfNeeded(key: String)
-    func update(row: Row)
-}
-
-protocol FieldCustomStorageWrappedProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get set }
-    var storageVersion: Int? { get }
-
-    func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table)
-    func setter() -> Setter?
-    func initExpresionIfNeeded(key: String)
-    func update(row: Row)
-}
-
-protocol BaseMappableWrappedProtocol {
+protocol BaseMappableValueWrappedProtocol {
     func configBaseMappableMapperClosure()
 }
 

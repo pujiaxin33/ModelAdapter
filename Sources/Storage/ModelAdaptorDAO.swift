@@ -8,17 +8,19 @@
 import Foundation
 import SQLite
 
-public protocol ModelAdaptorStorable {
-    init()
-    func initExpressions()
-    func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table)
-    func setters() -> [Setter]
-    func update(with row: Row)
-}
-
-public extension ModelAdaptorStorable {
-    func initExpressions() {
+extension ModelAdaptorModel {
+    var isExpressionsInited: Bool {
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.expressionsInit, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return (objc_getAssociatedObject(self, &AssociatedKeys.expressionsInit) as? Bool) ?? false
+        }
+    }
+    func initExpressionsIfNeeded() {
+        guard !isExpressionsInited else {
+            return
+        }
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             guard let propertyName = child.label else {
@@ -33,14 +35,10 @@ public extension ModelAdaptorStorable {
             }
         }
     }
-    func createColumn(tableBuilder: TableBuilder) {}
-    func addColumn(table: Table) {}
-    func setters() -> [Setter] { return [] }
-    func update(with row: Row) {}
 }
 
 public protocol ModelAdaptorDAO {
-    associatedtype Entity: ModelAdaptorStorable
+    associatedtype Entity: ModelAdaptorModel
     var connection: Connection { get }
     var table: Table { get }
 
@@ -61,42 +59,48 @@ public protocol ModelAdaptorDAO {
 
 public extension ModelAdaptorDAO {
     func createTable(ifNotExists: Bool = true) {
-        let entity = Entity()
+        let entity = Entity(JSON: [String : Any]())!
         let mirror = Mirror(reflecting: entity)
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
                 if let value = child.value as? FieldStorageWrappedProtocol {
-                    if value.storageVersion ?? 1 == 1 {
+                    if !value.storageIsNewField {
                         value.createColumn(tableBuilder: t)
                     }
                 }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                    if value.storageVersion ?? 1 == 1 {
+                    if !value.storageIsNewField {
                         value.createColumn(tableBuilder: t)
                     }
                 }else if let value = child.value as? FieldCustomStorageWrappedProtocol{
-                    if value.storageVersion ?? 1 == 1 {
+                    if !value.storageIsNewField {
                         value.createColumn(tableBuilder: t)
                     }
                 }
             }
-            entity.createColumn(tableBuilder: t)
+            if let customEntity = entity as? ModelAdaptorCustomStorage {
+                customEntity.createColumn(tableBuilder: t)
+            }
         })
         for child in mirror.children {
             if let value = child.value as? FieldStorageWrappedProtocol {
-                if value.storageVersion ?? 1 > 1 {
-                    value.addColumn(table: table)
+                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                    _ = try? connection.run(statement)
                 }
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if value.storageVersion ?? 1 > 1 {
-                    value.addColumn(table: table)
+                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                    _ = try? connection.run(statement)
                 }
             }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if value.storageVersion ?? 1 > 1 {
-                    value.addColumn(table: table)
+                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                    _ = try? connection.run(statement)
                 }
             }
         }
-        entity.addColumn(table: table)
+        if let customEntity = entity as? ModelAdaptorCustomStorage {
+            if let statement = customEntity.addColumn(table: table) {
+                _ = try? connection.run(statement)
+            }
+        }
     }
 
     func insert(entity: Entity) throws {
@@ -138,9 +142,11 @@ public extension ModelAdaptorDAO {
         }) else {
             return nil
         }
-        let entity = Entity()
+        let entity = Entity(JSON: [String : Any]())!
         update(entity: entity, with: row)
-        entity.update(with: row)
+        if let customEntity = entity as? ModelAdaptorCustomStorage {
+            customEntity.update(with: row)
+        }
         return entity
     }
 
@@ -151,7 +157,7 @@ public extension ModelAdaptorDAO {
         }) else {
             return nil
         }
-        let entity = Entity()
+        let entity = Entity(JSON: [String : Any]())!
         update(entity: entity, with: row)
         return entity
     }
@@ -162,7 +168,7 @@ public extension ModelAdaptorDAO {
         }
         var entities = [Entity]()
         for row in rows {
-            let entity = Entity()
+            let entity = Entity(JSON: [String : Any]())!
             update(entity: entity, with: row)
             entities.append(entity)
         }
@@ -187,7 +193,9 @@ public extension ModelAdaptorDAO {
                 }
             }
         }
-        setters.append(contentsOf: entity.setters())
+        if let customEntity = entity as? ModelAdaptorCustomStorage {
+            setters.append(contentsOf: customEntity.setters())
+        }
         return setters
     }
 
@@ -202,6 +210,8 @@ public extension ModelAdaptorDAO {
                 value.update(row: row)
             }
         }
-        entity.update(with: row)
+        if let customEntity = entity as? ModelAdaptorCustomStorage {
+            customEntity.update(with: row)
+        }
     }
 }

@@ -9,12 +9,9 @@ import Foundation
 import ObjectMapper
 import SQLite
 
-public protocol ModelAdaptorMappable: Mappable {
-    func customMap(map: Map)
-}
-
-public extension ModelAdaptorMappable {
+public extension ModelAdaptorModel {
     mutating func mapping(map: Map) {
+        initExpressionsIfNeeded()
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             guard let propertyName = child.label else {
@@ -26,28 +23,11 @@ public extension ModelAdaptorMappable {
                 value.mapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
             }
         }
-        self.customMap(map: map)
-    }
-    func customMap(map: Map) { }
-}
-
-public protocol ModelAdaptorImmutableMappable: ImmutableMappable { }
-public extension ModelAdaptorImmutableMappable {
-    mutating func mapping(map: Map) {
-        let mirror = Mirror(reflecting: self)
-        for child in mirror.children {
-            guard let propertyName = child.label else {
-                continue
-            }
-            if let value = child.value as? FieldMappableWrappedProtocol {
-                value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
-            }else if let value =  child.value as? FieldOptionalMappableWrappedProtocol {
-                value.immutableMapperClosure?(KeyManager.codingKey(propertyName: propertyName, key: value.key, codingKey: value.codingKey), map)
-            }
+        if let customModel = self as? ModelAdaptorCustomMap {
+            customModel.customMap(map: map)
         }
     }
 }
-
 
 public struct NilJSON {}
 public class NilTransform<NilValue>: TransformType {

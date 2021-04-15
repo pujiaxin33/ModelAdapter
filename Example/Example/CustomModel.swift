@@ -38,7 +38,7 @@ class CustomModel: ModelAdaptorModel {
     var userName: String = "名字"
     @FieldOptional(key: "nick_name")
     var nickName: String?
-    @Field(key: "amount", storageParams: .init(version: 2, defaultValue: 100))
+    @Field(key: "amount", storageParams: .init(isNewField: true, defaultValue: 100))
     var amount: Double = 6
     @FieldOptional
     var phone: String?
@@ -57,29 +57,25 @@ class CustomModel: ModelAdaptorModel {
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
 
-    //ObjectMapper需要自己处理，SQLite.swift不需要自己处理（Array.Elment遵从SQLiteValueProvider就无须自己处理）
-    @FieldCustom
-    var nests: [NestModel] = [NestModel]()
-    //ObjectMapper需要自己处理，SQLite.swift不需要自己处理（Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider就无须自己处理）
+    //如果值类型不是基础类型且不遵从BaseMappable，那么ObjectMapper的map需要自己处理
+    //如果值类型遵从SQLiteValueProvider协议，就无需处理SQlite逻辑。Array.Elment遵从SQLiteValueProvider、Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider等情况）
     //下面示例String、Int、NestModel、[NestModel]都是遵从于SQLiteValueProvider协议的。
     @FieldCustom
+    var nests: [NestModel] = [NestModel]()
+    @FieldOptionalCustom
     var customDict: [String: NestModel]?
-    @FieldCustom
+    @FieldOptionalCustom
     var customDictInt: [Int : NestModel]?
-    @FieldCustom
+    @FieldOptionalCustom
     var customDictAarray: [String: [NestModel]]?
-    //需要自己处理ObjectMapper和QLite.swift逻辑
+    //如果值类型既不遵从BaseMappable协议，也没有遵从SQLiteValueProvider，就不使用任何@Field，需要自己处理ObjectMapper和QLite.swift逻辑
     var customSet: Set<String>?
 
-    required init() {
-        //必须在required的初始化器调用initExpressions方法
-        initExpressions()
-    }
     required init?(map: Map) {
-        //必须在required的初始化器调用initExpressions方法
-        initExpressions()
     }
+}
 
+extension CustomModel: ModelAdaptorCustomMap {
     func customMap(map: Map) {
         self.nests <- map["nests"]
         self.customDict <- map["custom_dict"]
@@ -96,10 +92,6 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     var nestAge: Int = 0
 
     init?(map: Map) {
-        initExpressions()
-    }
-    init() {
-        initExpressions()
     }
 
     init?(value: String) {
@@ -116,19 +108,9 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
     }
 }
 
-struct OnlyMap: ModelAdaptorMappable {
-    @FieldOptional(key: "nick_name")
-    var nickName: String?
-    @Field
-    var age: Int = 6
-
-    init?(map: Map) {
-    }
-}
-
 struct IntDictTransform: TransformType {
     typealias Object = [Int : NestModel]
-    typealias JSON = String
+    typealias JSON = [Int : [String : Any]]
 
     func transformFromJSON(_ value: Any?) -> [Int : NestModel]? {
         guard let dict = value as? [Int : [String: Any]] else {
@@ -144,21 +126,15 @@ struct IntDictTransform: TransformType {
         return result
     }
 
-    func transformToJSON(_ value: [Int : NestModel]?) -> String? {
+    func transformToJSON(_ value: [Int : NestModel]?) -> [Int : [String : Any]]? {
         guard let dict = value else {
             return nil
         }
-        var result = [Int: String]()
+        var result = [Int: [String:Any]]()
         for (key, value) in dict {
-            guard let string = value.stringValue() else {
-                continue
-            }
-            result[key] = string
+            result[key] = value.toJSON()
         }
-        guard let data = try? JSONSerialization.data(withJSONObject: result, options: []) else {
-            return nil
-        }
-        return String(data: data, encoding: .utf8)
+        return result
     }
 }
 
