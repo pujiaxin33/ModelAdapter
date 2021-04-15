@@ -83,7 +83,7 @@ class ExampleTests: XCTestCase {
 
     func createModel() -> CustomModel {
         let jsonDict = [
-                        "accountID_key" : 123,
+                        "accountID_key" : UUID().uuidString,
                         "userName" : "用户名",
                         "nick_name" : "昵称",
                         "amount" : Double(100),

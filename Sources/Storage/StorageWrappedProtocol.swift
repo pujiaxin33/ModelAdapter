@@ -230,7 +230,7 @@ extension Dictionary: SQLiteValueProvider where Key: SQLiteValueProvider, Value:
     }
 }
 
-extension Field: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider {}
+extension Field: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider { }
 extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
     public var expression: Expression<Value.SQLiteValue> {
         set {

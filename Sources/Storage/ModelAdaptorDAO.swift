@@ -8,6 +8,18 @@
 import Foundation
 import SQLite
 
+class StorageNormalParams {
+    let key: String?
+    let primaryKey: Bool
+    let isNewField: Bool
+
+    init<Value>(params: StorageParams<Value>) {
+        key = params.key
+        primaryKey = params.primaryKey
+        isNewField = params.isNewField
+    }
+}
+
 extension ModelAdaptorModel {
     var isExpressionsInited: Bool {
         set {
@@ -27,11 +39,11 @@ extension ModelAdaptorModel {
                 continue
             }
             if let value = child.value as? FieldStorageWrappedProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
             }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageKey))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
             }
         }
     }
@@ -64,15 +76,15 @@ public extension ModelAdaptorDAO {
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
                 if let value = child.value as? FieldStorageWrappedProtocol {
-                    if !value.storageIsNewField {
+                    if !(value.storageNormalParams?.isNewField == true) {
                         value.createColumn(tableBuilder: t)
                     }
                 }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                    if !value.storageIsNewField {
+                    if !(value.storageNormalParams?.isNewField == true) {
                         value.createColumn(tableBuilder: t)
                     }
                 }else if let value = child.value as? FieldCustomStorageWrappedProtocol{
-                    if !value.storageIsNewField {
+                    if !(value.storageNormalParams?.isNewField == true) {
                         value.createColumn(tableBuilder: t)
                     }
                 }
@@ -83,15 +95,15 @@ public extension ModelAdaptorDAO {
         })
         for child in mirror.children {
             if let value = child.value as? FieldStorageWrappedProtocol {
-                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
                     _ = try? connection.run(statement)
                 }
             }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
                     _ = try? connection.run(statement)
                 }
             }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if value.storageIsNewField, let statement = value.addColumn(table: table) {
+                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
                     _ = try? connection.run(statement)
                 }
             }

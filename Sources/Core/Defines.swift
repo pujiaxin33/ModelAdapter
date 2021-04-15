@@ -33,8 +33,7 @@ protocol FieldMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
 protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
 
 protocol FieldStorageWrappedBaseProtocol: FieldWrappedProtocol {
-    var storageKey: String? { get }
-    var storageIsNewField: Bool { get }
+    var storageNormalParams: StorageNormalParams? { get }
 
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table) -> String?

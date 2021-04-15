@@ -30,9 +30,8 @@ enum Gender: String, SQLiteValueProvider {
 }
 
 class CustomModel: ModelAdaptorModel {
-    @FieldOptional(key: "accountID_key")
-    var accountID: Int?
-
+    @FieldOptional(key: "accountID_key", storageParams: .init(primaryKey: true))
+    var accountID: String?
     //这里的NilTransform<String>仅仅起到一个防止编译器报错，不知道convertor的类型。
     @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: "user_name"))
     var userName: String = "名字"
@@ -101,7 +100,11 @@ struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
         return self.toJSONString()
     }
     init?(stringValue: String) {
-        self.init(JSONString: stringValue)
+        if !stringValue.isEmpty {
+            self.init(JSONString: stringValue)
+        }else {
+            return nil
+        }
     }
     func stringValue() -> String? {
         return value()

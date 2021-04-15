@@ -29,10 +29,12 @@ open class CodingParams<Convertor: TransformType>{
 
 open class StorageParams<Value> {
     public let key: String?
+    public let primaryKey: Bool
     public let isNewField: Bool
     public let defaultValue: Value?
-    public init(key: String? = nil, isNewField: Bool = false, defaultValue: Value? = nil) {
+    public init(key: String? = nil, primaryKey: Bool = false, isNewField: Bool = false, defaultValue: Value? = nil) {
         self.key = key
+        self.primaryKey = primaryKey
         self.isNewField = isNewField
         self.defaultValue = defaultValue
     }
@@ -45,9 +47,8 @@ extension Field: FieldWrappedProtocol { }
     public var projectedValue: Field { self }
     let key: String?
     var codingKey: String?
-    var storageKey: String?
-    var storageIsNewField: Bool = false
     var storageParams: StorageParams<Value>?
+    var storageNormalParams: StorageNormalParams?
     var mapperClosure: ((String, Map) -> ())?
     var immutableMapperClosure: ((String, Map) -> ())?
 
@@ -56,8 +57,9 @@ extension Field: FieldWrappedProtocol { }
         self.key = key
         self.codingKey = codingParams?.key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
 
         if wrappedValue is ExpressibleByNilLiteral {
             assertionFailure("Use FieldOptional when value is optional")
@@ -73,8 +75,9 @@ extension Field: FieldWrappedProtocol { }
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
 
         if wrappedValue is ExpressibleByNilLiteral {
             assertionFailure("Use FieldOptional when value is optional")
@@ -93,8 +96,7 @@ extension Field: FieldWrappedProtocol { }
     let key: String?
     var codingKey: String?
     var storageParams: StorageParams<Value>?
-    var storageKey: String?
-    var storageIsNewField: Bool = false
+    var storageNormalParams: StorageNormalParams?
     var mapperClosure: ((String, Map) -> ())?
     var immutableMapperClosure: ((String, Map) -> ())?
 
@@ -103,8 +105,9 @@ extension Field: FieldWrappedProtocol { }
         self.key = key
         self.codingKey = codingParams?.key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
 
         if let aClass = self as? BaseMappableValueWrappedProtocol {
             aClass.configBaseMappableMapperClosure()
@@ -116,8 +119,9 @@ extension Field: FieldWrappedProtocol { }
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
 
         if let aClass = self as? BaseMappableValueWrappedProtocol {
             aClass.configBaseMappableMapperClosure()
@@ -132,16 +136,16 @@ extension FieldCustom: FieldWrappedProtocol { }
     public var wrappedValue: Value
     public var projectedValue: FieldCustom { self }
     let key: String?
-    var storageKey: String?
-    var storageIsNewField: Bool = false
     var storageParams: StorageParams<Value>?
+    var storageNormalParams: StorageNormalParams?
 
     public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
         if wrappedValue is ExpressibleByNilLiteral {
             assertionFailure("Use FieldOptionalCustom when value is optional")
         }
@@ -153,15 +157,15 @@ extension FieldOptionalCustom: FieldWrappedProtocol { }
     public var wrappedValue: Value?
     public var projectedValue: FieldOptionalCustom { self }
     let key: String?
-    var storageKey: String?
-    var storageIsNewField: Bool = false
     var storageParams: StorageParams<Value>?
+    var storageNormalParams: StorageNormalParams?
 
     public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
-        self.storageKey = storageParams?.key
-        self.storageIsNewField = storageParams?.isNewField ?? false
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
     }
 }
