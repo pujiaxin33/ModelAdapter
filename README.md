@@ -1,7 +1,7 @@
 # ModelAdaptor
 
 模型适配器：Define once, Use anywhere!
-终极目标是只需要定义一次数据模型，就可以在数据解析、数据库存储等地方使用。
+终极目标是只需要定义一次数据模型，就可以在数据解析、数据库存储等地方解析并使用。
 目前仅支持[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)数据解析、[SQLite.swift](https://github.com/stephencelis/SQLite.swift)数据存储。
 
 这个库的灵感来源于`Java`语言的注解特性，感兴趣的可以点击了解[Android Jetpack的Room库的简单使用](https://juejin.im/post/5d4c0088f265da03925a3265)，了解如何使用注解来简化数据库存储。
@@ -14,7 +14,7 @@
 
 ## 定义Model
 
-遵从`ModelAdaptorModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。然后实现协议要求实现的两个初始化方法，并且调用`initExpressions`方法，用于创建和属性绑定的`Expression`，用于后续数据库操作。
+遵从`ModelAdaptorModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。
 ```Swift
 class CustomModel: ModelAdaptorModel {
     @Field(key: "level")
@@ -35,7 +35,7 @@ class CustomModel: ModelAdaptorModel {
 
 ## 数据库DAO定义
 
-遵从`ModelAdaptorDAO`协议，确定关联类型`Entity`为`CustomModel`。然后实现协议要求提供的`connection`和`table`属性。整个数据库层的定义就完成了。不需要自己写增删改查的样板代码了。
+创建`CustomDAO`类，遵从`ModelAdaptorDAO`协议，设置关联类型`Entity`为`CustomModel`。然后实现协议要求提供的`connection`和`table`属性。整个数据库层的定义就完成了。不需要自己写增删改查的样板代码了。
 ```Swift
 class CustomDAO: ModelAdaptorDAO {
     typealias Entity = CustomModel
@@ -55,7 +55,7 @@ let jsonDict = ["accountID" : 123, "level" : 10]
 let model = CustomModel(JSON: jsonDict)!
 ```
 
-### 创建dao示例，创建数据库表单
+### 创建dao实例并创建数据库表单
 ```Swift
 let dao = CustomDAO()
 dao.createTable()
@@ -97,30 +97,29 @@ let queryOne = try? dao.query(model.$accountID.expression == 123)
 
 ### 自定义codingKey
 
-就是数据解析时定义的key
+数据解析时定义的key，确定优先级从高到低：key>codingParams.key>propertyName
 
-- 默认使用属性名
-```Swift
-@FieldOptional
-var nickName: String?
-```
-这里的codingKey就是`nickName`。
-
-- 默认自定义key
+- 使用key
 ```Swift
 @FieldOptional(key: "nick_name")
 var nickName: String?
 ```
 这里的codingKey就是`nick_name`。
 
-- 自定义`codingParams.key`
+- 使用`codingParams.key`
 ```Swift
 @FieldOptional(codingParams: .init(key: "nick_name_custom", convertor: NilTransform<String>()))
 var nickName: String?
 ```
-这里的codingKey就是`nick_name_custom`。`codingParams.key`优先级高于上面的默认自定义key。
-
+这里的codingKey就是`nick_name_custom`。
 因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor，也需要传递一个NilTransform类型实例，防止编译器报错。
+
+- 使用属性名
+```Swift
+@FieldOptional
+var nickName: String?
+```
+这里的codingKey就是`nickName`。
 
 ### 自定义convertor
 

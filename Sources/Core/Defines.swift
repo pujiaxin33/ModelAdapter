@@ -27,7 +27,6 @@ protocol FieldWrappedProtocol {
 protocol FieldMappableWrappedBaseProtocol: FieldWrappedProtocol {
     var codingKey: String? { get }
     var mapperClosure: ((String, Map)->())? { get }
-    var immutableMapperClosure: ((String, Map)->())? { get }
 }
 protocol FieldMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
 protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
@@ -46,6 +45,9 @@ protocol FieldOptionalStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { 
 protocol FieldCustomStorageWrappedProtocol: FieldStorageWrappedBaseProtocol {}
 
 protocol BaseMappableValueWrappedProtocol {
+    func configBaseMappableMapperClosure()
+}
+protocol ArrayBaseMappableValueWrappedProtocol {
     func configBaseMappableMapperClosure()
 }
 

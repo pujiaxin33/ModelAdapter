@@ -20,16 +20,9 @@ class ViewController: UIViewController {
         let dao = CustomDAO()
         dao.createTable()
         try? dao.insert(entity: model)
-//        try? dao.insert(entities: [model])
-//        try? dao.delete(model.$nickName.expression == "更新后")
-//        try? dao.delete(model.$accountID.expression > 100)
-//        try? dao.deleteAll()
         model.nickName = "更新后"
         //需要导入SQLite，下面==操作符才能正确识别
         try? dao.update(entity: model, model.$nickName.expression == "昵称")
-//        try? dao.update(entity: model, model.$amount.expression == 333)
-//        let queryOne = try? dao.query(model.$birthday.expression == Date())
-//        let queryTwo = try? dao.query(model.$vipLevel.expression == 10)
         if let queryAll = try? dao.queryAll() {
             print(queryAll)
         }

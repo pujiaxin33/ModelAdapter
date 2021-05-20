@@ -16,6 +16,9 @@ struct AssociatedKeys {
     static var expressionsInit: UInt8 = 0
 }
 
+/// 把自定义的数据类型转换为SQLite可以存储的数据类型。
+/// 需要实现方法`init?(value: SQLiteValue)`用于数据库类型转自定义类型；实现`func value() -> SQLiteValue?`用于把当前的自定义类型数据转换为数据库支持的类型。
+/// 如果自定义类型会出现在数组、字典里面，就需要实现`init?(stringValue: String)`和`func stringValue() -> String?`方法，用于将当前的自定义类型数据存储进数组或者字典里面，然后数组或字典再被转换成字符串存储进数据库。
 public protocol SQLiteValueProvider {
     associatedtype SQLiteValue: SQLite.Value
     init?(value: SQLiteValue)

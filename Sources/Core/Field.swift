@@ -50,7 +50,6 @@ extension Field: FieldWrappedProtocol { }
     var storageParams: StorageParams<Value>?
     var storageNormalParams: StorageNormalParams?
     var mapperClosure: ((String, Map) -> ())?
-    var immutableMapperClosure: ((String, Map) -> ())?
 
     public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
@@ -98,7 +97,6 @@ extension Field: FieldWrappedProtocol { }
     var storageParams: StorageParams<Value>?
     var storageNormalParams: StorageNormalParams?
     var mapperClosure: ((String, Map) -> ())?
-    var immutableMapperClosure: ((String, Map) -> ())?
 
     public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
         self.wrappedValue = wrappedValue
@@ -115,6 +113,7 @@ extension Field: FieldWrappedProtocol { }
             configMapperConvertorClosure(codingParams: codingParams)
         }
     }
+
     public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
         self.key = key

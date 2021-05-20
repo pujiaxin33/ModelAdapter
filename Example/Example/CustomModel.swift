@@ -56,8 +56,8 @@ class CustomModel: ModelAdaptorModel {
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
 
-    //如果值类型不是基础类型且不遵从BaseMappable，那么ObjectMapper的map需要自己处理
-    //如果值类型遵从SQLiteValueProvider协议，就无需处理SQlite逻辑。Array.Elment遵从SQLiteValueProvider、Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider等情况）
+    //如果值类型不是基础类型或不是遵从BaseMappable的类型（比如[String: T]、[String : [T]]、[Int : T]不能被识别），那么ObjectMapper的map需要自己处理
+    //如果值类型遵从SQLiteValueProvider协议，就无需处理SQlite逻辑。（Array.Elment遵从SQLiteValueProvider、Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider等情况）
     //下面示例String、Int、NestModel、[NestModel]都是遵从于SQLiteValueProvider协议的。
     @FieldCustom
     var nests: [NestModel] = [NestModel]()
