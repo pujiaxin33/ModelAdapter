@@ -258,7 +258,7 @@ extension Field: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
     }
 
     public func update(row: Row) {
-        if let value = Value.init(value: row[expression]) {
+        if let rowValue = try? row.get(expression), let value = Value.init(value: rowValue) {
             self.wrappedValue = value
         }
     }
@@ -299,7 +299,7 @@ extension FieldOptional: FieldOptionalStorageWrappedProtocol where Value: SQLite
     }
 
     public func update(row: Row) {
-        if let value = row[expression] {
+        if let value = try? row.get(expression) {
             self.wrappedValue = Value.init(value: value)
         }else {
             self.wrappedValue = nil
@@ -337,7 +337,7 @@ extension FieldCustom: FieldCustomStorageWrappedProtocol where Value: SQLiteValu
     }
 
     public func update(row: Row) {
-        if let stroageValue = row[expression], let value = Value.init(value: stroageValue) {
+        if let stroageValue = try? row.get(expression), let value = Value.init(value: stroageValue) {
             self.wrappedValue = value
         }
     }
@@ -373,7 +373,7 @@ extension FieldOptionalCustom: FieldCustomStorageWrappedProtocol where Value: SQ
     }
 
     public func update(row: Row) {
-        if let value = row[expression] {
+        if let value = try? row.get(expression) {
             self.wrappedValue = Value.init(value: value)
         }else {
             self.wrappedValue = nil
