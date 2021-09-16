@@ -9,7 +9,7 @@ import Foundation
 import ObjectMapper
 import SQLite
 
-public protocol ModelAdaptorModel: Mappable { }
+public protocol ModelAdaptorModel: Mappable, CustomStringConvertible { }
 public protocol ModelAdaptorCustomMap {
     func customMap(map: Map)
 }
@@ -51,3 +51,6 @@ protocol ArrayBaseMappableValueWrappedProtocol {
     func configBaseMappableMapperClosure()
 }
 
+internal func mirrorDescriptionPrettyPrinted(_ string: String) -> String {
+    return string.replacingOccurrences(of: "Mirror for ", with: "")
+}

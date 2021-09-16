@@ -29,6 +29,32 @@ public extension ModelAdaptorModel {
     }
 }
 
+public extension ModelAdaptorModel {
+    var description: String {
+        let mirror = Mirror(reflecting: self)
+        var infoDict = [String:Any]()
+        for child in mirror.children {
+            guard let propertyName = child.label else {
+                continue
+            }
+            if let valueDesc = child.value as? CustomStringConvertible {
+                infoDict[propertyName] = valueDesc.description
+            }else if  JSONSerialization.isValidJSONObject(child.value) {
+                infoDict[propertyName] = child.value
+            }else {
+                let valueMirror = Mirror(reflecting: child.value)
+                infoDict[propertyName] = mirrorDescriptionPrettyPrinted(valueMirror.description)
+            }
+        }
+        if JSONSerialization.isValidJSONObject(infoDict),
+           let data = try? JSONSerialization.data(withJSONObject: infoDict, options: .prettyPrinted),
+           let string = String(data: data, encoding: .utf8) {
+            return "\(mirrorDescriptionPrettyPrinted(mirror.description)):\(string)"
+        }
+        return mirrorDescriptionPrettyPrinted(mirror.description)
+    }
+}
+
 public struct NilJSON {}
 public class NilTransform<NilValue>: TransformType {
     public typealias Object = NilValue

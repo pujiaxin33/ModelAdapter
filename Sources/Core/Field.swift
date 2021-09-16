@@ -88,6 +88,16 @@ extension Field: FieldWrappedProtocol { }
         }
     }
 }
+extension Field: CustomStringConvertible {
+    public var description: String {
+        if let desc = self.wrappedValue as? CustomStringConvertible {
+            return desc.description
+        }else {
+            let mirror = Mirror(reflecting: self.wrappedValue)
+            return mirrorDescriptionPrettyPrinted(mirror.description)
+        }
+    }
+}
 
 @propertyWrapper public class FieldOptional<Value> {
     public var wrappedValue: Value?
@@ -129,6 +139,18 @@ extension Field: FieldWrappedProtocol { }
         }
     }
 }
+extension FieldOptional: CustomStringConvertible {
+    public var description: String {
+        if let desc = self.wrappedValue as? CustomStringConvertible {
+            return desc.description
+        }else if let value = self.wrappedValue {
+            let mirror = Mirror(reflecting: value)
+            return mirrorDescriptionPrettyPrinted(mirror.description)
+        }else {
+            return "nil"
+        }
+    }
+}
 
 extension FieldCustom: FieldWrappedProtocol { }
 @propertyWrapper public class FieldCustom<Value> {
@@ -151,6 +173,17 @@ extension FieldCustom: FieldWrappedProtocol { }
     }
 }
 
+extension FieldCustom: CustomStringConvertible {
+    public var description: String {
+        if let desc = self.wrappedValue as? CustomStringConvertible {
+            return desc.description
+        }else {
+            let mirror = Mirror(reflecting: self.wrappedValue)
+            return mirrorDescriptionPrettyPrinted(mirror.description)
+        }
+    }
+}
+
 extension FieldOptionalCustom: FieldWrappedProtocol { }
 @propertyWrapper public class FieldOptionalCustom<Value> {
     public var wrappedValue: Value?
@@ -165,6 +198,19 @@ extension FieldOptionalCustom: FieldWrappedProtocol { }
         self.storageParams = storageParams
         if let params = storageParams {
             self.storageNormalParams = StorageNormalParams(params: params)
+        }
+    }
+}
+
+extension FieldOptionalCustom: CustomStringConvertible {
+    public var description: String {
+        if let desc = self.wrappedValue as? CustomStringConvertible {
+            return desc.description
+        }else if let value = self.wrappedValue {
+            let mirror = Mirror(reflecting: value)
+            return mirrorDescriptionPrettyPrinted(mirror.description)
+        }else {
+            return "nil"
         }
     }
 }
