@@ -8,14 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		19886C0A2496467400A8D28D /* ModelAdaptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 19886C082496467400A8D28D /* ModelAdaptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		19886C35249648FA00A8D28D /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19886C34249648FA00A8D28D /* Defines.swift */; };
+		EA8B7B0126F32BEF00289E6D /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AF826F32BEF00289E6D /* Field.swift */; };
+		EA8B7B0226F32BEF00289E6D /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AF926F32BEF00289E6D /* KeyManager.swift */; };
+		EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFA26F32BEF00289E6D /* Defines.swift */; };
+		EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */; };
+		EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */; };
+		EA8B7B0626F32BEF00289E6D /* MappableWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */; };
+		EA8B7B0726F32BEF00289E6D /* ModelAdaptorMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		19886C052496467400A8D28D /* ModelAdaptor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelAdaptor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19886C082496467400A8D28D /* ModelAdaptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelAdaptor.h; sourceTree = "<group>"; };
 		19886C092496467400A8D28D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		19886C34249648FA00A8D28D /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		EA8B7AF826F32BEF00289E6D /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		EA8B7AF926F32BEF00289E6D /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
+		EA8B7AFA26F32BEF00289E6D /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
+		EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorDAO.swift; sourceTree = "<group>"; };
+		EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableWrappedProtocol.swift; sourceTree = "<group>"; };
+		EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorMappable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,20 +60,50 @@
 		19886C072496467400A8D28D /* ModelAdaptor */ = {
 			isa = PBXGroup;
 			children = (
-				19886C33249648FA00A8D28D /* Sources */,
+				EA8B7AF626F32BEF00289E6D /* Sources */,
 				19886C082496467400A8D28D /* ModelAdaptor.h */,
 				19886C092496467400A8D28D /* Info.plist */,
 			);
 			path = ModelAdaptor;
 			sourceTree = "<group>";
 		};
-		19886C33249648FA00A8D28D /* Sources */ = {
+		EA8B7AF626F32BEF00289E6D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				19886C34249648FA00A8D28D /* Defines.swift */,
+				EA8B7AF726F32BEF00289E6D /* Core */,
+				EA8B7AFB26F32BEF00289E6D /* Storage */,
+				EA8B7AFE26F32BEF00289E6D /* ObjectMapper */,
 			);
 			name = Sources;
 			path = ../../Sources;
+			sourceTree = "<group>";
+		};
+		EA8B7AF726F32BEF00289E6D /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EA8B7AF826F32BEF00289E6D /* Field.swift */,
+				EA8B7AF926F32BEF00289E6D /* KeyManager.swift */,
+				EA8B7AFA26F32BEF00289E6D /* Defines.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EA8B7AFB26F32BEF00289E6D /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */,
+				EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		EA8B7AFE26F32BEF00289E6D /* ObjectMapper */ = {
+			isa = PBXGroup;
+			children = (
+				EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */,
+				EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */,
+			);
+			path = ObjectMapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,7 +186,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19886C35249648FA00A8D28D /* Defines.swift in Sources */,
+				EA8B7B0126F32BEF00289E6D /* Field.swift in Sources */,
+				EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */,
+				EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */,
+				EA8B7B0626F32BEF00289E6D /* MappableWrappedProtocol.swift in Sources */,
+				EA8B7B0726F32BEF00289E6D /* ModelAdaptorMappable.swift in Sources */,
+				EA8B7B0226F32BEF00289E6D /* KeyManager.swift in Sources */,
+				EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
