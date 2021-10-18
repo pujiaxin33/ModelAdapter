@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import ObjectMapper
 import SQLite
 
-public protocol ModelAdaptorModel: Mappable, CustomStringConvertible { }
-public protocol ModelAdaptorCustomMap {
-    func customMap(map: Map)
+//fixme:CustomStringConvertible for print
+public protocol ModelAdaptorModel {
+    init()
 }
+
 public protocol ModelAdaptorCustomStorage {
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table) -> String?
@@ -26,36 +26,23 @@ public extension ModelAdaptorCustomStorage {
     }
 }
 
-protocol FieldWrappedProtocol {
+protocol FieldIdentifierProtocol {
     var key: String? { get }
 }
 
-protocol FieldMappableWrappedBaseProtocol: FieldWrappedProtocol {
-    var codingKey: String? { get }
-    var mapperClosure: ((String, Map)->())? { get }
-}
-protocol FieldMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
-protocol FieldOptionalMappableWrappedProtocol: FieldMappableWrappedBaseProtocol {}
-
-protocol FieldStorageWrappedBaseProtocol: FieldWrappedProtocol {
+protocol FieldStorageIdentifierBaseProtocol: FieldIdentifierProtocol {
     var storageNormalParams: StorageNormalParams? { get }
 
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table) -> String?
     func setter() -> Setter?
     func initExpresionIfNeeded(key: String)
-    func update(row: Row)
+    func update(with row: Row)
 }
-protocol FieldStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { }
-protocol FieldOptionalStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { }
-protocol FieldCustomStorageWrappedProtocol: FieldStorageWrappedBaseProtocol {}
+protocol FieldStorageIdentifierProtocol: FieldStorageIdentifierBaseProtocol { }
+protocol FieldOptionalStorageIdentifierProtocol: FieldStorageIdentifierBaseProtocol { }
+protocol FieldCustomStorageIdentifierProtocol: FieldStorageIdentifierBaseProtocol {}
 
-protocol BaseMappableValueWrappedProtocol {
-    func configMapperClosureWhenValueIsBaseMappable()
-}
-protocol ArrayBaseMappableValueWrappedProtocol {
-    func configBaseMappableMapperClosure()
-}
 
 internal func mirrorDescriptionPrettyPrinted(_ string: String) -> String {
     return string.replacingOccurrences(of: "Mirror for ", with: "")

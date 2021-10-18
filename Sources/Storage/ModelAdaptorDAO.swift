@@ -11,12 +11,10 @@ import SQLite
 class StorageNormalParams {
     let key: String?
     let primaryKey: Bool
-    let isNewField: Bool
 
     init<Value>(params: StorageParams<Value>) {
         key = params.key
         primaryKey = params.primaryKey
-        isNewField = params.isNewField
     }
 }
 
@@ -29,6 +27,7 @@ extension ModelAdaptorModel {
             return (objc_getAssociatedObject(self, &AssociatedKeys.expressionsInit) as? Bool) ?? false
         }
     }
+    //fixme:
     func initExpressionsIfNeeded() {
         guard !isExpressionsInited else {
             return
@@ -38,11 +37,9 @@ extension ModelAdaptorModel {
             guard let propertyName = child.label else {
                 continue
             }
-            if let value = child.value as? FieldStorageWrappedProtocol {
+            if let value = child.value as? FieldStorageIdentifierProtocol {
                 value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+            }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
                 value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
             }
         }
@@ -71,22 +68,17 @@ public protocol ModelAdaptorDAO {
 
 public extension ModelAdaptorDAO {
     func createTable(ifNotExists: Bool = true) {
-        let entity = Entity(JSON: [String : Any]())!
+        let entity = Entity()
         let mirror = Mirror(reflecting: entity)
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
-                if let value = child.value as? FieldStorageWrappedProtocol {
-                    if !(value.storageNormalParams?.isNewField == true) {
-                        value.createColumn(tableBuilder: t)
-                    }
-                }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                    if !(value.storageNormalParams?.isNewField == true) {
-                        value.createColumn(tableBuilder: t)
-                    }
-                }else if let value = child.value as? FieldCustomStorageWrappedProtocol{
-                    if !(value.storageNormalParams?.isNewField == true) {
-                        value.createColumn(tableBuilder: t)
-                    }
+                //fixme: FieldStorageIdentifierBaseProtocol
+                if let value = child.value as? FieldStorageIdentifierProtocol {
+                    value.createColumn(tableBuilder: t)
+                }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
+                    value.createColumn(tableBuilder: t)
+                }else if let value = child.value as? ModelAdaptorCustomStorage{
+                    value.createColumn(tableBuilder: t)
                 }
             }
             if let customEntity = entity as? ModelAdaptorCustomStorage {
@@ -98,7 +90,7 @@ public extension ModelAdaptorDAO {
                 guard let propertyName = child.label else {
                     continue
                 }
-                guard let value = child.value as? FieldStorageWrappedBaseProtocol  else {
+                guard let value = child.value as? FieldStorageIdentifierBaseProtocol  else {
                     continue
                 }
                 let key = KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key)
@@ -160,7 +152,7 @@ public extension ModelAdaptorDAO {
         }) else {
             return nil
         }
-        let entity = Entity(JSON: [String : Any]())!
+        let entity = Entity()
         update(entity: entity, with: row)
         if let customEntity = entity as? ModelAdaptorCustomStorage {
             customEntity.update(with: row)
@@ -175,7 +167,7 @@ public extension ModelAdaptorDAO {
         }) else {
             return nil
         }
-        let entity = Entity(JSON: [String : Any]())!
+        let entity = Entity()
         update(entity: entity, with: row)
         return entity
     }
@@ -186,7 +178,7 @@ public extension ModelAdaptorDAO {
         }
         var entities = [Entity]()
         for row in rows {
-            let entity = Entity(JSON: [String : Any]())!
+            let entity = Entity()
             update(entity: entity, with: row)
             entities.append(entity)
         }
@@ -197,15 +189,11 @@ public extension ModelAdaptorDAO {
         var setters = [Setter]()
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
+            if let value = child.value as? FieldStorageIdentifierProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if let setter = value.setter() {
-                    setters.append(setter)
-                }
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
+            }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
                 if let setter = value.setter() {
                     setters.append(setter)
                 }
@@ -220,12 +208,10 @@ public extension ModelAdaptorDAO {
     private func update(entity: Entity, with row: Row) {
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                value.update(row: row)
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                value.update(row: row)
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                value.update(row: row)
+            if let value = child.value as? FieldStorageIdentifierProtocol {
+                value.update(with: row)
+            }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
+                value.update(with: row)
             }
         }
         if let customEntity = entity as? ModelAdaptorCustomStorage {

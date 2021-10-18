@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "ModelAdaptor"
-  s.version = "0.0.3"
+  s.version = "0.0.4"
   s.summary      = "ModelAdaptor"
   s.homepage     = "https://github.com/pujiaxin33/ModelAdaptor"
   s.license      = "MIT"
@@ -13,6 +13,5 @@ Pod::Spec.new do |s|
   s.source_files  = "Sources", "Sources/**/*.{swift}"
   s.requires_arc = true
   
-  s.dependency 'ObjectMapper'
   s.dependency 'SQLite.swift'
 end

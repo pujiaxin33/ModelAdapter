@@ -1,4 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh
-${BUILT_PRODUCTS_DIR}/ModelAdaptor-iOS9.0/ModelAdaptor.framework
-${BUILT_PRODUCTS_DIR}/ObjectMapper-iOS9.0/ObjectMapper.framework
-${BUILT_PRODUCTS_DIR}/SQLite.swift-iOS9.0/SQLite.framework
+${BUILT_PRODUCTS_DIR}/ModelAdaptor/ModelAdaptor.framework
+${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework
+${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework

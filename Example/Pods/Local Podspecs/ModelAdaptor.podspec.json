@@ -1,6 +1,6 @@
 {
   "name": "ModelAdaptor",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "summary": "ModelAdaptor",
   "homepage": "https://github.com/pujiaxin33/ModelAdaptor",
   "license": "MIT",
@@ -13,7 +13,7 @@
   "swift_versions": "5.1",
   "source": {
     "git": "https://github.com/pujiaxin33/ModelAdaptor.git",
-    "tag": "0.0.1"
+    "tag": "0.0.4"
   },
   "frameworks": "UIKit",
   "source_files": [
@@ -22,9 +22,6 @@
   ],
   "requires_arc": true,
   "dependencies": {
-    "ObjectMapper": [
-
-    ],
     "SQLite.swift": [
 
     ]

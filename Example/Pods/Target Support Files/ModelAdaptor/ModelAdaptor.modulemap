@@ -1,5 +1,5 @@
 framework module ModelAdaptor {
-  umbrella header "ModelAdaptor-iOS9.0-umbrella.h"
+  umbrella header "ModelAdaptor-umbrella.h"
 
   export *
   module * { export * }

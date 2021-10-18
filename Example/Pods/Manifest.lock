@@ -1,6 +1,5 @@
 PODS:
-  - ModelAdaptor (0.0.1):
-    - ObjectMapper
+  - ModelAdaptor (0.0.4):
     - SQLite.swift
   - ObjectMapper (4.2.0)
   - SQLite.swift (0.12.2):
@@ -9,9 +8,10 @@ PODS:
 
 DEPENDENCIES:
   - ModelAdaptor (from `../../ModelAdaptor`)
+  - ObjectMapper
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - ObjectMapper
     - SQLite.swift
 
@@ -20,10 +20,10 @@ EXTERNAL SOURCES:
     :path: "../../ModelAdaptor"
 
 SPEC CHECKSUMS:
-  ModelAdaptor: d2b70c1b0cffda201e122019b0c1d9435a80fad6
+  ModelAdaptor: b7ce90b79330d07be47d5dec8c7b596e3676ad4c
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
 
-PODFILE CHECKSUM: 1d7447ef9132b7f424d196c23489d9adf464040e
+PODFILE CHECKSUM: 43dc8f5a407a07bf998c8fbace828af88bdfbc2d
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.10.2

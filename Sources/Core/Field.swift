@@ -7,70 +7,34 @@
 //
 
 import Foundation
-import ObjectMapper
 import SQLite
 
-/// 因为TransformType协议有关联类型，所以导致CodingParams变成了泛型类型。某些情况不需要配置convertor，只需要配置key、nested、delimiter等参数时，就传递一个NilTransform的实例即可，防止编译器报错。
-open class CodingParams<Convertor: TransformType>{
-    public let key: String?
-    public let convertor: Convertor?
-    public let nested: Bool?
-    public let delimiter: String
-    public let ignoreNil: Bool
-
-    public init(key: String? = nil, convertor: Convertor? = nil, nested: Bool? = nil, delimiter: String = ".", ignoreNil: Bool = false) {
-        self.key = key
-        self.convertor = convertor
-        self.nested = nested
-        self.delimiter = delimiter
-        self.ignoreNil = ignoreNil
-    }
-}
+//enum StorageParamsEnum<Value> {
+//    case key(String)
+//    case primaryKey(SQLite.PrimaryKey)
+//    case unique(Bool)
+//    case defaultValue(Value)
+//}
 
 open class StorageParams<Value> {
     public let key: String?
     public let primaryKey: Bool
-    public let isNewField: Bool
-    public let defaultValue: Value?
-    public init(key: String? = nil, primaryKey: Bool = false, isNewField: Bool = false, defaultValue: Value? = nil) {
+    public init(key: String? = nil, primaryKey: Bool = false) {
         self.key = key
         self.primaryKey = primaryKey
-        self.isNewField = isNewField
-        self.defaultValue = defaultValue
     }
 }
 
-extension Field: FieldWrappedProtocol { }
+extension Field: FieldIdentifierProtocol { }
 
 @propertyWrapper public class Field<Value> {
     public var wrappedValue: Value
     public var projectedValue: Field { self }
     let key: String?
-    var codingKey: String?
     var storageParams: StorageParams<Value>?
     var storageNormalParams: StorageNormalParams?
-    var mapperClosure: ((String, Map) -> ())?
 
-    public init<Convertor: TransformType>(wrappedValue: Value, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.codingKey = codingParams?.key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-
-        if wrappedValue is ExpressibleByNilLiteral {
-            assertionFailure("Use FieldOptional when value is optional")
-        }
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosureWhenHasConvertor(codingParams: codingParams)
-        }
-    }
-
-    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
+    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil)  {
         self.wrappedValue = wrappedValue
         self.key = key
         self.storageParams = storageParams
@@ -80,11 +44,6 @@ extension Field: FieldWrappedProtocol { }
 
         if wrappedValue is ExpressibleByNilLiteral {
             assertionFailure("Use FieldOptional when value is optional")
-        }
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosure()
         }
     }
 }
@@ -103,26 +62,8 @@ extension Field: CustomStringConvertible {
     public var wrappedValue: Value?
     public var projectedValue: FieldOptional { self }
     let key: String?
-    var codingKey: String?
     var storageParams: StorageParams<Value>?
     var storageNormalParams: StorageNormalParams?
-    var mapperClosure: ((String, Map) -> ())?
-
-    public init<Convertor: TransformType>(wrappedValue: Value? = nil, key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<Value>? = nil) where Convertor.Object == Value {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.codingKey = codingParams?.key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosureWhenHasConvertor(codingParams: codingParams)
-        }
-    }
 
     public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
         self.wrappedValue = wrappedValue
@@ -130,12 +71,6 @@ extension Field: CustomStringConvertible {
         self.storageParams = storageParams
         if let params = storageParams {
             self.storageNormalParams = StorageNormalParams(params: params)
-        }
-
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosure()
         }
     }
 }
@@ -152,127 +87,3 @@ extension FieldOptional: CustomStringConvertible {
     }
 }
 
-//=============FieldArray==============
-extension FieldArray: FieldWrappedProtocol { }
-
-@propertyWrapper public class FieldArray<Value> {
-    public var wrappedValue: [Value]
-    public var projectedValue: FieldArray { self }
-    let key: String?
-    var codingKey: String?
-    var storageParams: StorageParams<[Value]>?
-    var storageNormalParams: StorageNormalParams?
-    var mapperClosure: ((String, Map) -> ())?
-
-    public init<Convertor: TransformType>(wrappedValue: [Value], key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<[Value]>? = nil) where Convertor.Object == [Value] {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.codingKey = codingParams?.key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-
-        if wrappedValue is ExpressibleByNilLiteral {
-            assertionFailure("Use FieldOptional when value is optional")
-        }
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosureWhenHasConvertor(codingParams: codingParams)
-        }
-    }
-
-    public init(wrappedValue: [Value], key: String? = nil, storageParams: StorageParams<[Value]>? = nil) {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-
-        if wrappedValue is ExpressibleByNilLiteral {
-            assertionFailure("Use FieldOptional when value is optional")
-        }
-        if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configMapperClosureWhenValueIsBaseMappable()
-        }else {
-            configMapperClosure()
-        }
-    }
-}
-extension FieldArray: CustomStringConvertible {
-    public var description: String {
-        return self.wrappedValue.description
-//        if let desc = self.wrappedValue as? CustomStringConvertible {
-//            return desc.description
-//        }else {
-//            let mirror = Mirror(reflecting: self.wrappedValue)
-//            return mirrorDescriptionPrettyPrinted(mirror.description)
-//        }
-    }
-}
-//=============FieldArray==============
-
-extension FieldCustom: FieldWrappedProtocol { }
-@propertyWrapper public class FieldCustom<Value> {
-    public var wrappedValue: Value
-    public var projectedValue: FieldCustom { self }
-    let key: String?
-    var storageParams: StorageParams<Value>?
-    var storageNormalParams: StorageNormalParams?
-
-    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-        if wrappedValue is ExpressibleByNilLiteral {
-            assertionFailure("Use FieldOptionalCustom when value is optional")
-        }
-    }
-}
-
-extension FieldCustom: CustomStringConvertible {
-    public var description: String {
-        if let desc = self.wrappedValue as? CustomStringConvertible {
-            return desc.description
-        }else {
-            let mirror = Mirror(reflecting: self.wrappedValue)
-            return mirrorDescriptionPrettyPrinted(mirror.description)
-        }
-    }
-}
-
-extension FieldOptionalCustom: FieldWrappedProtocol { }
-@propertyWrapper public class FieldOptionalCustom<Value> {
-    public var wrappedValue: Value?
-    public var projectedValue: FieldOptionalCustom { self }
-    let key: String?
-    var storageParams: StorageParams<Value>?
-    var storageNormalParams: StorageNormalParams?
-
-    public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
-        self.wrappedValue = wrappedValue
-        self.key = key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
-    }
-}
-
-extension FieldOptionalCustom: CustomStringConvertible {
-    public var description: String {
-        if let desc = self.wrappedValue as? CustomStringConvertible {
-            return desc.description
-        }else if let value = self.wrappedValue {
-            let mirror = Mirror(reflecting: value)
-            return mirrorDescriptionPrettyPrinted(mirror.description)
-        }else {
-            return "nil"
-        }
-    }
-}
