@@ -55,6 +55,8 @@ class CustomModel: ModelAdaptorModel {
     var isRich: Bool
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
+    @FieldArray
+    var array: [String] = ["1", "2"]
 
     //如果值类型不是基础类型或不是遵从BaseMappable的类型（比如[String: T]、[String : [T]]、[Int : T]不能被识别），那么ObjectMapper的map需要自己处理
     //如果值类型遵从SQLiteValueProvider协议，就无需处理SQlite逻辑。（Array.Elment遵从SQLiteValueProvider、Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider等情况）

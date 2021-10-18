@@ -21,8 +21,10 @@ class ViewController: UIViewController {
         dao.createTable()
         try? dao.insert(entity: model)
         model.nickName = "更新后"
+        model.array = ["a" , "b" , "c", "d"]
         //需要导入SQLite，下面==操作符才能正确识别
         try? dao.update(entity: model, model.$nickName.expression == "昵称")
+        
         if let queryAll = try? dao.queryAll() {
             print(queryAll)
         }
@@ -41,6 +43,7 @@ class ViewController: UIViewController {
                         "level" : 10,
                         "registerDate" : "2020-08-08 06:06:06",
                         "has_money" : true,
+                        "array" : ["a1", "b1"],
                         "nest" :  ["nest_name" : "嵌套名字", "age" : 123],
                         "nests" : [["nest_name" : "嵌套名字", "age" : 123]],
                         "custom_dict" : ["custom1" : ["nest_name" : "嵌套名字", "age" : 123]],

@@ -20,6 +20,12 @@ public protocol ModelAdaptorCustomStorage {
     func update(with row: Row)
 }
 
+public extension ModelAdaptorCustomStorage {
+    func addColumn(table: Table) -> String? {
+        return nil
+    }
+}
+
 protocol FieldWrappedProtocol {
     var key: String? { get }
 }
@@ -45,7 +51,7 @@ protocol FieldOptionalStorageWrappedProtocol: FieldStorageWrappedBaseProtocol { 
 protocol FieldCustomStorageWrappedProtocol: FieldStorageWrappedBaseProtocol {}
 
 protocol BaseMappableValueWrappedProtocol {
-    func configBaseMappableMapperClosure()
+    func configMapperClosureWhenValueIsBaseMappable()
 }
 protocol ArrayBaseMappableValueWrappedProtocol {
     func configBaseMappableMapperClosure()

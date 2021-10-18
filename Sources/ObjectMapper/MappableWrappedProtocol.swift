@@ -10,7 +10,7 @@ import ObjectMapper
 
 extension Field: FieldMappableWrappedProtocol { }
 extension Field: BaseMappableValueWrappedProtocol where Value: BaseMappable {
-    func configBaseMappableMapperClosure() {
+    func configMapperClosureWhenValueIsBaseMappable() {
         self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
@@ -26,7 +26,7 @@ extension Field {
         }
     }
 
-    func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
+    func configMapperClosureWhenHasConvertor<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.mapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
@@ -40,7 +40,7 @@ extension Field {
 
 extension FieldOptional: FieldOptionalMappableWrappedProtocol {}
 extension FieldOptional: BaseMappableValueWrappedProtocol where Value: BaseMappable {
-    func configBaseMappableMapperClosure() {
+    func configMapperClosureWhenValueIsBaseMappable() {
         self.mapperClosure = {[weak self] (key, map) in
             guard let self = self else { return }
             self.wrappedValue <- map[key]
@@ -56,7 +56,7 @@ extension FieldOptional {
         }
     }
 
-    func configMapperConvertorClosure<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
+    func configMapperClosureWhenHasConvertor<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == Value {
         self.mapperClosure = {[weak self] (key, map) in
             guard let self = self, let codingParams = codingParams else { return }
             if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
@@ -67,3 +67,45 @@ extension FieldOptional {
         }
     }
 }
+
+//=============FieldArray==============
+extension FieldArray: FieldMappableWrappedProtocol { }
+extension FieldArray: BaseMappableValueWrappedProtocol where Value: BaseMappable {
+    func configMapperClosureWhenValueIsBaseMappable() {
+        self.mapperClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+    }
+    func configMapperClosureWhenHasConvertor<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == [Value] {
+        self.mapperClosure = {[weak self] (key, map) in
+            guard let self = self, let codingParams = codingParams else { return }
+            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
+                self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
+            }else {
+                self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
+            }
+        }
+    }
+}
+
+extension FieldArray {
+    func configMapperClosure() {
+        self.mapperClosure = {[weak self] (key, map) in
+            guard let self = self else { return }
+            self.wrappedValue <- map[key]
+        }
+    }
+
+    func configMapperClosureWhenHasConvertor<Convertor: TransformType>(codingParams: CodingParams<Convertor>?) where Convertor.Object == [Value] {
+        self.mapperClosure = {[weak self] (key, map) in
+            guard let self = self, let codingParams = codingParams else { return }
+            if let convertor = codingParams.convertor, !(convertor is NilTransform<Value>) {
+                self.wrappedValue <- (map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil], convertor)
+            }else {
+                self.wrappedValue <- map[key, nested: codingParams.nested, delimiter: codingParams.delimiter, ignoreNil: codingParams.ignoreNil]
+            }
+        }
+    }
+}
+//=============FieldArray==============

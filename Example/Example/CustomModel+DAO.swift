@@ -17,7 +17,6 @@ extension CustomModel: ModelAdaptorCustomStorage {
     func createColumn(tableBuilder: TableBuilder) {
         tableBuilder.column(CustomModel.customSetExpression)
     }
-    func addColumn(table: Table) -> String? { return nil }
     func setters() -> [Setter] {
         guard let set = customSet else {
             return []

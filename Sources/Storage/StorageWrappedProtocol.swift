@@ -11,6 +11,7 @@ import SQLite
 struct AssociatedKeys {
     static var expression: UInt8 = 0
     static var expressionOptional: UInt8 = 0
+    static var expressionArray: UInt8 = 0
     static var expressionCustom: UInt8 = 0
     static var expressionOptionalCustom: UInt8 = 0
     static var expressionsInit: UInt8 = 0
@@ -168,7 +169,10 @@ extension Array: SQLiteValueProvider where Element: SQLiteValueProvider {
     public typealias SQLiteValue = String
     static var separator: String { "|MASep|" }
     public init?(value: SQLiteValue) {
-        let components = value.components(separatedBy: Array.separator)
+        var components = value.components(separatedBy: Array.separator)
+        if components.first == "" {
+            components.removeFirst()
+        }
         self = components.compactMap { Element.init(stringValue: $0) }
     }
     public func value() -> SQLiteValue? {
@@ -312,6 +316,58 @@ extension FieldOptional: FieldOptionalStorageWrappedProtocol where Value: SQLite
 
     public func addColumn(table: Table) -> String? {
         return table.addColumn(expression, defaultValue: self.storageParams?.defaultValue?.value())
+    }
+}
+
+extension FieldArray: FieldStorageWrappedBaseProtocol where Value: SQLiteValueProvider { }
+extension FieldArray: FieldStorageWrappedProtocol where Value: SQLiteValueProvider {
+    public var expression: Expression<String> {
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.expressionArray, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.expressionArray) as! Expression<String>
+        }
+    }
+
+    public func setter() -> Setter? {
+        if let value = self.wrappedValue.value() {
+            return self.expression <- value
+        }
+        return nil
+    }
+
+    public func initExpresionIfNeeded(key: String) {
+        if objc_getAssociatedObject(self, &AssociatedKeys.expressionArray) == nil {
+            self.expression = Expression<String>(key)
+        }
+    }
+
+    public func update(row: Row) {
+        if let rowValue = try? row.get(expression) {
+            if let items = Array<String>.init(value: rowValue) {
+                var array = [Value]()
+                for item in items {
+                    guard let value = Value.init(stringValue: item) else { continue }
+                    array.append(value)
+                }
+                self.wrappedValue = array
+            }
+            
+        }
+    }
+
+    public func createColumn(tableBuilder: TableBuilder) {
+        tableBuilder.column(expression)
+    }
+
+    public func addColumn(table: Table) -> String? {
+        if let value = self.storageParams?.defaultValue?.value() {
+            return table.addColumn(expression, defaultValue: value)
+        }else {
+            assertionFailure("Must provide defaultValue")
+            return nil
+        }
     }
 }
 

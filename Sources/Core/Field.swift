@@ -64,9 +64,9 @@ extension Field: FieldWrappedProtocol { }
             assertionFailure("Use FieldOptional when value is optional")
         }
         if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configBaseMappableMapperClosure()
+            aClass.configMapperClosureWhenValueIsBaseMappable()
         }else {
-            configMapperConvertorClosure(codingParams: codingParams)
+            configMapperClosureWhenHasConvertor(codingParams: codingParams)
         }
     }
 
@@ -82,7 +82,7 @@ extension Field: FieldWrappedProtocol { }
             assertionFailure("Use FieldOptional when value is optional")
         }
         if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configBaseMappableMapperClosure()
+            aClass.configMapperClosureWhenValueIsBaseMappable()
         }else {
             configMapperClosure()
         }
@@ -118,9 +118,9 @@ extension Field: CustomStringConvertible {
         }
 
         if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configBaseMappableMapperClosure()
+            aClass.configMapperClosureWhenValueIsBaseMappable()
         }else {
-            configMapperConvertorClosure(codingParams: codingParams)
+            configMapperClosureWhenHasConvertor(codingParams: codingParams)
         }
     }
 
@@ -133,7 +133,7 @@ extension Field: CustomStringConvertible {
         }
 
         if let aClass = self as? BaseMappableValueWrappedProtocol {
-            aClass.configBaseMappableMapperClosure()
+            aClass.configMapperClosureWhenValueIsBaseMappable()
         }else {
             configMapperClosure()
         }
@@ -151,6 +151,68 @@ extension FieldOptional: CustomStringConvertible {
         }
     }
 }
+
+//=============FieldArray==============
+extension FieldArray: FieldWrappedProtocol { }
+
+@propertyWrapper public class FieldArray<Value> {
+    public var wrappedValue: [Value]
+    public var projectedValue: FieldArray { self }
+    let key: String?
+    var codingKey: String?
+    var storageParams: StorageParams<[Value]>?
+    var storageNormalParams: StorageNormalParams?
+    var mapperClosure: ((String, Map) -> ())?
+
+    public init<Convertor: TransformType>(wrappedValue: [Value], key: String? = nil, codingParams: CodingParams<Convertor>? = nil, storageParams: StorageParams<[Value]>? = nil) where Convertor.Object == [Value] {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.codingKey = codingParams?.key
+        self.storageParams = storageParams
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
+
+        if wrappedValue is ExpressibleByNilLiteral {
+            assertionFailure("Use FieldOptional when value is optional")
+        }
+        if let aClass = self as? BaseMappableValueWrappedProtocol {
+            aClass.configMapperClosureWhenValueIsBaseMappable()
+        }else {
+            configMapperClosureWhenHasConvertor(codingParams: codingParams)
+        }
+    }
+
+    public init(wrappedValue: [Value], key: String? = nil, storageParams: StorageParams<[Value]>? = nil) {
+        self.wrappedValue = wrappedValue
+        self.key = key
+        self.storageParams = storageParams
+        if let params = storageParams {
+            self.storageNormalParams = StorageNormalParams(params: params)
+        }
+
+        if wrappedValue is ExpressibleByNilLiteral {
+            assertionFailure("Use FieldOptional when value is optional")
+        }
+        if let aClass = self as? BaseMappableValueWrappedProtocol {
+            aClass.configMapperClosureWhenValueIsBaseMappable()
+        }else {
+            configMapperClosure()
+        }
+    }
+}
+extension FieldArray: CustomStringConvertible {
+    public var description: String {
+        return self.wrappedValue.description
+//        if let desc = self.wrappedValue as? CustomStringConvertible {
+//            return desc.description
+//        }else {
+//            let mirror = Mirror(reflecting: self.wrappedValue)
+//            return mirrorDescriptionPrettyPrinted(mirror.description)
+//        }
+    }
+}
+//=============FieldArray==============
 
 extension FieldCustom: FieldWrappedProtocol { }
 @propertyWrapper public class FieldCustom<Value> {

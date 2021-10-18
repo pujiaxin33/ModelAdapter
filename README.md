@@ -22,11 +22,7 @@ class CustomModel: ModelAdaptorModel {
     @FieldOptional
     var accountID: Int?
 
-    required init() {
-        initExpressions()
-    }
     required init?(map: Map) {
-        initExpressions()
     }
 }
 ```
@@ -136,10 +132,12 @@ var userName: String = "名字"
 ```
 
 ### 复杂类型自定义map过程
-
+//todo:列举出支持的类型，不支持的类型列表
 对于数据类型是数组、字典、Set等数据类型，就需要使用@FieldCustom进行注解。
 然后实现`func customMap(map: Map) `方法进行自己转换，如下所示：
 ```Swift
+@FieldCustom
+var nests: [NestModel] = [NestModel]()
 @FieldCustom
 var customDict: [String: NestModel]?
 @FieldCustom
@@ -168,16 +166,16 @@ func customMap(map: Map) {
 var userName: String = "名字"
 ```
 
-### 自定义storageParams.version和defaultValue
+### 自定义storageParams.isNewField和defaultValue
 
-当version大于1时，dao调用`createTable`方法时，对于该属性会调用`addColumn`方法。version默认为1，会调用`createColumn`方法。defaultValue就是调用`addColumn`方法时，当参数不是可选值使用的。
+当首次建表之后，添加的新属性需要把isNewField为true，这样dao调用`createTable`方法时，对于该属性会调用`addColumn`方法，把新增属性添加到已有的表里面。defaultValue配合isNewField为true时使用。
 ```Swift
-@Field(key: "amount", storageParams: .init(version: 2, defaultValue: 100))
+@Field(key: "amount", storageParams: .init(isNewField: true, defaultValue: 100))
 var amount: Double = 6
 ```
 
 ### 存储自定义类型
-
+//todo:sqlite支持的类型列表
 遵从`SQLiteValueProvider`协议并实现相关方法
 ```Swift
 //定义NestModel
@@ -226,9 +224,9 @@ var nest: NestModel?
 
 #### 存储Set
 
-需要自己完成处理存储过程，示例如下：
+需要自己完成处理存储过程，实现`ModelAdaptorCustomStorage`协议，示例如下：
 ```Swift
-extension CustomModel {
+extension CustomModel: ModelAdaptorCustomStorage {
     static let customSetExpression = Expression<String?>("custom_set")
 
     func createColumn(tableBuilder: TableBuilder) {

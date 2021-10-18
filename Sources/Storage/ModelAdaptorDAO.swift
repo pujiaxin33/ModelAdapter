@@ -93,19 +93,25 @@ public extension ModelAdaptorDAO {
                 customEntity.createColumn(tableBuilder: t)
             }
         })
-        for child in mirror.children {
-            if let value = child.value as? FieldStorageWrappedProtocol {
-                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
-                    _ = try? connection.run(statement)
+        if let columnNames = try? connection.existedColumnNames(in: table.name) {
+            for child in mirror.children {
+                guard let propertyName = child.label else {
+                    continue
                 }
-            }else if let value = child.value as? FieldOptionalStorageWrappedProtocol {
-                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
-                    _ = try? connection.run(statement)
+                guard let value = child.value as? FieldStorageWrappedBaseProtocol  else {
+                    continue
                 }
-            }else if let value = child.value as? FieldCustomStorageWrappedProtocol {
-                if value.storageNormalParams?.isNewField == true, let statement = value.addColumn(table: table) {
-                    _ = try? connection.run(statement)
+                let key = KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key)
+                let isExisted = columnNames.contains(where: { dbColumn -> Bool in
+                    return dbColumn.caseInsensitiveCompare(key) == ComparisonResult.orderedSame
+                })
+                guard !isExisted else {
+                    continue
                 }
+                guard let statement = value.addColumn(table: table) else {
+                    continue
+                }
+                _ = try? connection.run(statement)
             }
         }
         if let customEntity = entity as? ModelAdaptorCustomStorage {
@@ -225,5 +231,53 @@ public extension ModelAdaptorDAO {
         if let customEntity = entity as? ModelAdaptorCustomStorage {
             customEntity.update(with: row)
         }
+    }
+}
+
+extension Connection {
+    func exists(column: String, in table: String) throws -> Bool {
+        let stmt = try prepare("PRAGMA table_info(\(table))")
+        
+        let columnNames = stmt.makeIterator().map { (row) -> String in
+            return row[1] as? String ?? ""
+        }
+        
+        return columnNames.contains(where: { dbColumn -> Bool in
+            return dbColumn.caseInsensitiveCompare(column) == ComparisonResult.orderedSame
+        })
+    }
+    func existedColumnNames(in table: String) throws -> [String] {
+        let stmt = try prepare("PRAGMA table_info(\(table))")
+        
+        let columnNames = stmt.makeIterator().map { (row) -> String in
+            return row[1] as? String ?? ""
+        }
+        
+        return columnNames
+    }
+}
+extension Table {
+    var name: String {
+        var result: String = ""
+        let tableMirror = Mirror(reflecting: self)
+        for tableChild in tableMirror.children {
+            guard let tableChildLabel = tableChild.label else {
+                continue
+            }
+            guard tableChildLabel == "clauses", let clausesValue = tableChild.value as? QueryClauses else {
+                continue
+            }
+            let clausesValueMirror = Mirror(reflecting: clausesValue)
+            for clausesValueChild in clausesValueMirror.children {
+                guard let clausesValueChildLabel = clausesValueChild.label else {
+                    continue
+                }
+                guard clausesValueChildLabel == "from", let fromValue = clausesValueChild.value as? (String,String?,String?) else {
+                    continue
+                }
+                result = fromValue.0
+            }
+        }
+        return result
     }
 }
