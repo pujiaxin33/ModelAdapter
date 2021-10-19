@@ -19,7 +19,7 @@ class CustomDAO: ModelAdaptorDAO {
     }
 
     func customUpdate(entity: Entity) throws {
-        let statement = table.update(entity.$vipLevel.expression <- entity.vipLevel)
+        let statement = table.update(entity.$nickName.expression <- "自定义更新")
         try connection.run(statement)
     }
 }

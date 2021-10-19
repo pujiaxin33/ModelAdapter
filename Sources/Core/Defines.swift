@@ -13,26 +13,24 @@ public protocol ModelAdaptorModel {
     init()
 }
 
-public protocol ModelAdaptorCustomStorage {
+public protocol ModelAdaptorModelCustomStorage {
     func createColumn(tableBuilder: TableBuilder)
-    func addColumn(table: Table) -> String?
+    func addColumnStatements(table: Table) -> [String]?
     func setters() -> [Setter]
     func update(with row: Row)
 }
 
-public extension ModelAdaptorCustomStorage {
-    func addColumn(table: Table) -> String? {
+public extension ModelAdaptorModelCustomStorage {
+    func addColumnStatements(table: Table) -> [String]? {
         return nil
     }
 }
 
 protocol FieldIdentifierProtocol {
-    var key: String? { get }
+    var params: StorageParams { get }
 }
 
 protocol FieldStorageIdentifierBaseProtocol: FieldIdentifierProtocol {
-    var storageNormalParams: StorageNormalParams? { get }
-
     func createColumn(tableBuilder: TableBuilder)
     func addColumn(table: Table) -> String?
     func setter() -> Setter?

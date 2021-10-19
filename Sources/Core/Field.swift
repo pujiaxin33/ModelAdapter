@@ -9,19 +9,17 @@
 import Foundation
 import SQLite
 
-//enum StorageParamsEnum<Value> {
-//    case key(String)
-//    case primaryKey(SQLite.PrimaryKey)
-//    case unique(Bool)
-//    case defaultValue(Value)
-//}
-
-open class StorageParams<Value> {
-    public let key: String?
-    public let primaryKey: Bool
-    public init(key: String? = nil, primaryKey: Bool = false) {
+class StorageParams {
+    var key: String? = nil
+    var primaryKey: SQLite.PrimaryKey? = nil
+    var unique: Bool = false
+    var collate: SQLite.Collation? = nil
+    
+    init(key: String? = nil, primaryKey: SQLite.PrimaryKey? = nil, unique: Bool = false, collate: SQLite.Collation? = nil) {
         self.key = key
         self.primaryKey = primaryKey
+        self.unique = unique
+        self.collate = collate
     }
 }
 
@@ -30,20 +28,14 @@ extension Field: FieldIdentifierProtocol { }
 @propertyWrapper public class Field<Value> {
     public var wrappedValue: Value
     public var projectedValue: Field { self }
-    let key: String?
-    var storageParams: StorageParams<Value>?
-    var storageNormalParams: StorageNormalParams?
+    let params: StorageParams
 
-    public init(wrappedValue: Value, key: String? = nil, storageParams: StorageParams<Value>? = nil)  {
+    public init(wrappedValue: Value, key: String? = nil, primaryKey: SQLite.PrimaryKey? = nil, unique: Bool = false, collate: SQLite.Collation? = nil)  {
         self.wrappedValue = wrappedValue
-        self.key = key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
+        self.params = StorageParams(key: key, primaryKey: primaryKey, unique: unique, collate: collate)
 
         if wrappedValue is ExpressibleByNilLiteral {
-            assertionFailure("Use FieldOptional when value is optional")
+            assertionFailure("Use @FieldOptional when value is optional")
         }
     }
 }
@@ -61,17 +53,11 @@ extension Field: CustomStringConvertible {
 @propertyWrapper public class FieldOptional<Value> {
     public var wrappedValue: Value?
     public var projectedValue: FieldOptional { self }
-    let key: String?
-    var storageParams: StorageParams<Value>?
-    var storageNormalParams: StorageNormalParams?
+    let params: StorageParams
 
-    public init(wrappedValue: Value? = nil, key: String? = nil, storageParams: StorageParams<Value>? = nil) {
+    public init(wrappedValue: Value? = nil, key: String? = nil, collate: SQLite.Collation? = nil) {
         self.wrappedValue = wrappedValue
-        self.key = key
-        self.storageParams = storageParams
-        if let params = storageParams {
-            self.storageNormalParams = StorageNormalParams(params: params)
-        }
+        self.params = StorageParams(key: key, collate: collate)
     }
 }
 extension FieldOptional: CustomStringConvertible {

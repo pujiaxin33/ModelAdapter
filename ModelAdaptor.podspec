@@ -14,4 +14,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   
   s.dependency 'SQLite.swift'
+  s.dependency 'SQLiteValueExtension'
 end

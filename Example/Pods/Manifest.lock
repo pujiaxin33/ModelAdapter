@@ -1,10 +1,13 @@
 PODS:
   - ModelAdaptor (0.0.4):
     - SQLite.swift
+    - SQLiteValueExtension
   - ObjectMapper (4.2.0)
   - SQLite.swift (0.12.2):
     - SQLite.swift/standard (= 0.12.2)
   - SQLite.swift/standard (0.12.2)
+  - SQLiteValueExtension (0.0.4):
+    - SQLite.swift
 
 DEPENDENCIES:
   - ModelAdaptor (from `../../ModelAdaptor`)
@@ -14,15 +17,17 @@ SPEC REPOS:
   trunk:
     - ObjectMapper
     - SQLite.swift
+    - SQLiteValueExtension
 
 EXTERNAL SOURCES:
   ModelAdaptor:
     :path: "../../ModelAdaptor"
 
 SPEC CHECKSUMS:
-  ModelAdaptor: b7ce90b79330d07be47d5dec8c7b596e3676ad4c
+  ModelAdaptor: 24e8a311a5d664049c13c08d03144703d3c3796d
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
+  SQLiteValueExtension: 4dbbffb2d218d8e759746216e49d82a7bce0fb00
 
 PODFILE CHECKSUM: 43dc8f5a407a07bf998c8fbace828af88bdfbc2d
 

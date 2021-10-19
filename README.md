@@ -150,8 +150,6 @@ func customMap(map: Map) {
     self.nests <- map["nests"]
     self.customDict <- map["custom_dict"]
     self.customDictAarray <- map["custom_dict_array"]
-    self.customDictInt <- (map["custom_dict_int"], IntDictTransform())
-    self.customSet <- (map["custom_set"], ArraySetTransform())
 }
 ```
 

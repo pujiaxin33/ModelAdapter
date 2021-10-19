@@ -24,6 +24,9 @@
   "dependencies": {
     "SQLite.swift": [
 
+    ],
+    "SQLiteValueExtension": [
+
     ]
   },
   "swift_version": "5.1"

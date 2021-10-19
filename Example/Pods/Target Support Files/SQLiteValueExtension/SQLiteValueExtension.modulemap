@@ -1,0 +1,6 @@
+framework module SQLiteValueExtension {
+  umbrella header "SQLiteValueExtension-umbrella.h"
+
+  export *
+  module * { export * }
+}

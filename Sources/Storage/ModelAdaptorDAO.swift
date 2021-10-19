@@ -8,16 +8,6 @@
 import Foundation
 import SQLite
 
-class StorageNormalParams {
-    let key: String?
-    let primaryKey: Bool
-
-    init<Value>(params: StorageParams<Value>) {
-        key = params.key
-        primaryKey = params.primaryKey
-    }
-}
-
 extension ModelAdaptorModel {
     var isExpressionsInited: Bool {
         set {
@@ -27,8 +17,8 @@ extension ModelAdaptorModel {
             return (objc_getAssociatedObject(self, &AssociatedKeys.expressionsInit) as? Bool) ?? false
         }
     }
-    //fixme:
-    func initExpressionsIfNeeded() {
+    //fixme:initExpressionsIfNeeded call
+    public func initExpressionsIfNeeded() {
         guard !isExpressionsInited else {
             return
         }
@@ -38,9 +28,9 @@ extension ModelAdaptorModel {
                 continue
             }
             if let value = child.value as? FieldStorageIdentifierProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.params.key))
             }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.params.key))
             }
         }
     }
@@ -72,16 +62,13 @@ public extension ModelAdaptorDAO {
         let mirror = Mirror(reflecting: entity)
         _ = try? connection.run(table.create(ifNotExists: true) { t in
             for child in mirror.children {
-                //fixme: FieldStorageIdentifierBaseProtocol
                 if let value = child.value as? FieldStorageIdentifierProtocol {
                     value.createColumn(tableBuilder: t)
                 }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
                     value.createColumn(tableBuilder: t)
-                }else if let value = child.value as? ModelAdaptorCustomStorage{
-                    value.createColumn(tableBuilder: t)
                 }
             }
-            if let customEntity = entity as? ModelAdaptorCustomStorage {
+            if let customEntity = entity as? ModelAdaptorModelCustomStorage {
                 customEntity.createColumn(tableBuilder: t)
             }
         })
@@ -93,7 +80,7 @@ public extension ModelAdaptorDAO {
                 guard let value = child.value as? FieldStorageIdentifierBaseProtocol  else {
                     continue
                 }
-                let key = KeyManager.storageKey(propertyName: propertyName, key: value.key, storageKey: value.storageNormalParams?.key)
+                let key = KeyManager.storageKey(propertyName: propertyName, key: value.params.key)
                 let isExisted = columnNames.contains(where: { dbColumn -> Bool in
                     return dbColumn.caseInsensitiveCompare(key) == ComparisonResult.orderedSame
                 })
@@ -106,9 +93,11 @@ public extension ModelAdaptorDAO {
                 _ = try? connection.run(statement)
             }
         }
-        if let customEntity = entity as? ModelAdaptorCustomStorage {
-            if let statement = customEntity.addColumn(table: table) {
-                _ = try? connection.run(statement)
+        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
+            if let statements = customEntity.addColumnStatements(table: table) {
+                for statement in statements {
+                    _ = try? connection.run(statement)
+                }
             }
         }
     }
@@ -154,9 +143,6 @@ public extension ModelAdaptorDAO {
         }
         let entity = Entity()
         update(entity: entity, with: row)
-        if let customEntity = entity as? ModelAdaptorCustomStorage {
-            customEntity.update(with: row)
-        }
         return entity
     }
 
@@ -199,7 +185,7 @@ public extension ModelAdaptorDAO {
                 }
             }
         }
-        if let customEntity = entity as? ModelAdaptorCustomStorage {
+        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
             setters.append(contentsOf: customEntity.setters())
         }
         return setters
@@ -214,7 +200,7 @@ public extension ModelAdaptorDAO {
                 value.update(with: row)
             }
         }
-        if let customEntity = entity as? ModelAdaptorCustomStorage {
+        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
             customEntity.update(with: row)
         }
     }

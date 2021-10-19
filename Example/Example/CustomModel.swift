@@ -9,172 +9,92 @@
 import Foundation
 import ModelAdaptor
 import ObjectMapper
+import SQLiteValueExtension
 
 class CustomModel: ModelAdaptorModel, Mappable {
-    @FieldOptional(key: "accountID_key", storageParams: .init(primaryKey: true))
-    var accountID: String?
-    //这里的NilTransform<String>仅仅起到一个防止编译器报错，不知道convertor的类型。
-//    @Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false), storageParams: .init(key: "user_name"))
-    var userName: String = "名字"
+    @Field(key: "accountID_key", primaryKey: .default)
+    var accountID: String = ""
     @FieldOptional(key: "nick_name")
     var nickName: String?
-//    @Field(key: "amount", storageParams: .init(isNewField: true, defaultValue: 100))
     var amount: Double = 6
     @FieldOptional
     var phone: String?
     @FieldOptional
     var gender: Gender?
-//    @FieldOptional(codingParams: .init(key: "avatar_key", convertor: NilTransform<String>()))
-    var avatar: String?
-//    @FieldOptional(key: "birthday", codingParams: .init(key: "birthday_coding", convertor:  DateTransform()))
+    @FieldOptional(key: "birthday")
     var birthday: Date?
-    @Field(key: "level")
-    var vipLevel: Int = 1
-    
-    var registerDate: Date = Date()
-    @Field(wrappedValue: false, key: "has_money")
-    var isRich: Bool
+    //`Array.Element`、`Dictionary.Key`、`Dictionary.Value`和自定义数据类型遵从`SQLiteValueStringExpressible`协议，就可以通过`SQLite.swift`存储到数据库。
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
+    @Field
+    var nests: [NestModel] = [NestModel]()
+    @FieldOptional
+    var customDict: [String: NestModel]?
+    @FieldOptional
+    var customDictInt: [Int : NestModel]?
+    @FieldOptional
+    var customDictAarray: [String: [NestModel]]?
     
-    var array: [String] = ["1", "2"]
-
-    //如果值类型不是基础类型或不是遵从BaseMappable的类型（比如[String: T]、[String : [T]]、[Int : T]不能被识别），那么ObjectMapper的map需要自己处理
-    //如果值类型遵从SQLiteValueProvider协议，就无需处理SQlite逻辑。（Array.Elment遵从SQLiteValueProvider、Dictionary.Key和Dictionary.Value遵从SQLiteValueProvider等情况）
-    //下面示例String、Int、NestModel、[NestModel]都是遵从于SQLiteValueProvider协议的。
-//    @FieldCustom
-//    var nests: [NestModel] = [NestModel]()
-//    @FieldOptionalCustom
-//    var customDict: [String: NestModel]?
-//    @FieldOptionalCustom
-//    var customDictInt: [Int : NestModel]?
-//    @FieldOptionalCustom
-//    var customDictAarray: [String: [NestModel]]?
-    //如果值类型既不遵从BaseMappable协议，也没有遵从SQLiteValueProvider，就不使用任何@Field，需要自己处理ObjectMapper和QLite.swift逻辑
+    //如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdaptorModelCustomStorage`协议，然后自己处理数据的存储流程。
     var customSet: Set<String>? = nil
     
     required init() {
+        initExpressionsIfNeeded()
     }
     required init?(map: Map) {
+        initExpressionsIfNeeded()
     }
     func mapping(map: Map) {
         accountID <- map["accountID_key"]
-        userName <- map["userName"]
         nickName <- map["nick_name"]
         amount <- map["amount"]
         phone <- map["phone"]
         gender <- map["gender"]
-        avatar <- map["avatar_key"]
-        birthday <- map["birthday_coding"]
-        vipLevel <- map["level"]
-        registerDate <- map["registerDate"]
-        isRich <- map["has_money"]
-        array <- map["array"]
+        birthday <- (map["birthday_coding"], DateTransform())
         nest <- map["nest"]
-//        nests <- map["nests"]
-//        customDict <- map["custom_dict"]
-//        customDictAarray <- map["custom_dict_array"]
-//        customDictInt<- map["custom_dict_int"]
+        nests <- map["nests"]
+        customDict <- map["custom_dict"]
+        customDictAarray <- map["custom_dict_array"]
+        customDictInt <- map["custom_dict_int"]
         customSet <- map["custom_set"]
     }
 }
 
 
-struct NestModel: ModelAdaptorModel, SQLiteValueProvider, Mappable {
+struct NestModel: ModelAdaptorModel, SQLiteValueStorable, Mappable {
     @FieldOptional(key: "nest_name")
     var nestName: String?
     @Field(key: "age")
     var nestAge: Int = 0
 
-    init() {}
-    init?(map: Map) {}
+    init() {
+        initExpressionsIfNeeded()
+    }
+    init?(map: Map) {
+        initExpressionsIfNeeded()
+    }
     mutating func mapping(map: Map) {
         nestName <- map["nest_name"]
         nestAge <- map["age"]
     }
 
-    init?(value: String) {
-        self.init(JSONString: value)
+    static func fromStringValue(_ stringValue: String) -> NestModel {
+        return NestModel(JSONString: stringValue) ?? NestModel(JSON: [String : Any]())!
     }
-    func value() -> String? {
-        return self.toJSONString()
-    }
-    init?(stringValue: String) {
-        if !stringValue.isEmpty {
-            self.init(JSONString: stringValue)
-        }else {
-            return nil
-        }
-    }
-    func stringValue() -> String? {
-        return value()
+    var stringValue: String {
+        return toJSONString() ?? ""
     }
 }
 
-enum Gender: String, SQLiteValueProvider {
+enum Gender: String, SQLiteValueStorable {
     case unknow = "UnKnown"
     case female = "Female"
     case male = "Male"
 
-    init?(value: String) {
-        self.init(rawValue: value)
+    static func fromStringValue(_ stringValue: String) -> Gender {
+        return Gender(rawValue: stringValue) ?? .unknow
     }
-    func value() -> String? {
-        return self.rawValue
-    }
-    init?(stringValue: String) {
-        self.init(rawValue: stringValue)
-    }
-    func stringValue() -> String? {
-        return value()
-    }
-}
-
-struct IntDictTransform: TransformType {
-    typealias Object = [Int : NestModel]
-    typealias JSON = [Int : [String : Any]]
-
-    func transformFromJSON(_ value: Any?) -> [Int : NestModel]? {
-        guard let dict = value as? [Int : [String: Any]] else {
-            return nil
-        }
-        var result = [Int : NestModel]()
-        for (key, dictValue) in dict {
-            guard let model = NestModel(JSON: dictValue) else {
-                continue
-            }
-            result[key] = model
-        }
-        return result
-    }
-
-    func transformToJSON(_ value: [Int : NestModel]?) -> [Int : [String : Any]]? {
-        guard let dict = value else {
-            return nil
-        }
-        var result = [Int: [String:Any]]()
-        for (key, value) in dict {
-            result[key] = value.toJSON()
-        }
-        return result
-    }
-}
-
-struct ArraySetTransform: TransformType {
-    typealias Object = Set<String>
-    typealias JSON = [String]
-
-    func transformFromJSON(_ value: Any?) -> Object? {
-        guard let array = value as? [String] else {
-            return nil
-        }
-        return Set(array)
-    }
-
-    func transformToJSON(_ value: Object?) -> JSON? {
-        guard let set = value else {
-            return nil
-        }
-        return Array(set)
+    var stringValue: String {
+        return rawValue
     }
 }
