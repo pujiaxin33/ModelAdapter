@@ -8,10 +8,10 @@
 
 import Foundation
 import SQLite
-import ModelAdaptor
+import ModelAdapter
 
 //因为SQLite和ObjectMapper都有<-操作符，为了避免冲突，数据库存储自定义部分就单独创建一个文件。
-extension CustomModel: ModelAdaptorModelCustomStorage {
+extension CustomModel: ModelAdapterModelCustomStorage {
     static let customSetExpression = Expression<String?>("custom_set")
 
     func createColumn(tableBuilder: TableBuilder) {

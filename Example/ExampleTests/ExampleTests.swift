@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import ModelAdaptor
+import ModelAdapter
 import SQLite
 
 class ExampleTests: XCTestCase {

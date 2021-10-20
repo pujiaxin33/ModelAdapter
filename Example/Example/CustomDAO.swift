@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import ModelAdaptor
+import ModelAdapter
 import SQLite
 
-class CustomDAO: ModelAdaptorDAO {
+class CustomDAO: ModelAdapterDAO {
     typealias Entity = CustomModel
     var connection: Connection = try! Connection("\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/db.sqlite3")
     var table: Table = Table("user")

@@ -631,6 +631,18 @@ extension QueryType {
         return insert(onConflict, values)
     }
 
+    public func insertMany( _ values: [[Setter]]) -> Insert {
+        return insertMany(nil, values)
+    }
+
+    public func insertMany(or onConflict: OnConflict, _ values: [[Setter]]) -> Insert {
+        return insertMany(onConflict, values)
+    }
+
+    public func insertMany(or onConflict: OnConflict, _ values: [Setter]...) -> Insert {
+        return insertMany(onConflict, values)
+    }
+
     fileprivate func insert(_ or: OnConflict?, _ values: [Setter]) -> Insert {
         let insert = values.reduce((columns: [Expressible](), values: [Expressible]())) { insert, setter in
             (insert.columns + [setter.column], insert.values + [setter.value])
@@ -647,6 +659,31 @@ extension QueryType {
             whereClause
         ]
 
+        return Insert(" ".join(clauses.compactMap { $0 }).expression)
+    }
+
+    fileprivate func insertMany(_ or: OnConflict?, _ values: [[Setter]]) -> Insert {
+        guard let firstInsert = values.first else {
+            // must be at least 1 object or else we don't know columns. Default to default inserts.
+            return insert()
+        }
+        let columns = firstInsert.map { $0.column }
+        let insertValues = values.map { rowValues in
+            rowValues.reduce([Expressible]()) { insert, setter in
+                insert + [setter.value]
+            }
+        }
+
+        let clauses: [Expressible?] = [
+            Expression<Void>(literal: "INSERT"),
+            or.map { Expression<Void>(literal: "OR \($0.rawValue)") },
+            Expression<Void>(literal: "INTO"),
+            tableName(),
+            "".wrap(columns) as Expression<Void>,
+            Expression<Void>(literal: "VALUES"),
+            ", ".join(insertValues.map({ "".wrap($0) as Expression<Void> })),
+            whereClause
+        ]
         return Insert(" ".join(clauses.compactMap { $0 }).expression)
     }
 
@@ -672,6 +709,45 @@ extension QueryType {
             query.expression
         ]).expression)
     }
+    
+    // MARK: UPSERT
+    
+    public func upsert(_ insertValues: Setter..., onConflictOf conflicting: Expressible) -> Insert {
+        return upsert(insertValues, onConflictOf: conflicting)
+    }
+    
+    public func upsert(_ insertValues: [Setter], onConflictOf conflicting: Expressible) -> Insert {
+        let setValues = insertValues.filter { $0.column.asSQL() != conflicting.asSQL() }
+            .map { Setter(excluded: $0.column) }
+        return upsert(insertValues, onConflictOf: conflicting, set: setValues)
+    }
+    
+    public func upsert(_ insertValues: Setter..., onConflictOf conflicting: Expressible, set setValues: [Setter]) -> Insert {
+        return upsert(insertValues, onConflictOf: conflicting, set: setValues)
+    }
+    
+    public func upsert(_ insertValues: [Setter], onConflictOf conflicting: Expressible, set setValues: [Setter]) -> Insert {
+        let insert = insertValues.reduce((columns: [Expressible](), values: [Expressible]())) { insert, setter in
+            (insert.columns + [setter.column], insert.values + [setter.value])
+        }
+        
+        let clauses: [Expressible?] = [
+            Expression<Void>(literal: "INSERT"),
+            Expression<Void>(literal: "INTO"),
+            tableName(),
+            "".wrap(insert.columns) as Expression<Void>,
+            Expression<Void>(literal: "VALUES"),
+            "".wrap(insert.values) as Expression<Void>,
+            whereClause,
+            Expression<Void>(literal: "ON CONFLICT"),
+            "".wrap(conflicting) as Expression<Void>,
+            Expression<Void>(literal: "DO UPDATE SET"),
+            ", ".join(setValues.map { $0.expression })
+        ]
+        
+        return Insert(" ".join(clauses.compactMap { $0 }).expression)
+    }
+
 
     // MARK: UPDATE
 
@@ -963,7 +1039,6 @@ extension Connection {
                             try expandGlob(true)(q)
                             continue column
                         }
-                        throw QueryError.noSuchTable(name: namespace)
                     }
                     throw QueryError.noSuchTable(name: namespace)
                 }
@@ -1010,6 +1085,8 @@ extension Connection {
     /// - SeeAlso: `QueryType.insert(value:_:)`
     /// - SeeAlso: `QueryType.insert(values:)`
     /// - SeeAlso: `QueryType.insert(or:_:)`
+    /// - SeeAlso: `QueryType.insertMany(values:)`
+    /// - SeeAlso: `QueryType.insertMany(or:_:)`
     /// - SeeAlso: `QueryType.insert()`
     ///
     /// - Parameter query: An insert query.

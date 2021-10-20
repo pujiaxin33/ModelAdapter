@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import ModelAdaptor
+import ModelAdapter
 import ObjectMapper
 import SQLiteValueExtension
 
-class CustomModel: ModelAdaptorModel, Mappable {
+class CustomModel: ModelAdapterModel, Mappable {
     @Field(key: "accountID_key", primaryKey: true)
     var accountID: String = ""
     @FieldOptional(key: "nick_name")
@@ -35,7 +35,7 @@ class CustomModel: ModelAdaptorModel, Mappable {
     @FieldOptional
     var customDictAarray: [String: [NestModel]]?
     
-    //如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdaptorModelCustomStorage`协议，然后自己处理数据的存储流程。
+    //如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdapterModelCustomStorage`协议，然后自己处理数据的存储流程。
     var customSet: Set<String>? = nil
     
     required init() {

@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import ModelAdaptor
+import ModelAdapter
 import SQLiteValueExtension
 import SQLite
 
-struct NestModel: ModelAdaptorModel, SQLiteValueStorable {
+struct NestModel: ModelAdapterModel, SQLiteValueStorable {
     @FieldOptional(key: "nest_name")
     var nestName: String?
     @Field(key: "age")

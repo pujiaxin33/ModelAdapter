@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double ModelAdaptorVersionNumber;
-FOUNDATION_EXPORT const unsigned char ModelAdaptorVersionString[];
+FOUNDATION_EXPORT double ModelAdapterVersionNumber;
+FOUNDATION_EXPORT const unsigned char ModelAdapterVersionString[];
 

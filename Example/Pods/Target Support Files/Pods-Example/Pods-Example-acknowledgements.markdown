@@ -1,7 +1,7 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## ModelAdaptor
+## ModelAdapter
 
                                  Apache License
                            Version 2.0, January 2004

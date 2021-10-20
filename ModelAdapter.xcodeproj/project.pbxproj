@@ -3,31 +3,30 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		19886C0A2496467400A8D28D /* ModelAdaptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 19886C082496467400A8D28D /* ModelAdaptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EA8B7B0126F32BEF00289E6D /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AF826F32BEF00289E6D /* Field.swift */; };
-		EA8B7B0226F32BEF00289E6D /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AF926F32BEF00289E6D /* KeyManager.swift */; };
-		EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFA26F32BEF00289E6D /* Defines.swift */; };
-		EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */; };
-		EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */; };
+		EAB731AA27200ED3000D4DD8 /* ModelAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB731A927200ED3000D4DD8 /* ModelAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EAB731B827200EFC000D4DD8 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B227200EFC000D4DD8 /* Field.swift */; };
+		EAB731B927200EFC000D4DD8 /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B327200EFC000D4DD8 /* KeyManager.swift */; };
+		EAB731BA27200EFC000D4DD8 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B427200EFC000D4DD8 /* Defines.swift */; };
+		EAB731BB27200EFC000D4DD8 /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */; };
+		EAB731BC27200EFC000D4DD8 /* ModelAdaptorDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		19886C052496467400A8D28D /* ModelAdaptor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelAdaptor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		19886C082496467400A8D28D /* ModelAdaptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelAdaptor.h; sourceTree = "<group>"; };
-		19886C092496467400A8D28D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EA8B7AF826F32BEF00289E6D /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		EA8B7AF926F32BEF00289E6D /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
-		EA8B7AFA26F32BEF00289E6D /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
-		EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
-		EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorDAO.swift; sourceTree = "<group>"; };
+		EAB731A627200ED3000D4DD8 /* ModelAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAB731A927200ED3000D4DD8 /* ModelAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelAdapter.h; sourceTree = "<group>"; };
+		EAB731B227200EFC000D4DD8 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		EAB731B327200EFC000D4DD8 /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
+		EAB731B427200EFC000D4DD8 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
+		EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorDAO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		19886C022496467400A8D28D /* Frameworks */ = {
+		EAB731A327200ED3000D4DD8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -37,57 +36,55 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		19886BFB2496467400A8D28D = {
+		EAB7319C27200ED3000D4DD8 = {
 			isa = PBXGroup;
 			children = (
-				19886C072496467400A8D28D /* ModelAdaptor */,
-				19886C062496467400A8D28D /* Products */,
+				EAB731A827200ED3000D4DD8 /* ModelAdapter */,
+				EAB731A727200ED3000D4DD8 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		19886C062496467400A8D28D /* Products */ = {
+		EAB731A727200ED3000D4DD8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				19886C052496467400A8D28D /* ModelAdaptor.framework */,
+				EAB731A627200ED3000D4DD8 /* ModelAdapter.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		19886C072496467400A8D28D /* ModelAdaptor */ = {
+		EAB731A827200ED3000D4DD8 /* ModelAdapter */ = {
 			isa = PBXGroup;
 			children = (
-				EA8B7AF626F32BEF00289E6D /* Sources */,
-				19886C082496467400A8D28D /* ModelAdaptor.h */,
-				19886C092496467400A8D28D /* Info.plist */,
+				EAB731B027200EFC000D4DD8 /* Sources */,
+				EAB731A927200ED3000D4DD8 /* ModelAdapter.h */,
 			);
-			path = ModelAdaptor;
+			path = ModelAdapter;
 			sourceTree = "<group>";
 		};
-		EA8B7AF626F32BEF00289E6D /* Sources */ = {
+		EAB731B027200EFC000D4DD8 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				EA8B7AF726F32BEF00289E6D /* Core */,
-				EA8B7AFB26F32BEF00289E6D /* Storage */,
+				EAB731B127200EFC000D4DD8 /* Core */,
+				EAB731B527200EFC000D4DD8 /* Storage */,
 			);
-			name = Sources;
-			path = ../../Sources;
-			sourceTree = "<group>";
+			path = Sources;
+			sourceTree = SOURCE_ROOT;
 		};
-		EA8B7AF726F32BEF00289E6D /* Core */ = {
+		EAB731B127200EFC000D4DD8 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				EA8B7AF826F32BEF00289E6D /* Field.swift */,
-				EA8B7AF926F32BEF00289E6D /* KeyManager.swift */,
-				EA8B7AFA26F32BEF00289E6D /* Defines.swift */,
+				EAB731B227200EFC000D4DD8 /* Field.swift */,
+				EAB731B327200EFC000D4DD8 /* KeyManager.swift */,
+				EAB731B427200EFC000D4DD8 /* Defines.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
 		};
-		EA8B7AFB26F32BEF00289E6D /* Storage */ = {
+		EAB731B527200EFC000D4DD8 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */,
-				EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */,
+				EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */,
+				EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -95,70 +92,69 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		19886C002496467400A8D28D /* Headers */ = {
+		EAB731A127200ED3000D4DD8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19886C0A2496467400A8D28D /* ModelAdaptor.h in Headers */,
+				EAB731AA27200ED3000D4DD8 /* ModelAdapter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		19886C042496467400A8D28D /* ModelAdaptor */ = {
+		EAB731A527200ED3000D4DD8 /* ModelAdapter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 19886C0D2496467400A8D28D /* Build configuration list for PBXNativeTarget "ModelAdaptor" */;
+			buildConfigurationList = EAB731AD27200ED3000D4DD8 /* Build configuration list for PBXNativeTarget "ModelAdapter" */;
 			buildPhases = (
-				19886C002496467400A8D28D /* Headers */,
-				19886C012496467400A8D28D /* Sources */,
-				19886C022496467400A8D28D /* Frameworks */,
-				19886C032496467400A8D28D /* Resources */,
+				EAB731A127200ED3000D4DD8 /* Headers */,
+				EAB731A227200ED3000D4DD8 /* Sources */,
+				EAB731A327200ED3000D4DD8 /* Frameworks */,
+				EAB731A427200ED3000D4DD8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = ModelAdaptor;
-			productName = ModelAdaptor;
-			productReference = 19886C052496467400A8D28D /* ModelAdaptor.framework */;
+			name = ModelAdapter;
+			productName = ModelAdapter;
+			productReference = EAB731A627200ED3000D4DD8 /* ModelAdapter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		19886BFC2496467400A8D28D /* Project object */ = {
+		EAB7319D27200ED3000D4DD8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = jiaxin;
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					19886C042496467400A8D28D = {
-						CreatedOnToolsVersion = 11.3.1;
-						LastSwiftMigration = 1130;
+					EAB731A527200ED3000D4DD8 = {
+						CreatedOnToolsVersion = 13.0;
 					};
 				};
 			};
-			buildConfigurationList = 19886BFF2496467400A8D28D /* Build configuration list for PBXProject "ModelAdaptor" */;
-			compatibilityVersion = "Xcode 9.3";
+			buildConfigurationList = EAB731A027200ED3000D4DD8 /* Build configuration list for PBXProject "ModelAdapter" */;
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 19886BFB2496467400A8D28D;
-			productRefGroup = 19886C062496467400A8D28D /* Products */;
+			mainGroup = EAB7319C27200ED3000D4DD8;
+			productRefGroup = EAB731A727200ED3000D4DD8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				19886C042496467400A8D28D /* ModelAdaptor */,
+				EAB731A527200ED3000D4DD8 /* ModelAdapter */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		19886C032496467400A8D28D /* Resources */ = {
+		EAB731A427200ED3000D4DD8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -168,28 +164,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		19886C012496467400A8D28D /* Sources */ = {
+		EAB731A227200ED3000D4DD8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA8B7B0126F32BEF00289E6D /* Field.swift in Sources */,
-				EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */,
-				EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */,
-				EA8B7B0226F32BEF00289E6D /* KeyManager.swift in Sources */,
-				EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */,
+				EAB731B827200EFC000D4DD8 /* Field.swift in Sources */,
+				EAB731BC27200EFC000D4DD8 /* ModelAdaptorDAO.swift in Sources */,
+				EAB731BB27200EFC000D4DD8 /* StorageWrappedProtocol.swift in Sources */,
+				EAB731B927200EFC000D4DD8 /* KeyManager.swift in Sources */,
+				EAB731BA27200EFC000D4DD8 /* Defines.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		19886C0B2496467400A8D28D /* Debug */ = {
+		EAB731AB27200ED3000D4DD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -209,6 +205,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -246,13 +243,13 @@
 			};
 			name = Debug;
 		};
-		19886C0C2496467400A8D28D /* Release */ = {
+		EAB731AC27200ED3000D4DD8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -272,6 +269,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -303,50 +301,55 @@
 			};
 			name = Release;
 		};
-		19886C0E2496467400A8D28D /* Debug */ = {
+		EAB731AE27200ED3000D4DD8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = ModelAdaptor/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jiaxin.ModelAdaptor;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiaxin.ModelAdapter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		19886C0F2496467400A8D28D /* Release */ = {
+		EAB731AF27200ED3000D4DD8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = ModelAdaptor/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = jiaxin.ModelAdaptor;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiaxin.ModelAdapter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -355,25 +358,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		19886BFF2496467400A8D28D /* Build configuration list for PBXProject "ModelAdaptor" */ = {
+		EAB731A027200ED3000D4DD8 /* Build configuration list for PBXProject "ModelAdapter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				19886C0B2496467400A8D28D /* Debug */,
-				19886C0C2496467400A8D28D /* Release */,
+				EAB731AB27200ED3000D4DD8 /* Debug */,
+				EAB731AC27200ED3000D4DD8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		19886C0D2496467400A8D28D /* Build configuration list for PBXNativeTarget "ModelAdaptor" */ = {
+		EAB731AD27200ED3000D4DD8 /* Build configuration list for PBXNativeTarget "ModelAdapter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				19886C0E2496467400A8D28D /* Debug */,
-				19886C0F2496467400A8D28D /* Release */,
+				EAB731AE27200ED3000D4DD8 /* Debug */,
+				EAB731AF27200ED3000D4DD8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 19886BFC2496467400A8D28D /* Project object */;
+	rootObject = EAB7319D27200ED3000D4DD8 /* Project object */;
 }

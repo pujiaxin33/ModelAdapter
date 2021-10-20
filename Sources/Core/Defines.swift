@@ -1,6 +1,6 @@
 //
 //  FieldWrappedProtocol.swift
-//  ModelAdaptor
+//  ModelAdapter
 //
 //  Created by jiaxin on 2020/6/15.
 //
@@ -8,11 +8,11 @@
 import Foundation
 import SQLite
 
-public protocol ModelAdaptorModel: CustomStringConvertible {
+public protocol ModelAdapterModel: CustomStringConvertible {
     init()
 }
 
-public extension ModelAdaptorModel {
+public extension ModelAdapterModel {
     var description: String {
         let mirror = Mirror(reflecting: self)
         var infoDict = [String:Any]()
@@ -38,14 +38,14 @@ public extension ModelAdaptorModel {
     }
 }
 
-public protocol ModelAdaptorModelCustomStorage {
+public protocol ModelAdapterModelCustomStorage {
     func createColumn(tableBuilder: TableBuilder)
     func addColumnStatements(table: Table) -> [String]?
     func setters() -> [Setter]
     func update(with row: Row)
 }
 
-public extension ModelAdaptorModelCustomStorage {
+public extension ModelAdapterModelCustomStorage {
     func addColumnStatements(table: Table) -> [String]? {
         return nil
     }

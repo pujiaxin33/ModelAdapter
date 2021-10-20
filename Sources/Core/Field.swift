@@ -1,6 +1,6 @@
 //
 //  Defines.swift
-//  ModelAdaptor
+//  ModelAdapter
 //
 //  Created by jiaxin on 2020/6/14.
 //  Copyright © 2020 jiaxin. All rights reserved.

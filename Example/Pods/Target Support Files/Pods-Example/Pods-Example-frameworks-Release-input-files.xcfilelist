@@ -1,5 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh
-${BUILT_PRODUCTS_DIR}/ModelAdaptor/ModelAdaptor.framework
+${BUILT_PRODUCTS_DIR}/ModelAdapter/ModelAdapter.framework
 ${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework
 ${BUILT_PRODUCTS_DIR}/SQLite.swift/SQLite.framework
 ${BUILT_PRODUCTS_DIR}/SQLiteValueExtension/SQLiteValueExtension.framework

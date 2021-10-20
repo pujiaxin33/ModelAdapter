@@ -1,16 +1,16 @@
 PODS:
-  - ModelAdaptor (0.0.4):
+  - ModelAdapter (0.0.5):
     - SQLite.swift
-    - SQLiteValueExtension
+    - SQLiteValueExtension (~> 0.0.7)
   - ObjectMapper (4.2.0)
-  - SQLite.swift (0.12.2):
-    - SQLite.swift/standard (= 0.12.2)
-  - SQLite.swift/standard (0.12.2)
-  - SQLiteValueExtension (0.0.4):
+  - SQLite.swift (0.13.0):
+    - SQLite.swift/standard (= 0.13.0)
+  - SQLite.swift/standard (0.13.0)
+  - SQLiteValueExtension (0.0.7):
     - SQLite.swift
 
 DEPENDENCIES:
-  - ModelAdaptor (from `../../ModelAdaptor`)
+  - ModelAdapter (from `../../ModelAdapter`)
   - ObjectMapper
 
 SPEC REPOS:
@@ -20,15 +20,15 @@ SPEC REPOS:
     - SQLiteValueExtension
 
 EXTERNAL SOURCES:
-  ModelAdaptor:
-    :path: "../../ModelAdaptor"
+  ModelAdapter:
+    :path: "../../ModelAdapter"
 
 SPEC CHECKSUMS:
-  ModelAdaptor: 24e8a311a5d664049c13c08d03144703d3c3796d
+  ModelAdapter: d57b9ba6b3571a11e6bb13fbfe1b6265c5b4cb59
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
-  SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
-  SQLiteValueExtension: 4dbbffb2d218d8e759746216e49d82a7bce0fb00
+  SQLite.swift: 8add701609fd0ef78d097dcc75d20a9782e6f5fc
+  SQLiteValueExtension: 743b16c035639bd219168e2fe0ab131b22378794
 
-PODFILE CHECKSUM: 43dc8f5a407a07bf998c8fbace828af88bdfbc2d
+PODFILE CHECKSUM: 9476876cf52c6d4a61effb55decad8177d06a1b8
 
 COCOAPODS: 1.10.2

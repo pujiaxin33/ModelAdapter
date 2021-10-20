@@ -8,7 +8,7 @@
 
 import UIKit
 import SQLite
-import ModelAdaptor
+import ModelAdapter
 import ObjectMapper
 
 class ViewController: UIViewController {

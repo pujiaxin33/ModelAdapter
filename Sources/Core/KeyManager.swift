@@ -1,6 +1,6 @@
 //
 //  KeyManager.swift
-//  ModelAdaptor
+//  ModelAdapter
 //
 //  Created by jiaxin on 2020/6/30.
 //

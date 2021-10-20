@@ -1,4 +1,4 @@
-# ModelAdaptor
+# ModelAdapter
 
 模型适配器：Define once, Use anywhere!
 终极目标是只需要定义一次数据模型，就可以在数据解析、数据库存储等地方解析并使用。
@@ -8,15 +8,15 @@
 
 然后依赖于Swift 5.1提供的`Proptery wrapper`特性，感兴趣的可以看一下这篇文章：[Property wrappers in Swift](https://www.swiftbysundell.com/articles/property-wrappers-in-swift/)
 
-我们一起看一个简单使用示例，看看`ModelAdaptor`如何简化我们的代码！
+我们一起看一个简单使用示例，看看`ModelAdapter`如何简化我们的代码！
 
 # 使用示例
 
 ## 定义Model
 
-遵从`ModelAdaptorModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。
+遵从`ModelAdapterModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。
 ```Swift
-class CustomModel: ModelAdaptorModel {
+class CustomModel: ModelAdapterModel {
     @Field(key: "level")
     var vipLevel: Int = 1
     @FieldOptional
@@ -31,9 +31,9 @@ class CustomModel: ModelAdaptorModel {
 
 ## 数据库DAO定义
 
-创建`CustomDAO`类，遵从`ModelAdaptorDAO`协议，设置关联类型`Entity`为`CustomModel`。然后实现协议要求提供的`connection`和`table`属性。整个数据库层的定义就完成了。不需要自己写增删改查的样板代码了。
+创建`CustomDAO`类，遵从`ModelAdapterDAO`协议，设置关联类型`Entity`为`CustomModel`。然后实现协议要求提供的`connection`和`table`属性。整个数据库层的定义就完成了。不需要自己写增删改查的样板代码了。
 ```Swift
-class CustomDAO: ModelAdaptorDAO {
+class CustomDAO: ModelAdapterDAO {
     typealias Entity = CustomModel
     var connection: Connection = try! Connection("\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/db.sqlite3")
     var table: Table = Table("user")
@@ -177,7 +177,7 @@ var amount: Double = 6
 遵从`SQLiteValueProvider`协议并实现相关方法
 ```Swift
 //定义NestModel
-struct NestModel: ModelAdaptorModel, SQLiteValueProvider {
+struct NestModel: ModelAdapterModel, SQLiteValueProvider {
     @FieldOptional(key: "nest_name")
     var nestName: String?
     @Field(key: "age")
@@ -222,9 +222,9 @@ var nest: NestModel?
 
 #### 存储Set
 
-需要自己完成处理存储过程，实现`ModelAdaptorCustomStorage`协议，示例如下：
+需要自己完成处理存储过程，实现`ModelAdapterCustomStorage`协议，示例如下：
 ```Swift
-extension CustomModel: ModelAdaptorCustomStorage {
+extension CustomModel: ModelAdapterCustomStorage {
     static let customSetExpression = Expression<String?>("custom_set")
 
     func createColumn(tableBuilder: TableBuilder) {
@@ -255,7 +255,7 @@ extension CustomModel: ModelAdaptorCustomStorage {
 
 ## DAO层使用
 
-`ModelAdaptorDAO`协议默认实现了常用的增删改查方法：
+`ModelAdapterDAO`协议默认实现了常用的增删改查方法：
 ```Swift
 func createTable(ifNotExists: Bool)
 func insert(entity: Entity) throws
@@ -281,9 +281,9 @@ func customUpdate(entity: Entity) throws {
 
 ## 不需要`SQLite.swift`，只处理`ObjectMapper`
 
-遵从`ModelAdaptorMappable`协议即可。
+遵从`ModelAdapterMappable`协议即可。
 ```Swift
-struct OnlyMap: ModelAdaptorMappable {
+struct OnlyMap: ModelAdapterMappable {
     @FieldOptional(key: "nick_name")
     var nickName: String?
     @Field
@@ -305,7 +305,7 @@ struct OnlyMap: ModelAdaptorMappable {
 ## Cocoapods
 
 ```
-pod 'ModelAdaptor'
+pod 'ModelAdapter'
 ```
 
 

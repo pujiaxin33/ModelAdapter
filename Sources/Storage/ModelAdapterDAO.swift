@@ -1,6 +1,6 @@
 //
-//  ModelAdaptorDAO.swift
-//  ModelAdaptor
+//  ModelAdapterDAO.swift
+//  ModelAdapter
 //
 //  Created by jiaxin on 2020/6/15.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import SQLite
 
-extension ModelAdaptorModel {
+extension ModelAdapterModel {
     public func initFieldExpressions() {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
@@ -24,8 +24,8 @@ extension ModelAdaptorModel {
     }
 }
 
-public protocol ModelAdaptorDAO {
-    associatedtype Entity: ModelAdaptorModel
+public protocol ModelAdapterDAO {
+    associatedtype Entity: ModelAdapterModel
     var connection: Connection { get }
     var table: Table { get }
 
@@ -44,7 +44,7 @@ public protocol ModelAdaptorDAO {
     func queryAll() throws -> [Entity]?
 }
 
-public extension ModelAdaptorDAO {
+public extension ModelAdapterDAO {
     func createTable(ifNotExists: Bool = true) {
         let entity = Entity()
         let mirror = Mirror(reflecting: entity)
@@ -56,7 +56,7 @@ public extension ModelAdaptorDAO {
                     value.createColumn(tableBuilder: t)
                 }
             }
-            if let customEntity = entity as? ModelAdaptorModelCustomStorage {
+            if let customEntity = entity as? ModelAdapterModelCustomStorage {
                 customEntity.createColumn(tableBuilder: t)
             }
         })
@@ -81,7 +81,7 @@ public extension ModelAdaptorDAO {
                 _ = try? connection.run(statement)
             }
         }
-        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
+        if let customEntity = entity as? ModelAdapterModelCustomStorage {
             if let statements = customEntity.addColumnStatements(table: table) {
                 for statement in statements {
                     _ = try? connection.run(statement)
@@ -173,7 +173,7 @@ public extension ModelAdaptorDAO {
                 }
             }
         }
-        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
+        if let customEntity = entity as? ModelAdapterModelCustomStorage {
             setters.append(contentsOf: customEntity.setters())
         }
         return setters
@@ -188,7 +188,7 @@ public extension ModelAdaptorDAO {
                 value.update(with: row)
             }
         }
-        if let customEntity = entity as? ModelAdaptorModelCustomStorage {
+        if let customEntity = entity as? ModelAdapterModelCustomStorage {
             customEntity.update(with: row)
         }
     }

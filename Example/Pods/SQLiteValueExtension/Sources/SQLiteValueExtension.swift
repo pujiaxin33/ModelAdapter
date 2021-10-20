@@ -87,7 +87,7 @@ extension Date: StringValueExpressible {
     }
 }
 //=====================Add New Type =====================
-extension Float: Value, StringValueExpressible {
+extension Float: SQLiteValueStringExpressible {
     public static var declaredDatatype: String { Double.declaredDatatype }
     public static func fromDatatypeValue(_ datatypeValue: Double) -> Float {
         return Float(datatypeValue)
@@ -109,7 +109,7 @@ extension Array: Expressible where Element: StringValueExpressible {
         return Expression(value: self).expression
     }
 }
-extension Array: Value where Element: StringValueExpressible {
+extension Array: SQLiteValueStringExpressible where Element: StringValueExpressible {
     public typealias Datatype = String
     public static var declaredDatatype: String { String.declaredDatatype }
     public static func fromStringValue(_ stringValue: String) -> Self {
@@ -137,20 +137,20 @@ extension Array: Value where Element: StringValueExpressible {
     }
 }
 //=====================Extension Dictionary=====================
-extension Dictionary: Expressible where Key: StringValueExpressible, Value: StringValueExpressible {
+extension Dictionary: Expressible where Key: StringValueExpressible, Dictionary.Value: StringValueExpressible {
     public var expression: Expression<Void> {
         return Expression(value: self).expression
     }
 }
-extension Dictionary: SQLite.Value where Dictionary.Key: StringValueExpressible, Dictionary.Value: StringValueExpressible {
+extension Dictionary: SQLiteValueStringExpressible where Dictionary.Key: StringValueExpressible, Dictionary.Value: StringValueExpressible {
     public typealias Datatype = String
     public static var declaredDatatype: String { String.declaredDatatype }
     public static func fromStringValue(_ stringValue: String) -> Self {
-        var result = [Key:Value]()
+        var result = [Key:Dictionary.Value]()
         if let object = try? JSONSerialization.jsonObject(with: Data(stringValue.utf8), options: []) as? [String:String] {
             for (key, value) in object {
                 let resultKey = Key.fromStringValue(key) as! Key
-                let resultValue = Value.fromStringValue(value) as! Value
+                let resultValue = Dictionary.Value.fromStringValue(value) as! Dictionary.Value
                 result[resultKey] = resultValue
             }
         }
@@ -174,8 +174,10 @@ extension Dictionary: SQLite.Value where Dictionary.Key: StringValueExpressible,
     }
 }
 
+public typealias SQLiteValueStringExpressible = SQLite.Value & StringValueExpressible
+
 //=====================For Easy Use=====================
-public protocol SQLiteValueStorable: Value, StringValueExpressible { }
+public protocol SQLiteValueStorable: SQLiteValueStringExpressible { }
 public extension SQLiteValueStorable {
     static var declaredDatatype: String { String.declaredDatatype }
     var datatypeValue: String { stringValue }

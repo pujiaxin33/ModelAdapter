@@ -219,7 +219,7 @@
 			<key>License</key>
 			<string>MIT</string>
 			<key>Title</key>
-			<string>ModelAdaptor</string>
+			<string>ModelAdapter</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
