@@ -16,6 +16,7 @@ class CustomModel: ModelAdapterModel, Mappable {
     var accountID: String = ""
     @FieldOptional(key: "nick_name")
     var nickName: String?
+    @Field
     var amount: Double = 6
     @FieldOptional
     var phone: String?

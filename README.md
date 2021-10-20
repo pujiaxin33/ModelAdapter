@@ -1,10 +1,6 @@
 # ModelAdapter
 
-模型适配器：Define once, Use anywhere!
-终极目标是只需要定义一次数据模型，就可以在数据解析、数据库存储等地方解析并使用。
-目前仅支持[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)数据解析、[SQLite.swift](https://github.com/stephencelis/SQLite.swift)数据存储。
-
-这个库的灵感来源于`Java`语言的注解特性，感兴趣的可以点击了解[Android Jetpack的Room库的简单使用](https://juejin.im/post/5d4c0088f265da03925a3265)，了解如何使用注解来简化数据库存储。
+A SQLite ORM for Swift 5.1+ powered by [SQLite.swift](https://github.com/stephencelis/SQLite.swift).
 
 然后依赖于Swift 5.1提供的`Proptery wrapper`特性，感兴趣的可以看一下这篇文章：[Property wrappers in Swift](https://www.swiftbysundell.com/articles/property-wrappers-in-swift/)
 
@@ -12,26 +8,48 @@
 
 # 使用示例
 
-## 定义Model
+## Column定义
 
-遵从`ModelAdapterModel`协议，非可选值普通类型使用`@Field`进行注解，可选值类型使用`@FieldOptional`进行注解。
+- 1、数据类型遵从`ModelAdapterModel`协议
+- 2、非可选值属性使用`@Field`进行注解
+- 3、可选值属性使用`@FieldOptional`进行注解
+- 4、在`Field`或`FieldOptional`初始化器填写column相关信息
+
 ```Swift
 class CustomModel: ModelAdapterModel {
-    @Field(key: "level")
-    var vipLevel: Int = 1
+    @Field(key: "user_id", primaryKey: true)
+    var userID: Int = 0
     @FieldOptional
-    var accountID: Int?
+    var nickName: String?
+    @FieldOptional(unique: true)
+    var phone: Int?
+    @Field
+    var age: Int = 0
 
-    required init?(map: Map) {
+    required init() {
+        initFieldExpressions()
     }
 }
 ```
 
-经过这一步`ObjectMapper`层的数据解析已经完成，无需自己实现`func mapping(map: Map) `方法和添加类似`self.vipLevel <- map["level"]`的代码。
+## `ModelAdapterModel`其他配置
+
+- 实现`ModelAdapterModel`协议的指定初始化器，并且在`init`方法调用`initFieldExpressions`方法。
+```Swift
+class CustomModel: ModelAdapterModel {
+    required init() {
+        initFieldExpressions()
+    }
+}
+```
 
 ## 数据库DAO定义
 
-创建`CustomDAO`类，遵从`ModelAdapterDAO`协议，设置关联类型`Entity`为`CustomModel`。然后实现协议要求提供的`connection`和`table`属性。整个数据库层的定义就完成了。不需要自己写增删改查的样板代码了。
+- 自定义`CustomDAO`类，遵从`ModelAdapterDAO`协议
+- 设置关联类型`Entity`为`CustomModel`
+- 实现`ModelAdapterDAO`协议要求的`connection`和`table`属性
+- 整个数据库层的定义就完成了，不需要自己写增删改查的样板代码了。
+
 ```Swift
 class CustomDAO: ModelAdapterDAO {
     typealias Entity = CustomModel
@@ -46,8 +64,9 @@ class CustomDAO: ModelAdapterDAO {
 ## 开始使用
 
 ### 通过JSON字典数据创建model。
+引入了[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)库完成JSON To Model
 ```Swift
-let jsonDict = ["accountID" : 123, "level" : 10]
+let jsonDict = ["user_id" : 123, "nickName" : "暴走的鑫鑫", "phone": 123456, "age": 33]
 let model = CustomModel(JSON: jsonDict)!
 ```
 
@@ -64,13 +83,13 @@ try? dao.insert(entity: model)
 
 ### 删除数据
 ```Swift
-try? dao.delete(model.$accountID.expression == 123)
+try? dao.delete(model.$userID.expression == 123)
 ```
 
 ### 更新数据
 ```Swift
-model.vipLevel = 100
-try? dao.update(entity: model, model.$accountID.expression == 123)
+model.phone = 654321
+try? dao.update(entity: model, model.$userID.expression == 123)
 ```
 
 ### 查询数据
@@ -78,159 +97,92 @@ try? dao.update(entity: model, model.$accountID.expression == 123)
 //查询全部
 let queryAll = try? dao.queryAll() 
 //条件查询
-let queryOne = try? dao.query(model.$accountID.expression == 123)
+let queryOne = try? dao.query(model.$userID.expression == 123)
 ```
-
-## 使用总结
-
-以上就是一个简单的使用场景，需要通过`@Field`、`@FieldOptional`注解，在`ObjectMapper`和`SQLite.swift`两端就可以无缝使用了。尤其是数据库操作，无需写N多的样板代码。
 
 # 详细说明
 
-对于普通的情况使用起来非常顺手，对于一些特殊的数据类型，就要做一些兼容处理了。下面分别通过`ObjectMapper`和`SQLite.swift`两侧来进行说明。
+## 自定义column key
 
-## `ObjectMapper`特殊处理
-
-### 自定义codingKey
-
-数据解析时定义的key，确定优先级从高到低：key>codingParams.key>propertyName
-
-- 使用key
-```Swift
-@FieldOptional(key: "nick_name")
-var nickName: String?
-```
-这里的codingKey就是`nick_name`。
-
-- 使用`codingParams.key`
-```Swift
-@FieldOptional(codingParams: .init(key: "nick_name_custom", convertor: NilTransform<String>()))
-var nickName: String?
-```
-这里的codingKey就是`nick_name_custom`。
-因为`CodingParams`是一个泛型类型，所以即使不需要自定义convertor，也需要传递一个NilTransform类型实例，防止编译器报错。
-
-- 使用属性名
-```Swift
-@FieldOptional
-var nickName: String?
-```
-这里的codingKey就是`nickName`。
-
-### 自定义convertor
+- 默认是属性名称，比如age属性在数据库的column值就是age
+- 通过Field的key进行自定义，比如nickName属性在数据库的column值就是nick_name
 
 ```Swift
-@Field(codingParams: .init(convertor: DateTransform()))
-var registerDate: Date = Date()
+@Field(key: "nick_name"))
+var nickName: String = "名字"
+@Field
+var age: Int = 0
 ```
 
-### nested、delimiter、ignoreNil自定义
+## 自动创建数据库column
 
+当首次建表之后，后续添加的属性，会自动创建数据库column。比如现在新增了height属性，只需要正常配置即可。
 ```Swift
-@Field(codingParams: .init(key: nil, convertor: NilTransform<String>(), nested: nil, delimiter:  ".", ignoreNil:  false))
-var userName: String = "名字"
+@Field
+var height: Double = 188
 ```
 
-### 复杂类型自定义map过程
-//todo:列举出支持的类型，不支持的类型列表
-对于数据类型是数组、字典、Set等数据类型，就需要使用@FieldCustom进行注解。
-然后实现`func customMap(map: Map) `方法进行自己转换，如下所示：
-```Swift
-@FieldCustom
-var nests: [NestModel] = [NestModel]()
-@FieldCustom
-var customDict: [String: NestModel]?
-@FieldCustom
-var customDictInt: [Int : NestModel]?
-@FieldCustom
-var customDictAarray: [String: [NestModel]]?
-var customSet: Set<String>?
+## 存储自定义类型
 
-func customMap(map: Map) {
-    self.nests <- map["nests"]
-    self.customDict <- map["custom_dict"]
-    self.customDictAarray <- map["custom_dict_array"]
-}
-```
+属性的类型是自定义类型时，需要让自定义类型遵从`SQLiteValueStorable`协议并实现相关方法，就能够存储进数据库。
 
-## `SQLite.swift`特殊处理
-
-### 自定义storageParams.key
-
-同codingKey一样，可以通过默认属性名、默认自定义key、storageParams.key完成
+`SQLiteValueStorable`协议就是让自定义类型能够和String互相转换，从而能够存储进数据库。更多详细信息，点击[SQLiteValueExtension](https://github.com/pujiaxin33/SQLiteValueExtension)进行了解。
 
 ```Swift
-@Field(storageParams: .init(key: "user_name"))
-var userName: String = "名字"
-```
-
-### 自定义storageParams.isNewField和defaultValue
-
-当首次建表之后，添加的新属性需要把isNewField为true，这样dao调用`createTable`方法时，对于该属性会调用`addColumn`方法，把新增属性添加到已有的表里面。defaultValue配合isNewField为true时使用。
-```Swift
-@Field(key: "amount", storageParams: .init(isNewField: true, defaultValue: 100))
-var amount: Double = 6
-```
-
-### 存储自定义类型
-//todo:sqlite支持的类型列表
-遵从`SQLiteValueProvider`协议并实现相关方法
-```Swift
-//定义NestModel
-struct NestModel: ModelAdapterModel, SQLiteValueProvider {
-    @FieldOptional(key: "nest_name")
+struct NestModel: SQLiteValueStorable {
     var nestName: String?
-    @Field(key: "age")
     var nestAge: Int = 0
 
-    init?(map: Map) {
-        initExpressions()
+    static func fromStringValue(_ stringValue: String) -> NestModel {
+        return NestModel(JSONString: stringValue) ?? NestModel(JSON: [String : Any]())!
     }
-    init() {
-        initExpressions()
-    }
-
-    init?(value: String) {
-        self.init(JSONString: value)
-    }
-    func value() -> String? {
-        return self.toJSONString()
-    }
-    init?(stringValue: String) {
-        self.init(JSONString: stringValue)
-    }
-    func stringValue() -> String? {
-        return value()
+    var stringValue: String {
+        return toJSONString() ?? ""
     }
 }
-//在CustomModel中使用
-@FieldOptional
-var nest: NestModel?
+
+class CustomModel: ModelAdapterModel {
+    @FieldOptional
+    var nest: NestModel?
+}
 ```
 
-### 存储数组、字典、Set等数据类型
+## 存储数组、字典
 
-#### 存储数组
+以下基础类型都已经遵从`SQLiteValueStringExpressible`协议。
+- `Int`、
+- `Int64`
+- `Bool`
+- `Double`
+- `Float`
+- `String`
+- `Blob`
+- `Data`
+- `Date`
 
-只需要Array.Element遵从于`SQLiteValueProvider`即可。比如`[NestModel]`、`[Int]`。
-对于`String`、`Int`、`Double`、`Date`、`Data`等基础类型，已经默认遵从了`SQLiteValueProvider`协议。自定义的类型需要自己实现。
+### 存储数组
 
-#### 存储字典
+只需要`Array.Element`遵从于`SQLiteValueStringExpressible`即可。比如`[NestModel]`、`[Int]`、`[Date]`。
 
-只需要`Dictionay.key`和`Value`遵从于`SQLiteValueProvider`即可。
+### 存储字典
+
+只需要`Dictionay.key`和`Value`遵从于`SQLiteValueStringExpressible`即可。
 比如`[String: NestModel]`、`[Int : NestModel]`、`[String: [NestModel]]`。
 
-#### 存储Set
+## 自定义存储
 
-需要自己完成处理存储过程，实现`ModelAdapterCustomStorage`协议，示例如下：
+如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdapterModelCustomStorage`协议，然后自己处理数据的存储流程。存储数据类型`Set<String>`示例如下：
 ```Swift
+class CustomModel: ModelAdapterModel {
+    var customSet: Set<String>? = nil
+}
+    
 extension CustomModel: ModelAdapterCustomStorage {
     static let customSetExpression = Expression<String?>("custom_set")
 
     func createColumn(tableBuilder: TableBuilder) {
         tableBuilder.column(CustomModel.customSetExpression)
     }
-    func addColumn(table: Table) { }
     func setters() -> [Setter] {
         guard let set = customSet else {
             return []
@@ -270,35 +222,16 @@ func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity?
 func queryAll() throws -> [Entity]?
 ```
 
-如果需要实现其他数据库操作，可以参考示例代码：
+### 自定义数据库参考
+
 ```Swift
-//CustomDAO添加的自定义方法
-func customUpdate(entity: Entity) throws {
-    let statement = table.update(entity.$vipLevel.expression <- entity.vipLevel)
-    try connection.run(statement)
-}
-```
-
-## 不需要`SQLite.swift`，只处理`ObjectMapper`
-
-遵从`ModelAdapterMappable`协议即可。
-```Swift
-struct OnlyMap: ModelAdapterMappable {
-    @FieldOptional(key: "nick_name")
-    var nickName: String?
-    @Field
-    var age: Int = 6
-
-    init?(map: Map) {
+class CustomDAO: ModelAdapterDAO {
+    func customUpdate(entity: Entity) throws {
+        let statement = table.update(entity.$nickName.expression <- "自定义更新")
+        try connection.run(statement)
     }
 }
 ```
-
-# 总结
-
-对于新的特性总会感觉莫名兴奋，如果能利用他们提高工作效率就更完美了。最开始了解过`Java`的注解特性，就觉得十分强大。恰好swift 5.1带来了`Property Wrapper`特性，抱着试一试的态度，做出了`ModelAdaptoer`库。
-
-目前`ModelAdaptoer`处于实验性阶段，在小项目上进行了实践。感兴趣的朋友，可以一起优化壮大它。虽然目前有一些限制，但是带来的便利也是非常巨大的。期待你的加入，让`ModelAdaptoer`变得更加强大。
 
 # 安装
 
@@ -308,6 +241,11 @@ struct OnlyMap: ModelAdapterMappable {
 pod 'ModelAdapter'
 ```
 
+# 要求
+
+- iOS 9+
+- Swift 5.1+
+- Xcode 12+
 
 
 
