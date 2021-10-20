@@ -9,28 +9,16 @@ import Foundation
 import SQLite
 
 extension ModelAdaptorModel {
-    var isExpressionsInited: Bool {
-        set {
-            objc_setAssociatedObject(self, &AssociatedKeys.expressionsInit, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            return (objc_getAssociatedObject(self, &AssociatedKeys.expressionsInit) as? Bool) ?? false
-        }
-    }
-    //fixme:initExpressionsIfNeeded call
-    public func initExpressionsIfNeeded() {
-        guard !isExpressionsInited else {
-            return
-        }
+    public func initFieldExpressions() {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             guard let propertyName = child.label else {
                 continue
             }
             if let value = child.value as? FieldStorageIdentifierProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.params.key))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key))
             }else if let value = child.value as? FieldOptionalStorageIdentifierProtocol {
-                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.params.key))
+                value.initExpresionIfNeeded(key: KeyManager.storageKey(propertyName: propertyName, key: value.key))
             }
         }
     }
@@ -80,7 +68,7 @@ public extension ModelAdaptorDAO {
                 guard let value = child.value as? FieldStorageIdentifierBaseProtocol  else {
                     continue
                 }
-                let key = KeyManager.storageKey(propertyName: propertyName, key: value.params.key)
+                let key = KeyManager.storageKey(propertyName: propertyName, key: value.key)
                 let isExisted = columnNames.contains(where: { dbColumn -> Bool in
                     return dbColumn.caseInsensitiveCompare(key) == ComparisonResult.orderedSame
                 })

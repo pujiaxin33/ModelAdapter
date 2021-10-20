@@ -13,8 +13,6 @@
 		EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFA26F32BEF00289E6D /* Defines.swift */; };
 		EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */; };
 		EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */; };
-		EA8B7B0626F32BEF00289E6D /* MappableWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */; };
-		EA8B7B0726F32BEF00289E6D /* ModelAdaptorMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +24,6 @@
 		EA8B7AFA26F32BEF00289E6D /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		EA8B7AFC26F32BEF00289E6D /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
 		EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorDAO.swift; sourceTree = "<group>"; };
-		EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MappableWrappedProtocol.swift; sourceTree = "<group>"; };
-		EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorMappable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +68,6 @@
 			children = (
 				EA8B7AF726F32BEF00289E6D /* Core */,
 				EA8B7AFB26F32BEF00289E6D /* Storage */,
-				EA8B7AFE26F32BEF00289E6D /* ObjectMapper */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -95,15 +90,6 @@
 				EA8B7AFD26F32BEF00289E6D /* ModelAdaptorDAO.swift */,
 			);
 			path = Storage;
-			sourceTree = "<group>";
-		};
-		EA8B7AFE26F32BEF00289E6D /* ObjectMapper */ = {
-			isa = PBXGroup;
-			children = (
-				EA8B7AFF26F32BEF00289E6D /* MappableWrappedProtocol.swift */,
-				EA8B7B0026F32BEF00289E6D /* ModelAdaptorMappable.swift */,
-			);
-			path = ObjectMapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,8 +175,6 @@
 				EA8B7B0126F32BEF00289E6D /* Field.swift in Sources */,
 				EA8B7B0526F32BEF00289E6D /* ModelAdaptorDAO.swift in Sources */,
 				EA8B7B0426F32BEF00289E6D /* StorageWrappedProtocol.swift in Sources */,
-				EA8B7B0626F32BEF00289E6D /* MappableWrappedProtocol.swift in Sources */,
-				EA8B7B0726F32BEF00289E6D /* ModelAdaptorMappable.swift in Sources */,
 				EA8B7B0226F32BEF00289E6D /* KeyManager.swift in Sources */,
 				EA8B7B0326F32BEF00289E6D /* Defines.swift in Sources */,
 			);
@@ -250,7 +234,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -307,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

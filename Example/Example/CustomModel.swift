@@ -12,7 +12,7 @@ import ObjectMapper
 import SQLiteValueExtension
 
 class CustomModel: ModelAdaptorModel, Mappable {
-    @Field(key: "accountID_key", primaryKey: .default)
+    @Field(key: "accountID_key", primaryKey: true)
     var accountID: String = ""
     @FieldOptional(key: "nick_name")
     var nickName: String?
@@ -39,10 +39,10 @@ class CustomModel: ModelAdaptorModel, Mappable {
     var customSet: Set<String>? = nil
     
     required init() {
-        initExpressionsIfNeeded()
+        initFieldExpressions()
     }
-    required init?(map: Map) {
-        initExpressionsIfNeeded()
+    required convenience init?(map: Map) {
+        self.init()
     }
     func mapping(map: Map) {
         accountID <- map["accountID_key"]
@@ -57,32 +57,6 @@ class CustomModel: ModelAdaptorModel, Mappable {
         customDictAarray <- map["custom_dict_array"]
         customDictInt <- map["custom_dict_int"]
         customSet <- map["custom_set"]
-    }
-}
-
-
-struct NestModel: ModelAdaptorModel, SQLiteValueStorable, Mappable {
-    @FieldOptional(key: "nest_name")
-    var nestName: String?
-    @Field(key: "age")
-    var nestAge: Int = 0
-
-    init() {
-        initExpressionsIfNeeded()
-    }
-    init?(map: Map) {
-        initExpressionsIfNeeded()
-    }
-    mutating func mapping(map: Map) {
-        nestName <- map["nest_name"]
-        nestAge <- map["age"]
-    }
-
-    static func fromStringValue(_ stringValue: String) -> NestModel {
-        return NestModel(JSONString: stringValue) ?? NestModel(JSON: [String : Any]())!
-    }
-    var stringValue: String {
-        return toJSONString() ?? ""
     }
 }
 

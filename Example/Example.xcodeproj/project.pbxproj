@@ -22,6 +22,8 @@
 		19EF104424AD8CDE0090A58D /* CustomModel+DAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */; };
 		19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F8007B2497570F00A98C1F /* CustomDAO.swift */; };
 		9EC6ECF047FB2B9A07E5588D /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FD68C87A731E9037712163 /* Pods_Example.framework */; };
+		EA08C368271FEE0500F7C400 /* NestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08C367271FEE0500F7C400 /* NestModel.swift */; };
+		EA08C36A271FEE3A00F7C400 /* NestModel+Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08C369271FEE3A00F7C400 /* NestModel+Map.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomModel+DAO.swift"; sourceTree = "<group>"; };
 		19F8007B2497570F00A98C1F /* CustomDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDAO.swift; sourceTree = "<group>"; };
 		38FD68C87A731E9037712163 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA08C367271FEE0500F7C400 /* NestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestModel.swift; sourceTree = "<group>"; };
+		EA08C369271FEE3A00F7C400 /* NestModel+Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NestModel+Map.swift"; sourceTree = "<group>"; };
 		F4F23314EB699F7E1B04703A /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		F6FCCE68554163AC34C4BCDD /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +113,8 @@
 				19886C232496475B00A8D28D /* ViewController.swift */,
 				19886CAC24964A3900A8D28D /* CustomModel.swift */,
 				19EF104324AD8CDE0090A58D /* CustomModel+DAO.swift */,
+				EA08C367271FEE0500F7C400 /* NestModel.swift */,
+				EA08C369271FEE3A00F7C400 /* NestModel+Map.swift */,
 				19F8007B2497570F00A98C1F /* CustomDAO.swift */,
 				19886CAE24964B2E00A8D28D /* DateTransform.swift */,
 				19886C252496475B00A8D28D /* Main.storyboard */,
@@ -293,7 +299,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA08C36A271FEE3A00F7C400 /* NestModel+Map.swift in Sources */,
 				19886CAF24964B2E00A8D28D /* DateTransform.swift in Sources */,
+				EA08C368271FEE0500F7C400 /* NestModel.swift in Sources */,
 				19886CAD24964A3900A8D28D /* CustomModel.swift in Sources */,
 				19886C242496475B00A8D28D /* ViewController.swift in Sources */,
 				19F8007C2497570F00A98C1F /* CustomDAO.swift in Sources */,
