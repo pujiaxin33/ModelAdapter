@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EAB4E6B0272027170060BAC2 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB4E6AA272027170060BAC2 /* Field.swift */; };
+		EAB4E6B1272027170060BAC2 /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB4E6AB272027170060BAC2 /* KeyManager.swift */; };
+		EAB4E6B2272027170060BAC2 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB4E6AC272027170060BAC2 /* Defines.swift */; };
+		EAB4E6B3272027170060BAC2 /* ModelAdapterDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB4E6AE272027170060BAC2 /* ModelAdapterDAO.swift */; };
+		EAB4E6B4272027170060BAC2 /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB4E6AF272027170060BAC2 /* StorageWrappedProtocol.swift */; };
 		EAB731AA27200ED3000D4DD8 /* ModelAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB731A927200ED3000D4DD8 /* ModelAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EAB731B827200EFC000D4DD8 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B227200EFC000D4DD8 /* Field.swift */; };
-		EAB731B927200EFC000D4DD8 /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B327200EFC000D4DD8 /* KeyManager.swift */; };
-		EAB731BA27200EFC000D4DD8 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B427200EFC000D4DD8 /* Defines.swift */; };
-		EAB731BB27200EFC000D4DD8 /* StorageWrappedProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */; };
-		EAB731BC27200EFC000D4DD8 /* ModelAdaptorDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EAB4E6AA272027170060BAC2 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		EAB4E6AB272027170060BAC2 /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
+		EAB4E6AC272027170060BAC2 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		EAB4E6AE272027170060BAC2 /* ModelAdapterDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdapterDAO.swift; sourceTree = "<group>"; };
+		EAB4E6AF272027170060BAC2 /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
 		EAB731A627200ED3000D4DD8 /* ModelAdapter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ModelAdapter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAB731A927200ED3000D4DD8 /* ModelAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelAdapter.h; sourceTree = "<group>"; };
-		EAB731B227200EFC000D4DD8 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		EAB731B327200EFC000D4DD8 /* KeyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyManager.swift; sourceTree = "<group>"; };
-		EAB731B427200EFC000D4DD8 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
-		EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageWrappedProtocol.swift; sourceTree = "<group>"; };
-		EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelAdaptorDAO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +36,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EAB4E6A8272027170060BAC2 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EAB4E6A9272027170060BAC2 /* Core */,
+				EAB4E6AD272027170060BAC2 /* Storage */,
+			);
+			path = Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+		EAB4E6A9272027170060BAC2 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EAB4E6AA272027170060BAC2 /* Field.swift */,
+				EAB4E6AB272027170060BAC2 /* KeyManager.swift */,
+				EAB4E6AC272027170060BAC2 /* Defines.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EAB4E6AD272027170060BAC2 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				EAB4E6AE272027170060BAC2 /* ModelAdapterDAO.swift */,
+				EAB4E6AF272027170060BAC2 /* StorageWrappedProtocol.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		EAB7319C27200ED3000D4DD8 = {
 			isa = PBXGroup;
 			children = (
@@ -55,38 +83,10 @@
 		EAB731A827200ED3000D4DD8 /* ModelAdapter */ = {
 			isa = PBXGroup;
 			children = (
-				EAB731B027200EFC000D4DD8 /* Sources */,
+				EAB4E6A8272027170060BAC2 /* Sources */,
 				EAB731A927200ED3000D4DD8 /* ModelAdapter.h */,
 			);
 			path = ModelAdapter;
-			sourceTree = "<group>";
-		};
-		EAB731B027200EFC000D4DD8 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				EAB731B127200EFC000D4DD8 /* Core */,
-				EAB731B527200EFC000D4DD8 /* Storage */,
-			);
-			path = Sources;
-			sourceTree = SOURCE_ROOT;
-		};
-		EAB731B127200EFC000D4DD8 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				EAB731B227200EFC000D4DD8 /* Field.swift */,
-				EAB731B327200EFC000D4DD8 /* KeyManager.swift */,
-				EAB731B427200EFC000D4DD8 /* Defines.swift */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		EAB731B527200EFC000D4DD8 /* Storage */ = {
-			isa = PBXGroup;
-			children = (
-				EAB731B627200EFC000D4DD8 /* StorageWrappedProtocol.swift */,
-				EAB731B727200EFC000D4DD8 /* ModelAdaptorDAO.swift */,
-			);
-			path = Storage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,11 +168,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAB731B827200EFC000D4DD8 /* Field.swift in Sources */,
-				EAB731BC27200EFC000D4DD8 /* ModelAdaptorDAO.swift in Sources */,
-				EAB731BB27200EFC000D4DD8 /* StorageWrappedProtocol.swift in Sources */,
-				EAB731B927200EFC000D4DD8 /* KeyManager.swift in Sources */,
-				EAB731BA27200EFC000D4DD8 /* Defines.swift in Sources */,
+				EAB4E6B0272027170060BAC2 /* Field.swift in Sources */,
+				EAB4E6B1272027170060BAC2 /* KeyManager.swift in Sources */,
+				EAB4E6B4272027170060BAC2 /* StorageWrappedProtocol.swift in Sources */,
+				EAB4E6B3272027170060BAC2 /* ModelAdapterDAO.swift in Sources */,
+				EAB4E6B2272027170060BAC2 /* Defines.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
