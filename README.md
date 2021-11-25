@@ -2,11 +2,11 @@
 
 A SQLite ORM for Swift 5.1+ powered by [SQLite.swift](https://github.com/stephencelis/SQLite.swift).
 
-然后依赖于Swift 5.1提供的`Proptery wrapper`特性，感兴趣的可以看一下这篇文章：[Property wrappers in Swift](https://www.swiftbysundell.com/articles/property-wrappers-in-swift/)
-
-我们一起看一个简单使用示例，看看`ModelAdapter`如何简化我们的代码！
+基于SQLite.swift封装的SQLite ORM库，需要Swift 5.1+。消灭SQLite.swift库需要的数据库定义、增删改查等样板代码，只需要简单的配置就能完成数据对象对应数据库的搭建。
 
 # 使用示例
+
+下面是一个简单使用示例，看看`ModelAdapter`如何简化代码！
 
 ## Column定义
 
@@ -64,7 +64,7 @@ class CustomDAO: ModelAdapterDAO {
 ## 开始使用
 
 ### 通过JSON字典数据创建model。
-引入了[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)库完成JSON To Model
+引入了[ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper)库完成JSON To Model。
 ```Swift
 let jsonDict = ["user_id" : 123, "nickName" : "暴走的鑫鑫", "phone": 123456, "age": 33]
 let model = CustomModel(JSON: jsonDict)!
@@ -247,6 +247,9 @@ pod 'ModelAdapter'
 - Swift 5.1+
 - Xcode 12+
 
+# 依赖
 
+- `SQLite.swift`
+- `SQLiteValueExtension`
 
 
