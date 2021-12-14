@@ -240,7 +240,7 @@ class CustomDAO: ModelAdapterDAO {
 ## Cocoapods
 
 ```
-pod 'ModelAdapter'
+pod 'ModelAdapter', '~> 0.0.8'
 ```
 
 # 要求
