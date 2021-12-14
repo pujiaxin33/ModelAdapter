@@ -23,10 +23,8 @@ protocol FieldValueDataypeEqualToStringIdentifierProtocol {
     func addColumnWithCollate(table: Table) -> String?
 }
 
-public typealias SQLiteValueProvider = SQLite.Value & StringValueExpressible
-
-extension Field: FieldStorageIdentifierBaseProtocol where Value: SQLiteValueProvider { }
-extension Field: FieldStorageIdentifierProtocol where Value: SQLiteValueProvider {
+extension Field: FieldStorageIdentifierBaseProtocol where Value: SQLiteValueStringExpressible { }
+extension Field: FieldStorageIdentifierProtocol where Value: SQLiteValueStringExpressible {
     public var expression: Expression<Value> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expression, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -78,14 +76,14 @@ extension Field: FieldStorageIdentifierProtocol where Value: SQLiteValueProvider
     }
 }
 
-extension Field: FieldValueDataypeEqualToInt64IdentifierProtocol where Value: SQLiteValueProvider, Value.Datatype == Int64 {
+extension Field: FieldValueDataypeEqualToInt64IdentifierProtocol where Value: SQLiteValueStringExpressible, Value.Datatype == Int64 {
     func createColumnWithPrimaryKey(tableBuilder: TableBuilder) {
         if self.params.primaryKey != nil {
             tableBuilder.column(expression, primaryKey: self.params.primaryKey!, check: self.params.check?(expression))
         }
     }
 }
-extension Field: FieldValueDataypeEqualToStringIdentifierProtocol where Value: SQLiteValueProvider, Value.Datatype == String {
+extension Field: FieldValueDataypeEqualToStringIdentifierProtocol where Value: SQLiteValueStringExpressible, Value.Datatype == String {
     func createColumnWithCollate(tableBuilder: TableBuilder) {
         if self.params.collate != nil {
             tableBuilder.column(expression, unique: self.params.unique, check: self.params.check?(expression), collate: self.params.collate!)
@@ -99,8 +97,8 @@ extension Field: FieldValueDataypeEqualToStringIdentifierProtocol where Value: S
     }
 }
 
-extension FieldOptional: FieldStorageIdentifierBaseProtocol where Value: SQLiteValueProvider { }
-extension FieldOptional: FieldOptionalStorageIdentifierProtocol where Value: SQLiteValueProvider {
+extension FieldOptional: FieldStorageIdentifierBaseProtocol where Value: SQLiteValueStringExpressible { }
+extension FieldOptional: FieldOptionalStorageIdentifierProtocol where Value: SQLiteValueStringExpressible {
     public var expression: Expression<Value?> {
         set {
             objc_setAssociatedObject(self, &AssociatedKeys.expressionOptional, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -152,7 +150,7 @@ extension FieldOptional: FieldOptionalStorageIdentifierProtocol where Value: SQL
     }
 }
 
-extension FieldOptional: FieldValueDataypeEqualToStringIdentifierProtocol where Value: SQLiteValueProvider, Value.Datatype == String {
+extension FieldOptional: FieldValueDataypeEqualToStringIdentifierProtocol where Value: SQLiteValueStringExpressible, Value.Datatype == String {
     func createColumnWithCollate(tableBuilder: TableBuilder) {
         if self.params.collate != nil {
             if let check = self.params.checkOptional?(expression) {

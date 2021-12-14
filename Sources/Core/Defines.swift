@@ -10,6 +10,10 @@ import SQLite
 
 public protocol ModelAdapterModel: CustomStringConvertible {
     init()
+    mutating func update(with row: Row)
+}
+public extension ModelAdapterModel {
+    func update(with row: Row) {}
 }
 
 public extension ModelAdapterModel {
@@ -42,7 +46,6 @@ public protocol ModelAdapterModelCustomStorage {
     func createColumn(tableBuilder: TableBuilder)
     func addColumnStatements(table: Table) -> [String]?
     func setters() -> [Setter]
-    func update(with row: Row)
 }
 
 public extension ModelAdapterModelCustomStorage {

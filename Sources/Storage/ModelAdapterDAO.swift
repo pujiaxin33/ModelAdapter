@@ -48,7 +48,7 @@ public extension ModelAdapterDAO {
     func createTable(ifNotExists: Bool = true) {
         let entity = Entity()
         let mirror = Mirror(reflecting: entity)
-        _ = try? connection.run(table.create(ifNotExists: true) { t in
+        _ = try? connection.run(table.create(ifNotExists: ifNotExists) { t in
             for child in mirror.children {
                 if let value = child.value as? FieldStorageIdentifierProtocol {
                     value.createColumn(tableBuilder: t)
@@ -129,8 +129,8 @@ public extension ModelAdapterDAO {
         }) else {
             return nil
         }
-        let entity = Entity()
-        update(entity: entity, with: row)
+        var entity = Entity()
+        update(entity: &entity, with: row)
         return entity
     }
 
@@ -141,8 +141,8 @@ public extension ModelAdapterDAO {
         }) else {
             return nil
         }
-        let entity = Entity()
-        update(entity: entity, with: row)
+        var entity = Entity()
+        update(entity: &entity, with: row)
         return entity
     }
 
@@ -152,8 +152,8 @@ public extension ModelAdapterDAO {
         }
         var entities = [Entity]()
         for row in rows {
-            let entity = Entity()
-            update(entity: entity, with: row)
+            var entity = Entity()
+            update(entity: &entity, with: row)
             entities.append(entity)
         }
         return entities
@@ -179,7 +179,7 @@ public extension ModelAdapterDAO {
         return setters
     }
 
-    private func update(entity: Entity, with row: Row) {
+    private func update(entity: inout Entity, with row: Row) {
         let mirror = Mirror(reflecting: entity)
         for child in mirror.children {
             if let value = child.value as? FieldStorageIdentifierProtocol {
@@ -188,8 +188,8 @@ public extension ModelAdapterDAO {
                 value.update(with: row)
             }
         }
-        if let customEntity = entity as? ModelAdapterModelCustomStorage {
-            customEntity.update(with: row)
+        if (entity as? ModelAdapterModelCustomStorage) != nil {
+            entity.update(with: row)
         }
     }
 }

@@ -44,7 +44,7 @@ class ViewController: UIViewController {
                         "custom_dict" : ["custom1" : ["nest_name" : "嵌套名字", "age" : 123]],
                         "custom_dict_array" : ["custom1" : [["nest_name" : "嵌套名字", "age" : 123]]],
                         "custom_dict_int" : [1 : ["nest_name" : "嵌套名字", "age" : 123]],
-                        "custom_set" : ["1", "2", "3"]
+                        "custom_set" : Set<String>.init(["1", "2", "3"])
             ] as [String : Any]
         return CustomModel(JSON: jsonDict)!
     }

@@ -11,7 +11,7 @@ import ModelAdapter
 import ObjectMapper
 import SQLiteValueExtension
 
-class CustomModel: ModelAdapterModel, Mappable {
+struct CustomModel: ModelAdapterModel, Mappable {
     @Field(key: "accountID_key", primaryKey: true)
     var accountID: String = ""
     @FieldOptional(key: "nick_name")
@@ -24,7 +24,7 @@ class CustomModel: ModelAdapterModel, Mappable {
     var gender: Gender?
     @FieldOptional(key: "birthday")
     var birthday: Date?
-    //`Array.Element`、`Dictionary.Key`、`Dictionary.Value`和自定义数据类型遵从`SQLiteValueStringExpressible`协议，就可以通过`SQLite.swift`存储到数据库。
+    //`Array.Element`、`Dictionary.Key`、`Dictionary.Value`和自定义数据类型遵从`SQLiteValueStorable`协议，就可以通过`SQLite.swift`存储到数据库。
     @Field
     var nest: NestModel = NestModel(JSON: [String : Any]())!
     @Field
@@ -36,16 +36,16 @@ class CustomModel: ModelAdapterModel, Mappable {
     @FieldOptional
     var customDictAarray: [String: [NestModel]]?
     
-    //如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdapterModelCustomStorage`协议，然后自己处理数据的存储流程。
+    //如果值类型没有遵从`SQLiteValueStorable`，就不能使用@Field。需要遵从`ModelAdapterModelCustomStorage`协议，然后自己处理数据的存储流程。
     var customSet: Set<String>? = nil
     
-    required init() {
+    init() {
         initFieldExpressions()
     }
-    required convenience init?(map: Map) {
+    init?(map: Map) {
         self.init()
     }
-    func mapping(map: Map) {
+    mutating func mapping(map: Map) {
         accountID <- map["accountID_key"]
         nickName <- map["nick_name"]
         amount <- map["amount"]

@@ -14,6 +14,12 @@ import ModelAdapter
 extension CustomModel: ModelAdapterModelCustomStorage {
     static let customSetExpression = Expression<String?>("custom_set")
 
+    /*
+     //如果是数据库表单创建之后新增的自定义属性，就通过addColumnStatements方法创建Field。
+    func addColumnStatements(table: Table) -> [String]? {
+        return [table.addColumn(CustomModel.customSetExpression)]
+    }
+     */
     func createColumn(tableBuilder: TableBuilder) {
         tableBuilder.column(CustomModel.customSetExpression)
     }
@@ -26,7 +32,7 @@ extension CustomModel: ModelAdapterModelCustomStorage {
         }
         return [CustomModel.customSetExpression <- String(data: data, encoding: .utf8)]
     }
-    func update(with row: Row) {
+    mutating func update(with row: Row) {
         guard let string = row[CustomModel.customSetExpression] else {
             return
         }
