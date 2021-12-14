@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "ModelAdapter"
-  s.version = "0.0.7"
+  s.version = "0.0.8"
   s.summary      = "ModelAdapter"
   s.homepage     = "https://github.com/pujiaxin33/ModelAdapter"
   s.license      = "MIT"

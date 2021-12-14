@@ -16,7 +16,7 @@ A SQLite ORM for Swift 5.1+ powered by [SQLite.swift](https://github.com/stephen
 - 4、在`Field`或`FieldOptional`初始化器填写column相关信息
 
 ```Swift
-class CustomModel: ModelAdapterModel {
+struct CustomModel: ModelAdapterModel {
     @Field(key: "user_id", primaryKey: true)
     var userID: Int = 0
     @FieldOptional
@@ -26,7 +26,7 @@ class CustomModel: ModelAdapterModel {
     @Field
     var age: Int = 0
 
-    required init() {
+    init() {
         initFieldExpressions()
     }
 }
@@ -36,8 +36,8 @@ class CustomModel: ModelAdapterModel {
 
 - 实现`ModelAdapterModel`协议的指定初始化器，并且在`init`方法调用`initFieldExpressions`方法。
 ```Swift
-class CustomModel: ModelAdapterModel {
-    required init() {
+struct CustomModel: ModelAdapterModel {
+    init() {
         initFieldExpressions()
     }
 }
@@ -124,9 +124,11 @@ var height: Double = 188
 
 ## 存储自定义类型
 
-属性的类型是自定义类型时，需要让自定义类型遵从`SQLiteValueStorable`协议并实现相关方法，就能够存储进数据库。
+属性的类型是自定义类型时，需要让自定义类型遵从`SQLiteValueStringExpressible`协议并实现相关方法，就能够存储进数据库。为了方便使用，使用`SQLiteValueStorable`协议，它遵从于`SQLiteValueStringExpressible`协议。
 
 `SQLiteValueStorable`协议就是让自定义类型能够和String互相转换，从而能够存储进数据库。更多详细信息，点击[SQLiteValueExtension](https://github.com/pujiaxin33/SQLiteValueExtension)进行了解。
+
+使用`SQLiteValueStorable`协议时需要导入`import SQLiteValueExtension`。
 
 ```Swift
 struct NestModel: SQLiteValueStorable {
@@ -192,7 +194,7 @@ extension CustomModel: ModelAdapterCustomStorage {
         }
         return [CustomModel.customSetExpression <- String(data: data, encoding: .utf8)]
     }
-    func update(with row: Row) {
+    mutating func update(with row: Row) {
         guard let string = row[CustomModel.customSetExpression] else {
             return
         }
