@@ -2,7 +2,7 @@
 
 A SQLite ORM for Swift 5.1+ powered by [SQLite.swift](https://github.com/stephencelis/SQLite.swift).
 
-基于SQLite.swift封装的SQLite ORM库，需要Swift 5.1+。消灭SQLite.swift库需要的数据库定义、增删改查等样板代码，只需要简单的配置就能完成数据对象对应数据库的搭建。
+基于SQLite.swift封装的SQLite ORM库，需要Swift 5.1+。减少SQLite.swift库需要的数据库定义、增删改查等样板代码，只需要简单的配置就能完成数据对象对应数据库表的搭建。
 
 # 使用示例
 
@@ -171,7 +171,7 @@ class CustomModel: ModelAdapterModel {
 只需要`Dictionay.key`和`Value`遵从于`SQLiteValueStringExpressible`即可。
 比如`[String: NestModel]`、`[Int : NestModel]`、`[String: [NestModel]]`。
 
-## 自定义存储
+## 自定义存储属性
 
 如果值类型没有遵从`SQLiteValueStringExpressible`，就不能使用@Field。需要遵从`ModelAdapterModelCustomStorage`协议，然后自己处理数据的存储流程。存储数据类型`Set<String>`示例如下：
 ```Swift
@@ -224,7 +224,7 @@ func query(_ predicate: SQLite.Expression<Bool?>) throws -> Entity?
 func queryAll() throws -> [Entity]?
 ```
 
-### 自定义数据库参考
+### 自定义数据库操作
 
 ```Swift
 class CustomDAO: ModelAdapterDAO {
